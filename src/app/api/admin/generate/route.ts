@@ -1,0 +1,59 @@
+import { NextRequest, NextResponse } from "next/server";
+import { generateRecipe } from "@/lib/generate-recipe";
+import { findRecipeImage } from "@/lib/unsplash";
+import { saveGeneratedRecipe } from "@/lib/save-recipe";
+import { downloadRecipeImage } from "@/lib/download-image";
+
+/**
+ * POST /api/admin/generate
+ * Generate a single recipe from a dish name.
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const { dishName } = await request.json();
+
+    if (!dishName || typeof dishName !== "string") {
+      return NextResponse.json(
+        { error: "dishName is required" },
+        { status: 400 }
+      );
+    }
+
+    // Generate recipe with AI
+    const recipe = await generateRecipe(dishName);
+
+    // Find an image
+    const imageUrl = await findRecipeImage(dishName);
+
+    // Save to database
+    const saved = await saveGeneratedRecipe(recipe, imageUrl);
+
+    if (!saved) {
+      return NextResponse.json(
+        { error: "Failed to save recipe to database" },
+        { status: 500 }
+      );
+    }
+
+    // Download image locally
+    await downloadRecipeImage(imageUrl, saved.slug, saved.id);
+
+    return NextResponse.json({
+      success: true,
+      recipe: {
+        id: saved.id,
+        slug: saved.slug,
+        title: recipe.title,
+      },
+    });
+  } catch (error) {
+    console.error("Recipe generation failed:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Recipe generation failed",
+      },
+      { status: 500 }
+    );
+  }
+}

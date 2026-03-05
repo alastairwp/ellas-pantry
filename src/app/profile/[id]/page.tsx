@@ -28,6 +28,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       id: true,
       name: true,
       bio: true,
+      image: true,
       createdAt: true,
     },
   });
@@ -64,7 +65,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     <div className="mx-auto max-w-4xl px-4 py-8">
       {/* Profile Header */}
       <div className="flex items-center gap-5">
-        <Avatar name={user.name} size="lg" />
+        <Avatar name={user.name} image={user.image} size="lg" />
         <div>
           <h1 className="text-2xl font-bold text-stone-900">
             {user.name || "Anonymous"}

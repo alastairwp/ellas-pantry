@@ -26,10 +26,22 @@ const SIZES = {
 
 interface AvatarProps {
   name: string | null | undefined;
+  image?: string | null;
   size?: "sm" | "md" | "lg";
 }
 
-export function Avatar({ name, size = "md" }: AvatarProps) {
+export function Avatar({ name, image, size = "md" }: AvatarProps) {
+  if (image) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={image}
+        alt={name || "User avatar"}
+        className={`${SIZES[size]} rounded-full object-cover shrink-0`}
+      />
+    );
+  }
+
   const displayName = name || "?";
   const initial = displayName.charAt(0).toUpperCase();
   const colorIndex = hashName(displayName) % COLORS.length;

@@ -52,3 +52,6 @@ next-env.d.ts
 
 # downloaded recipe images
 /public/images/recipes/
+
+# user avatar uploads
+/public/images/avatars/

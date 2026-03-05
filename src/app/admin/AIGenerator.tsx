@@ -113,6 +113,19 @@ export function AIGenerator() {
     }
   }
 
+  async function saveOffset() {
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "generatorOffset", value: String(generatorOffset) }),
+      });
+      if (!res.ok) throw new Error("Failed to save offset");
+    } catch {
+      setJobError("Failed to save offset");
+    }
+  }
+
   const inputClass =
     "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500";
 
@@ -345,16 +358,24 @@ export function AIGenerator() {
                 <label className="block text-sm font-medium text-stone-700 mb-1">
                   Current Offset
                 </label>
-                <input
-                  type="number"
-                  value={generatorOffset}
-                  onChange={(e) =>
-                    setGeneratorOffset(parseInt(e.target.value, 10) || 0)
-                  }
-                  className={inputClass}
-                  min="0"
-                  disabled
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={generatorOffset}
+                    onChange={(e) =>
+                      setGeneratorOffset(parseInt(e.target.value, 10) || 0)
+                    }
+                    className={inputClass}
+                    min="0"
+                  />
+                  <button
+                    type="button"
+                    onClick={saveOffset}
+                    className="rounded-lg border border-stone-300 bg-white px-3 py-2 text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors whitespace-nowrap"
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
 

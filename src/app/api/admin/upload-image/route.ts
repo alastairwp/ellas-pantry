@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
-import sharp from "sharp";
+import { processRecipeImage } from "@/lib/process-image";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
@@ -24,10 +24,7 @@ export async function POST(request: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const webpBuffer = await sharp(buffer)
-      .resize(1200, null, { withoutEnlargement: true })
-      .webp({ quality: 80 })
-      .toBuffer();
+    const { buffer: webpBuffer } = await processRecipeImage(buffer);
 
     const bucket = slug.slice(0, 2);
     const bucketDir = path.join(IMAGES_BASE, bucket);
@@ -42,8 +39,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ path: localPath });
   } catch (error) {
     console.error("Image upload failed:", error);
+    const message =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Image upload failed" },
+      { error: `Image upload failed: ${message}` },
       { status: 500 }
     );
   }

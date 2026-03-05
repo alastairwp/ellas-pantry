@@ -9,7 +9,7 @@ async function searchPexels(query: string): Promise<string | null> {
 
   const encoded = encodeURIComponent(query + " food");
   const res = await fetch(
-    `https://api.pexels.com/v1/search?query=${encoded}&per_page=1&orientation=landscape`,
+    `https://api.pexels.com/v1/search?query=${encoded}&per_page=1&orientation=portrait`,
     { headers: { Authorization: PEXELS_API_KEY } }
   );
   if (!res.ok) return null;

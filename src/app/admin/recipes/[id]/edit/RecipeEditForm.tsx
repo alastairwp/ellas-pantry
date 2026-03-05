@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, GripVertical, ImageIcon, Upload, Loader2 } from "lucide-react";
+import { Plus, Trash2, GripVertical, ImageIcon, Upload, Loader2, RefreshCw } from "lucide-react";
 
 interface IngredientInput {
   name: string;
@@ -68,6 +68,7 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
   const [dietaryTags, setDietaryTags] = useState<Option[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [fetchingImage, setFetchingImage] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [imageCacheBuster, setImageCacheBuster] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -117,6 +118,30 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
       setUploading(false);
     }
   }, [initialData.slug]);
+
+  const fetchFromSource = useCallback(async (source: "unsplash" | "pexels") => {
+    setFetchingImage(source);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/admin/refresh-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recipeId: initialData.id, source }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to fetch image");
+      setHeroImage(data.path);
+      setImageCacheBuster(`?t=${Date.now()}`);
+      setMessage({ type: "success", text: `Image fetched from ${source}` });
+    } catch (err) {
+      setMessage({
+        type: "error",
+        text: err instanceof Error ? err.message : "Image fetch failed",
+      });
+    } finally {
+      setFetchingImage(null);
+    }
+  }, [initialData.id]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -224,14 +249,32 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
               }}
             />
             {heroImage ? (
-              <div className="relative mb-3 h-48 w-full overflow-hidden rounded-lg border border-stone-200">
+              <div className="relative mb-3 rounded-lg border border-stone-200 inline-block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={`${heroImage}${imageCacheBuster}`}
                   alt="Current hero image"
-                  className="h-full w-full object-cover"
+                  className="max-w-full max-h-96 rounded-lg"
                 />
                 <div className="absolute top-2 right-2 flex gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => fetchFromSource("unsplash")}
+                    disabled={!!fetchingImage}
+                    className="rounded-full bg-white/90 p-1.5 text-stone-600 hover:bg-amber-50 hover:text-amber-700 shadow-sm transition-colors disabled:opacity-50"
+                    title="Fetch from Unsplash"
+                  >
+                    {fetchingImage === "unsplash" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => fetchFromSource("pexels")}
+                    disabled={!!fetchingImage}
+                    className="rounded-full bg-white/90 px-2 py-1.5 text-xs font-medium text-stone-600 hover:bg-amber-50 hover:text-amber-700 shadow-sm transition-colors disabled:opacity-50"
+                    title="Fetch from Pexels"
+                  >
+                    {fetchingImage === "pexels" ? <Loader2 className="h-4 w-4 animate-spin" /> : "PX"}
+                  </button>
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}

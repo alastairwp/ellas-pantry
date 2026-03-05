@@ -1,3 +1,12 @@
-ellaspantry.com {
+www.ellaspantry.co.uk {
+	handle /images/recipes/* {
+		root * /srv/recipe-images
+		uri strip_prefix /images/recipes
+		file_server
+	}
 	reverse_proxy app:3000
+}
+
+ellaspantry.co.uk {
+	redir https://www.ellaspantry.co.uk{uri} permanent
 }

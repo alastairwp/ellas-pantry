@@ -1,5 +1,5 @@
 FROM node:20-alpine AS base
-RUN apk add --no-cache libc6-compat openssl
+RUN apk add --no-cache libc6-compat openssl su-exec
 
 # --- Dependencies ---
 FROM base AS deps
@@ -31,21 +31,20 @@ RUN adduser --system --uid 1001 nextjs
 # Copy public assets (recipe images will be mounted as volume)
 COPY --from=builder /app/public ./public
 
+# Ensure the recipe images directory is writable by nextjs user
+RUN mkdir -p /app/public/images/recipes && chown -R nextjs:nodejs /app/public/images/recipes
+
 # Copy standalone build output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy Prisma schema + migrations for runtime migrate deploy
+# Copy Prisma schema + migrations + all node_modules for runtime migrate deploy
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/node_modules ./node_modules
 
 # Copy entrypoint script
 COPY scripts/docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
-
-USER nextjs
 
 EXPOSE 3000
 ENV PORT=3000

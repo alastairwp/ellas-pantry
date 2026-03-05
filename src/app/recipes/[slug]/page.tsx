@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getRecipeBySlug } from "@/lib/recipes";
+import { auth } from "@/lib/auth";
 import { RecipeHero } from "@/components/recipe/RecipeHero";
 import { RecipeMeta } from "@/components/recipe/RecipeMeta";
 import { DietaryBadges } from "@/components/recipe/DietaryBadges";
@@ -21,6 +22,7 @@ import { NutritionPanel } from "@/components/recipe/NutritionPanel";
 import { AddToCollectionButton } from "@/components/recipe/AddToCollectionButton";
 import { RelatedRecipes } from "@/components/recipe/RelatedRecipes";
 import { SubstitutionsPanel } from "@/components/recipe/SubstitutionsPanel";
+import { RecipeImage } from "@/components/recipe/RecipeImage";
 
 interface RecipePageProps {
   params: Promise<{ slug: string }>;
@@ -30,7 +32,9 @@ export async function generateMetadata({
   params,
 }: RecipePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const recipe = await getRecipeBySlug(slug);
+  const session = await auth();
+  const isAdmin = session?.user?.role === "admin";
+  const recipe = await getRecipeBySlug(slug, isAdmin);
   if (!recipe) return { title: "Recipe Not Found" };
 
   return {
@@ -39,7 +43,7 @@ export async function generateMetadata({
     openGraph: {
       title: recipe.title,
       description: recipe.description,
-      images: [{ url: recipe.heroImage, width: 1200, height: 630 }],
+      images: [{ url: recipe.heroImage, width: 1200, height: 1800 }],
       type: "article",
     },
     twitter: {
@@ -53,13 +57,20 @@ export async function generateMetadata({
 
 export default async function RecipePage({ params }: RecipePageProps) {
   const { slug } = await params;
-  const recipe = await getRecipeBySlug(slug);
+  const session = await auth();
+  const isAdmin = session?.user?.role === "admin";
+  const recipe = await getRecipeBySlug(slug, isAdmin);
   if (!recipe) notFound();
 
   const dietaryTags = recipe.dietaryTags.map((t) => t.dietaryTag);
 
   return (
     <article>
+      {!recipe.published && (
+        <div className="bg-amber-500 text-white text-center text-sm font-medium py-2 px-4">
+          This recipe is pending review and not visible to the public.
+        </div>
+      )}
       <RecipeJsonLd
         title={recipe.title}
         description={recipe.description}
@@ -103,15 +114,20 @@ export default async function RecipePage({ params }: RecipePageProps) {
           <RecipeRating recipeId={recipe.id} />
         </div>
 
-        {/* Action Bar */}
-        <div className="mt-6 flex flex-wrap gap-3 no-print">
-          <CookModeButton title={recipe.title} steps={recipe.steps} />
-          <SaveRecipeButton recipeId={recipe.id} />
-          <AddToMealPlan recipeId={recipe.id} />
-          <AddToCollectionButton recipeId={recipe.id} />
-          <ShareButton title={recipe.title} description={recipe.description} recipeId={recipe.id} imageUrl={recipe.heroImage} />
-          <PrintButton />
-          <AdminEditButton recipeId={recipe.id} />
+        {/* Action Bar + Image */}
+        <div className="mt-6 flex flex-col sm:flex-row sm:items-start gap-4">
+          <div className="flex flex-wrap gap-3 no-print flex-1">
+            <CookModeButton title={recipe.title} steps={recipe.steps} />
+            <SaveRecipeButton recipeId={recipe.id} />
+            <AddToMealPlan recipeId={recipe.id} />
+            <AddToCollectionButton recipeId={recipe.id} />
+            <ShareButton title={recipe.title} description={recipe.description} recipeId={recipe.id} imageUrl={recipe.heroImage} />
+            <PrintButton />
+            <AdminEditButton recipeId={recipe.id} />
+          </div>
+          <div className="sm:flex-shrink-0">
+            <RecipeImage src={recipe.heroImage} alt={recipe.title} />
+          </div>
         </div>
 
         <AdUnit adSlot="recipe-top" adFormat="horizontal" className="my-6" />

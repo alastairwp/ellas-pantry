@@ -1,4 +1,4 @@
-import sharp from "sharp";
+import { processRecipeImage } from "./process-image";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { prisma } from "./prisma";
@@ -38,10 +38,7 @@ export async function downloadRecipeImage(
 
     const buffer = Buffer.from(await response.arrayBuffer());
 
-    const webpBuffer = await sharp(buffer)
-      .resize(1200, null, { withoutEnlargement: true })
-      .webp({ quality: 80 })
-      .toBuffer();
+    const { buffer: webpBuffer } = await processRecipeImage(buffer);
 
     const filename = `${slug}.webp`;
     const filepath = path.join(bucketDir, filename);

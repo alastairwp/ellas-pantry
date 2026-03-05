@@ -23,6 +23,7 @@ export function RecipeHero({
         priority
         sizes="100vw"
         className="object-cover"
+        unoptimized={heroImage.startsWith("/")}
       />
 
       {/* Gradient overlay */}

@@ -25,7 +25,7 @@ async function searchUnsplash(dishName: string): Promise<string | null> {
   try {
     const query = encodeURIComponent(`${dishName} food dish`);
     const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=${query}&per_page=1&orientation=landscape`,
+      `https://api.unsplash.com/search/photos?query=${query}&per_page=1&orientation=portrait`,
       {
         headers: { Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}` },
       }
@@ -48,7 +48,7 @@ async function searchUnsplash(dishName: string): Promise<string | null> {
       dishName.split(" ").slice(0, 2).join(" ") + " food"
     );
     const retry = await fetch(
-      `https://api.unsplash.com/search/photos?query=${simpleQuery}&per_page=1&orientation=landscape`,
+      `https://api.unsplash.com/search/photos?query=${simpleQuery}&per_page=1&orientation=portrait`,
       {
         headers: { Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}` },
       }
@@ -69,7 +69,7 @@ async function searchPexels(dishName: string): Promise<string | null> {
   try {
     const query = encodeURIComponent(`${dishName} food`);
     const res = await fetch(
-      `https://api.pexels.com/v1/search?query=${query}&per_page=1&orientation=landscape`,
+      `https://api.pexels.com/v1/search?query=${query}&per_page=1&orientation=portrait`,
       {
         headers: { Authorization: PEXELS_API_KEY! },
       }
@@ -92,7 +92,7 @@ async function searchPexels(dishName: string): Promise<string | null> {
       dishName.split(" ").slice(0, 2).join(" ") + " food"
     );
     const retry = await fetch(
-      `https://api.pexels.com/v1/search?query=${simpleQuery}&per_page=1&orientation=landscape`,
+      `https://api.pexels.com/v1/search?query=${simpleQuery}&per_page=1&orientation=portrait`,
       {
         headers: { Authorization: PEXELS_API_KEY! },
       }
@@ -109,7 +109,23 @@ async function searchPexels(dishName: string): Promise<string | null> {
   }
 }
 
+/**
+ * Find a recipe image from a specific source.
+ */
+export async function findRecipeImageFromSource(
+  dishName: string,
+  source: "unsplash" | "pexels"
+): Promise<string | null> {
+  if (source === "unsplash" && UNSPLASH_ACCESS_KEY) {
+    return searchUnsplash(dishName);
+  }
+  if (source === "pexels" && PEXELS_API_KEY) {
+    return searchPexels(dishName);
+  }
+  return null;
+}
+
 function generatePlaceholder(dishName: string): string {
   const encoded = encodeURIComponent(dishName);
-  return `https://placehold.co/1200x630/f59e0b/ffffff?text=${encoded}`;
+  return `https://placehold.co/1200x1800/f59e0b/ffffff?text=${encoded}`;
 }

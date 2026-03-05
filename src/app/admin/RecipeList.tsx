@@ -1,12 +1,27 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Trash2, ExternalLink, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
+import {
+  Trash2,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
+  Check,
+  Pencil,
+  Eye,
+  EyeOff,
+  LayoutGrid,
+  LayoutList,
+} from "lucide-react";
 
 interface RecipeItem {
   id: number;
   slug: string;
   title: string;
+  heroImage: string;
   source: string;
   published: boolean;
   createdAt: string;
@@ -26,10 +41,15 @@ export function RecipeList() {
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
   const [sourceFilter, setSourceFilter] = useState<string>("");
+  const [publishedFilter, setPublishedFilter] = useState<string>("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [counts, setCounts] = useState<Counts>({});
+  const [pendingCount, setPendingCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [actionLoading, setActionLoading] = useState(false);
+  const [viewMode, setViewMode] = useState<"list" | "gallery">("list");
 
   const fetchRecipes = useCallback(async () => {
     setLoading(true);
@@ -40,6 +60,7 @@ export function RecipeList() {
       params.set("sortBy", sortBy);
       params.set("sortDir", sortDir);
       if (sourceFilter) params.set("source", sourceFilter);
+      if (publishedFilter) params.set("published", publishedFilter);
 
       const res = await fetch(`/api/admin/recipes?${params.toString()}`);
       const data = await res.json();
@@ -48,19 +69,29 @@ export function RecipeList() {
       setTotal(data.total);
       setTotalPages(data.totalPages);
       setCounts(data.counts);
+      setPendingCount(data.pendingCount);
     } catch (err) {
       console.error("Failed to fetch recipes:", err);
     } finally {
       setLoading(false);
     }
-  }, [page, sourceFilter, sortBy, sortDir]);
+  }, [page, sourceFilter, publishedFilter, sortBy, sortDir]);
 
   useEffect(() => {
     fetchRecipes();
   }, [fetchRecipes]);
 
+  useEffect(() => {
+    setSelected(new Set());
+  }, [page, sourceFilter, publishedFilter]);
+
   function handleSourceChange(source: string) {
     setSourceFilter(source);
+    setPage(1);
+  }
+
+  function handlePublishedChange(value: string) {
+    setPublishedFilter(value);
     setPage(1);
   }
 
@@ -75,10 +106,50 @@ export function RecipeList() {
   }
 
   function sortIcon(field: string) {
-    if (sortBy !== field) return <ArrowUpDown className="h-3.5 w-3.5 text-stone-300" />;
-    return sortDir === "asc"
-      ? <ArrowUp className="h-3.5 w-3.5 text-amber-600" />
-      : <ArrowDown className="h-3.5 w-3.5 text-amber-600" />;
+    if (sortBy !== field)
+      return <ArrowUpDown className="h-3.5 w-3.5 text-stone-300" />;
+    return sortDir === "asc" ? (
+      <ArrowUp className="h-3.5 w-3.5 text-amber-600" />
+    ) : (
+      <ArrowDown className="h-3.5 w-3.5 text-amber-600" />
+    );
+  }
+
+  function toggleSelect(id: number) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    if (selected.size === recipes.length) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(recipes.map((r) => r.id)));
+    }
+  }
+
+  async function handleBulkAction(published: boolean) {
+    if (selected.size === 0) return;
+    setActionLoading(true);
+    try {
+      const res = await fetch("/api/admin/recipes", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [...selected], published }),
+      });
+      if (res.ok) {
+        setSelected(new Set());
+        fetchRecipes();
+      }
+    } catch (err) {
+      console.error("Bulk action failed:", err);
+    } finally {
+      setActionLoading(false);
+    }
   }
 
   async function handleDelete(id: number, title: string) {
@@ -91,6 +162,19 @@ export function RecipeList() {
       }
     } catch (err) {
       console.error("Delete failed:", err);
+    }
+  }
+
+  async function handleApprove(id: number) {
+    try {
+      const res = await fetch("/api/admin/recipes", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [id], published: true }),
+      });
+      if (res.ok) fetchRecipes();
+    } catch (err) {
+      console.error("Approve failed:", err);
     }
   }
 
@@ -136,15 +220,110 @@ export function RecipeList() {
     }
   };
 
+  const statusLabel = (published: boolean) =>
+    published ? (
+      <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+        <Eye className="h-3 w-3" /> Live
+      </span>
+    ) : (
+      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+        <EyeOff className="h-3 w-3" /> Pending
+      </span>
+    );
+
   return (
     <div>
-      {/* Source filter pills */}
+      {/* Status filter */}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        <button
+          onClick={() => handlePublishedChange("")}
+          className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+            publishedFilter === ""
+              ? "bg-stone-800 text-white"
+              : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+          }`}
+        >
+          All
+        </button>
+        <button
+          onClick={() => handlePublishedChange("false")}
+          className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+            publishedFilter === "false"
+              ? "bg-amber-600 text-white"
+              : "bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200"
+          }`}
+        >
+          Pending Review
+          {pendingCount > 0 && (
+            <span className="ml-1.5 inline-flex items-center justify-center rounded-full bg-amber-700 px-1.5 py-0.5 text-xs text-white min-w-[20px]">
+              {pendingCount}
+            </span>
+          )}
+        </button>
+        <button
+          onClick={() => handlePublishedChange("true")}
+          className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+            publishedFilter === "true"
+              ? "bg-green-600 text-white"
+              : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
+          }`}
+        >
+          Published
+        </button>
+      </div>
+
+      {/* Source filter pills + view toggle */}
       <div className="flex flex-wrap items-center gap-2 mb-6">
-        {filterBtn("All", "", totalAll)}
+        {filterBtn("All Sources", "", totalAll)}
         {filterBtn("AI Generated", "ai", counts.ai)}
         {filterBtn("CSV Import", "csv", counts.csv)}
         {filterBtn("Manual", "manual", counts.manual)}
+        <div className="ml-auto flex items-center rounded-lg border border-stone-200 overflow-hidden">
+          <button
+            onClick={() => setViewMode("list")}
+            className={`p-2 transition-colors ${viewMode === "list" ? "bg-stone-800 text-white" : "text-stone-400 hover:text-stone-600 hover:bg-stone-50"}`}
+            title="List view"
+          >
+            <LayoutList className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => setViewMode("gallery")}
+            className={`p-2 transition-colors ${viewMode === "gallery" ? "bg-stone-800 text-white" : "text-stone-400 hover:text-stone-600 hover:bg-stone-50"}`}
+            title="Gallery view"
+          >
+            <LayoutGrid className="h-4 w-4" />
+          </button>
+        </div>
       </div>
+
+      {/* Bulk actions bar */}
+      {selected.size > 0 && (
+        <div className="mb-4 flex items-center gap-3 rounded-lg bg-stone-50 border border-stone-200 px-4 py-3">
+          <span className="text-sm font-medium text-stone-700">
+            {selected.size} selected
+          </span>
+          <button
+            onClick={() => handleBulkAction(true)}
+            disabled={actionLoading}
+            className="inline-flex items-center gap-1.5 rounded-full bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
+          >
+            <Check className="h-3.5 w-3.5" /> Approve
+          </button>
+          <button
+            onClick={() => handleBulkAction(false)}
+            disabled={actionLoading}
+            className="inline-flex items-center gap-1.5 rounded-full bg-stone-200 px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-300 disabled:opacity-50 transition-colors"
+          >
+            <EyeOff className="h-3.5 w-3.5" /> Unpublish
+          </button>
+          <button
+            onClick={() => setSelected(new Set())}
+            className="ml-auto text-sm text-stone-500 hover:text-stone-700 transition-colors"
+          >
+            Clear
+          </button>
+        </div>
+      )}
 
       {/* Stats bar */}
       <div className="mb-4 text-sm text-stone-500">
@@ -153,80 +332,218 @@ export function RecipeList() {
           <span>
             {" "}
             (filtered by{" "}
-            <strong>{sourceFilter === "ai" ? "AI Generated" : sourceFilter === "csv" ? "CSV Import" : "Manual"}</strong>)
+            <strong>
+              {sourceFilter === "ai"
+                ? "AI Generated"
+                : sourceFilter === "csv"
+                  ? "CSV Import"
+                  : "Manual"}
+            </strong>
+            )
           </span>
         )}
       </div>
 
-      {/* Table */}
+      {/* Content */}
       {loading ? (
         <div className="py-12 text-center text-stone-400">Loading...</div>
       ) : recipes.length === 0 ? (
         <div className="py-12 text-center text-stone-400">
           No recipes found.
         </div>
+      ) : viewMode === "gallery" ? (
+        /* Gallery View */
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {recipes.map((recipe) => (
+            <div
+              key={recipe.id}
+              className={`group relative rounded-xl border overflow-hidden transition-shadow hover:shadow-md ${
+                selected.has(recipe.id)
+                  ? "border-amber-500 ring-2 ring-amber-200"
+                  : !recipe.published
+                    ? "border-amber-200 bg-amber-50/30"
+                    : "border-stone-200"
+              }`}
+            >
+              {/* Checkbox overlay */}
+              <div className="absolute top-2 left-2 z-10">
+                <input
+                  type="checkbox"
+                  checked={selected.has(recipe.id)}
+                  onChange={() => toggleSelect(recipe.id)}
+                  className="h-5 w-5 rounded border-2 border-white/80 bg-white/60 text-amber-600 focus:ring-amber-500 shadow-sm cursor-pointer"
+                />
+              </div>
+              {/* Status badge overlay */}
+              <div className="absolute top-2 right-2 z-10">
+                {statusLabel(recipe.published)}
+              </div>
+              {/* Image */}
+              <a href={`/recipes/${recipe.slug}`} target="_blank" className="block">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={recipe.heroImage}
+                  alt={recipe.title}
+                  className="aspect-square w-full object-cover"
+                />
+              </a>
+              {/* Info */}
+              <div className="p-3">
+                <a
+                  href={`/recipes/${recipe.slug}`}
+                  target="_blank"
+                  className="block text-sm font-medium text-stone-800 hover:text-amber-600 transition-colors line-clamp-2 leading-snug"
+                >
+                  {recipe.title}
+                </a>
+                <div className="mt-1.5 flex items-center gap-1.5">
+                  {sourceLabel(recipe.source)}
+                </div>
+                {/* Action buttons */}
+                <div className="mt-2 flex items-center gap-1.5">
+                  {!recipe.published && (
+                    <button
+                      onClick={() => handleApprove(recipe.id)}
+                      className="rounded-md bg-green-50 p-1.5 text-green-600 hover:bg-green-100 hover:text-green-700 transition-colors"
+                      title="Approve & publish"
+                    >
+                      <Check className="h-4 w-4" />
+                    </button>
+                  )}
+                  <a
+                    href={`/admin/recipes/${recipe.id}/edit`}
+                    className="rounded-md bg-stone-50 p-1.5 text-stone-500 hover:bg-amber-50 hover:text-amber-600 transition-colors"
+                    title="Edit recipe"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </a>
+                  <button
+                    onClick={() => handleDelete(recipe.id, recipe.title)}
+                    className="rounded-md bg-stone-50 p-1.5 text-stone-400 hover:bg-red-50 hover:text-red-500 transition-colors ml-auto"
+                    title="Delete recipe"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
+        /* List View (Table) */
         <div className="overflow-hidden rounded-lg border border-stone-200">
           <table className="w-full text-sm">
             <thead className="bg-stone-50">
               <tr>
+                <th className="px-3 py-3 text-left w-10">
+                  <input
+                    type="checkbox"
+                    checked={
+                      recipes.length > 0 && selected.size === recipes.length
+                    }
+                    onChange={toggleSelectAll}
+                    className="h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500"
+                  />
+                </th>
                 <th className="px-4 py-3 text-left font-medium text-stone-600">
-                  <button onClick={() => handleSort("title")} className="inline-flex items-center gap-1.5 hover:text-amber-700 transition-colors">
+                  <button
+                    onClick={() => handleSort("title")}
+                    className="inline-flex items-center gap-1.5 hover:text-amber-700 transition-colors"
+                  >
                     Recipe {sortIcon("title")}
                   </button>
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-stone-600 w-20">
-                  <button onClick={() => handleSort("source")} className="inline-flex items-center gap-1.5 hover:text-amber-700 transition-colors">
+                  <button
+                    onClick={() => handleSort("source")}
+                    className="inline-flex items-center gap-1.5 hover:text-amber-700 transition-colors"
+                  >
                     Source {sortIcon("source")}
                   </button>
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-stone-600 hidden sm:table-cell">
-                  Categories
+                <th className="px-4 py-3 text-left font-medium text-stone-600 w-24">
+                  Status
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-stone-600 hidden md:table-cell w-28">
-                  <button onClick={() => handleSort("createdAt")} className="inline-flex items-center gap-1.5 hover:text-amber-700 transition-colors">
+                  <button
+                    onClick={() => handleSort("createdAt")}
+                    className="inline-flex items-center gap-1.5 hover:text-amber-700 transition-colors"
+                  >
                     Created {sortIcon("createdAt")}
                   </button>
                 </th>
-                <th className="px-4 py-3 text-right font-medium text-stone-600 w-20">
+                <th className="px-4 py-3 text-right font-medium text-stone-600 w-32">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
               {recipes.map((recipe) => (
-                <tr key={recipe.id} className="hover:bg-stone-50">
+                <tr
+                  key={recipe.id}
+                  className={`hover:bg-stone-50 ${!recipe.published ? "bg-amber-50/30" : ""}`}
+                >
+                  <td className="px-3 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(recipe.id)}
+                      onChange={() => toggleSelect(recipe.id)}
+                      className="h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500"
+                    />
+                  </td>
                   <td className="px-4 py-3">
-                    <a
-                      href={`/recipes/${recipe.slug}`}
-                      target="_blank"
-                      className="font-medium text-stone-800 hover:text-amber-600 transition-colors"
-                    >
-                      {recipe.title}
-                    </a>
+                    <div className="flex items-center gap-3">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={recipe.heroImage}
+                        alt=""
+                        className="h-10 w-10 rounded-lg object-cover flex-shrink-0 border border-stone-200"
+                      />
+                      <a
+                        href={`/recipes/${recipe.slug}`}
+                        target="_blank"
+                        className="font-medium text-stone-800 hover:text-amber-600 transition-colors line-clamp-1"
+                      >
+                        {recipe.title}
+                      </a>
+                    </div>
                   </td>
                   <td className="px-4 py-3">{sourceLabel(recipe.source)}</td>
-                  <td className="px-4 py-3 text-stone-500 hidden sm:table-cell">
-                    {recipe.categories
-                      .map((c) => c.category.name)
-                      .join(", ") || "-"}
+                  <td className="px-4 py-3">
+                    {statusLabel(recipe.published)}
                   </td>
                   <td className="px-4 py-3 text-stone-500 hidden md:table-cell">
                     {new Date(recipe.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-2">
+                    <div className="flex items-center justify-end gap-1.5">
+                      {!recipe.published && (
+                        <button
+                          onClick={() => handleApprove(recipe.id)}
+                          className="rounded-md bg-green-50 p-1.5 text-green-600 hover:bg-green-100 hover:text-green-700 transition-colors"
+                          title="Approve & publish"
+                        >
+                          <Check className="h-4 w-4" />
+                        </button>
+                      )}
+                      <a
+                        href={`/admin/recipes/${recipe.id}/edit`}
+                        className="rounded-md bg-stone-50 p-1.5 text-stone-500 hover:bg-amber-50 hover:text-amber-600 transition-colors"
+                        title="Edit recipe"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </a>
                       <a
                         href={`/recipes/${recipe.slug}`}
                         target="_blank"
-                        className="text-stone-400 hover:text-amber-600 transition-colors"
+                        className="rounded-md bg-stone-50 p-1.5 text-stone-400 hover:bg-stone-100 hover:text-stone-600 transition-colors"
                         title="View recipe"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </a>
                       <button
                         onClick={() => handleDelete(recipe.id, recipe.title)}
-                        className="text-stone-400 hover:text-red-500 transition-colors"
+                        className="rounded-md bg-stone-50 p-1.5 text-stone-400 hover:bg-red-50 hover:text-red-500 transition-colors"
                         title="Delete recipe"
                       >
                         <Trash2 className="h-4 w-4" />

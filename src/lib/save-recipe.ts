@@ -76,6 +76,7 @@ export async function saveGeneratedRecipe(
         description: recipe.description,
         heroImage: imageUrl,
         source: "ai",
+        published: false,
         prepTime: recipe.prepTime,
         cookTime: recipe.cookTime,
         servings: recipe.servings,

@@ -58,9 +58,9 @@ async function withRatingStats<T extends { id: number }>(recipes: T[]) {
   });
 }
 
-export async function getRecipeBySlug(slug: string) {
+export async function getRecipeBySlug(slug: string, includeUnpublished = false) {
   const recipe = await prisma.recipe.findUnique({
-    where: { slug, published: true },
+    where: { slug, ...(includeUnpublished ? {} : { published: true }) },
     include: recipeIncludes,
   });
 

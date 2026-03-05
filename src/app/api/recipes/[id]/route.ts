@@ -130,10 +130,12 @@ export async function PUT(
       },
     });
 
-    // Revalidate the recipe page so Next.js serves fresh content
+    // Revalidate pages so Next.js serves fresh content
     if (full?.slug) {
       revalidatePath(`/recipes/${full.slug}`);
     }
+    revalidatePath("/");
+    revalidatePath("/recipes");
 
     return NextResponse.json(full);
   } catch (error) {

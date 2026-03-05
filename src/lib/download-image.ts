@@ -40,7 +40,7 @@ export async function downloadRecipeImage(
 
     const { buffer: webpBuffer } = await processRecipeImage(buffer);
 
-    const filename = `${slug}.webp`;
+    const filename = `${slug}-${Date.now()}.webp`;
     const filepath = path.join(bucketDir, filename);
     await writeFile(filepath, webpBuffer);
 

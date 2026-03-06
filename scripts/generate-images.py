@@ -31,11 +31,11 @@ from PIL import Image
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 
-def get_db_connection():
-    """Connect to PostgreSQL using DATABASE_URL from .env."""
-    url = os.environ.get("DATABASE_URL")
+def get_db_connection(db_url=None):
+    """Connect to PostgreSQL using provided URL or DATABASE_URL from .env."""
+    url = db_url or os.environ.get("DATABASE_URL")
     if not url:
-        print("ERROR: DATABASE_URL not set in .env")
+        print("ERROR: DATABASE_URL not set in .env and --db-url not provided")
         sys.exit(1)
     return psycopg2.connect(url)
 
@@ -179,6 +179,12 @@ def authenticate(api_url, email, password):
 
     # Use NextAuth's credentials sign-in
     csrf_resp = session.get(f"{api_url}/api/auth/csrf")
+    if csrf_resp.status_code != 200 or "json" not in csrf_resp.headers.get("content-type", ""):
+        print(f"CSRF request failed (status {csrf_resp.status_code})")
+        print(f"  URL: {csrf_resp.url}")
+        print(f"  Content-Type: {csrf_resp.headers.get('content-type')}")
+        print(f"  Body: {csrf_resp.text[:300]}")
+        return None
     csrf_token = csrf_resp.json().get("csrfToken", "")
 
     resp = session.post(
@@ -190,14 +196,22 @@ def authenticate(api_url, email, password):
             "redirect": "false",
             "json": "true",
         },
-        allow_redirects=False,
+        allow_redirects=True,
     )
 
-    if resp.status_code in (200, 302):
+    # Check we got a session cookie (authjs.session-token or __Secure- variant)
+    cookie_names = [c.name for c in session.cookies]
+    has_session = any("session-token" in name for name in cookie_names)
+
+    if has_session:
         print("Authenticated successfully")
         return session
     else:
-        print(f"Authentication failed: {resp.status_code}")
+        print(f"Authentication failed (status {resp.status_code})")
+        print(f"  Cookies received: {cookie_names}")
+        # Verify by hitting the session endpoint
+        check = session.get(f"{api_url}/api/auth/session")
+        print(f"  Session check: {check.text[:200]}")
         return None
 
 
@@ -223,6 +237,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate recipe images locally")
     parser.add_argument("--limit", type=int, default=50, help="Max recipes to process")
     parser.add_argument("--api-url", type=str, help="App URL for auto-upload")
+    parser.add_argument("--db-url", type=str, help="Database URL (overrides DATABASE_URL from .env)")
     parser.add_argument("--email", type=str, help="Admin email for auth")
     parser.add_argument("--password", type=str, help="Admin password for auth")
     parser.add_argument("--slugs", nargs="+", help="Specific recipe slugs to process")
@@ -239,7 +254,7 @@ def main():
 
     # Connect to database
     print("Connecting to database...")
-    conn = get_db_connection()
+    conn = get_db_connection(args.db_url)
 
     # Fetch pending recipes
     recipes = fetch_pending_recipes(conn, args.limit, slugs=args.slugs)
@@ -253,8 +268,8 @@ def main():
     # Set up auto-upload if requested
     session = None
     if args.api_url and not args.save_only:
-        email = args.email or input("Admin email: ")
-        password = args.password or input("Admin password: ")
+        email = args.email or os.environ.get("ADMIN_EMAIL") or input("Admin email: ")
+        password = args.password or os.environ.get("ADMIN_PASSWORD") or input("Admin password: ")
         session = authenticate(args.api_url, email, password)
         if not session:
             print("Failed to authenticate. Falling back to save-only mode.")

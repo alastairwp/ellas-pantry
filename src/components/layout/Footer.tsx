@@ -18,6 +18,12 @@ export function Footer() {
               Privacy Policy
             </Link>
             <Link
+              href="/terms"
+              className="text-sm text-stone-500 hover:text-amber-700 transition-colors"
+            >
+              Terms &amp; Conditions
+            </Link>
+            <Link
               href="/contact"
               className="text-sm text-stone-500 hover:text-amber-700 transition-colors"
             >

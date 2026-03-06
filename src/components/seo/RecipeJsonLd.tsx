@@ -83,7 +83,7 @@ export function RecipeJsonLd({
     name: title,
     description,
     image: heroImage.startsWith("/")
-      ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://ellaspantry.com"}${heroImage}`
+      ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.ellaspantry.co.uk"}${heroImage}`
       : heroImage,
     prepTime: toIsoDuration(prepTime),
     cookTime: toIsoDuration(cookTime),

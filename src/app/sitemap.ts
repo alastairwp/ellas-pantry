@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 import { getAllRecipeSlugs } from "@/lib/recipes";
 import { getAllCategorySlugs } from "@/lib/categories";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ellaspantry.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ellaspantry.co.uk";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let recipes: { slug: string; updatedAt: Date }[] = [];

@@ -14,7 +14,7 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://ellaspantry.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.ellaspantry.co.uk"
   ),
   title: {
     default: "Ella's Pantry - Delicious Recipes for Every Occasion",

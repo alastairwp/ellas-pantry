@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import type { MetadataRoute } from "next";
 import { getAllRecipeSlugs } from "@/lib/recipes";
 import { getAllCategorySlugs } from "@/lib/categories";

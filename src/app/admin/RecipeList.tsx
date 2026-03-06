@@ -15,6 +15,7 @@ import {
   EyeOff,
   LayoutGrid,
   LayoutList,
+  ImageIcon,
 } from "lucide-react";
 
 interface RecipeItem {
@@ -23,6 +24,7 @@ interface RecipeItem {
   title: string;
   heroImage: string;
   source: string;
+  imageStatus: string;
   published: boolean;
   createdAt: string;
   categories: { category: { name: string } }[];
@@ -152,6 +154,26 @@ export function RecipeList() {
     }
   }
 
+  async function handleBulkImageStatus(imageStatus: string) {
+    if (selected.size === 0) return;
+    setActionLoading(true);
+    try {
+      const res = await fetch("/api/admin/recipes", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [...selected], imageStatus }),
+      });
+      if (res.ok) {
+        setSelected(new Set());
+        fetchRecipes();
+      }
+    } catch (err) {
+      console.error("Bulk image status update failed:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
   async function handleDelete(id: number, title: string) {
     if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
 
@@ -230,6 +252,31 @@ export function RecipeList() {
         <EyeOff className="h-3 w-3" /> Pending
       </span>
     );
+
+  const imageStatusLabel = (status: string) => {
+    switch (status) {
+      case "pending":
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+            <ImageIcon className="h-3 w-3" /> Queued
+          </span>
+        );
+      case "generated":
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+            <ImageIcon className="h-3 w-3" /> Generated
+          </span>
+        );
+      case "skip":
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-500">
+            <ImageIcon className="h-3 w-3" /> Skip
+          </span>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div>
@@ -316,6 +363,21 @@ export function RecipeList() {
           >
             <EyeOff className="h-3.5 w-3.5" /> Unpublish
           </button>
+          <span className="mx-1 text-stone-300">|</span>
+          <button
+            onClick={() => handleBulkImageStatus("pending")}
+            disabled={actionLoading}
+            className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-200 disabled:opacity-50 transition-colors"
+          >
+            <ImageIcon className="h-3.5 w-3.5" /> Queue for Image Gen
+          </button>
+          <button
+            onClick={() => handleBulkImageStatus("skip")}
+            disabled={actionLoading}
+            className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 text-sm font-medium text-stone-500 hover:bg-stone-200 disabled:opacity-50 transition-colors"
+          >
+            <ImageIcon className="h-3.5 w-3.5" /> Skip Image
+          </button>
           <button
             onClick={() => setSelected(new Set())}
             className="ml-auto text-sm text-stone-500 hover:text-stone-700 transition-colors"
@@ -398,6 +460,7 @@ export function RecipeList() {
                 </a>
                 <div className="mt-1.5 flex items-center gap-1.5">
                   {sourceLabel(recipe.source)}
+                  {imageStatusLabel(recipe.imageStatus)}
                 </div>
                 {/* Action buttons */}
                 <div className="mt-2 flex items-center gap-1.5">
@@ -464,6 +527,9 @@ export function RecipeList() {
                 <th className="px-4 py-3 text-left font-medium text-stone-600 w-24">
                   Status
                 </th>
+                <th className="px-4 py-3 text-left font-medium text-stone-600 w-24 hidden lg:table-cell">
+                  Image
+                </th>
                 <th className="px-4 py-3 text-left font-medium text-stone-600 hidden md:table-cell w-28">
                   <button
                     onClick={() => handleSort("createdAt")}
@@ -511,6 +577,9 @@ export function RecipeList() {
                   <td className="px-4 py-3">{sourceLabel(recipe.source)}</td>
                   <td className="px-4 py-3">
                     {statusLabel(recipe.published)}
+                  </td>
+                  <td className="px-4 py-3 hidden lg:table-cell">
+                    {imageStatusLabel(recipe.imageStatus)}
                   </td>
                   <td className="px-4 py-3 text-stone-500 hidden md:table-cell">
                     {new Date(recipe.createdAt).toLocaleDateString()}

@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
         title: true,
         heroImage: true,
         source: true,
+        imageStatus: true,
         published: true,
         createdAt: true,
         categories: { include: { category: { select: { name: true } } } },
@@ -69,18 +70,31 @@ export async function PATCH(request: NextRequest) {
   if (!authResult.authorized) return authResult.response;
 
   try {
-    const { ids, published } = await request.json();
+    const { ids, published, imageStatus } = await request.json();
 
-    if (!Array.isArray(ids) || ids.length === 0 || typeof published !== "boolean") {
+    if (!Array.isArray(ids) || ids.length === 0) {
       return NextResponse.json(
-        { error: "ids (array) and published (boolean) are required" },
+        { error: "ids (array) is required" },
+        { status: 400 }
+      );
+    }
+
+    const data: Record<string, unknown> = {};
+    if (typeof published === "boolean") data.published = published;
+    if (typeof imageStatus === "string" && ["none", "pending", "generated", "skip"].includes(imageStatus)) {
+      data.imageStatus = imageStatus;
+    }
+
+    if (Object.keys(data).length === 0) {
+      return NextResponse.json(
+        { error: "At least one field to update is required" },
         { status: 400 }
       );
     }
 
     const result = await prisma.recipe.updateMany({
       where: { id: { in: ids } },
-      data: { published },
+      data,
     });
 
     return NextResponse.json({ updated: result.count });

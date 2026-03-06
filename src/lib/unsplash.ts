@@ -1,21 +1,25 @@
 const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 const PEXELS_API_KEY = process.env.PEXELS_API_KEY;
+const STOCK_IMAGES_ENABLED = process.env.STOCK_IMAGES_ENABLED !== "false";
 
 /**
  * Find a royalty-free food photo for a dish name.
  * Tries Unsplash first, then Pexels as fallback, then placeholder.
+ * Set STOCK_IMAGES_ENABLED=false in .env to skip stock image lookups.
  */
 export async function findRecipeImage(dishName: string): Promise<string> {
-  // Try Unsplash first
-  if (UNSPLASH_ACCESS_KEY) {
-    const url = await searchUnsplash(dishName);
-    if (url) return url;
-  }
+  if (STOCK_IMAGES_ENABLED) {
+    // Try Unsplash first
+    if (UNSPLASH_ACCESS_KEY) {
+      const url = await searchUnsplash(dishName);
+      if (url) return url;
+    }
 
-  // Try Pexels as fallback
-  if (PEXELS_API_KEY) {
-    const url = await searchPexels(dishName);
-    if (url) return url;
+    // Try Pexels as fallback
+    if (PEXELS_API_KEY) {
+      const url = await searchPexels(dishName);
+      if (url) return url;
+    }
   }
 
   return generatePlaceholder(dishName);

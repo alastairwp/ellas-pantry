@@ -55,3 +55,9 @@ next-env.d.ts
 
 # user avatar uploads
 /public/images/avatars/
+
+# AI generated images
+/generated-images/
+
+# Python virtual env
+/scripts/venv/

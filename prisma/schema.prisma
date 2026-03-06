@@ -75,6 +75,7 @@ model Recipe {
   servings    Int
   difficulty  String   @default("Medium") // Easy, Medium, Hard
   source      String   @default("manual") // "manual", "csv", "ai"
+  imageStatus String   @default("none") // "none", "pending", "generated", "skip"
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

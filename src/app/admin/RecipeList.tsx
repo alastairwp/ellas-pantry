@@ -44,6 +44,7 @@ export function RecipeList() {
   const [page, setPage] = useState(1);
   const [sourceFilter, setSourceFilter] = useState<string>("");
   const [publishedFilter, setPublishedFilter] = useState<string>("");
+  const [imageFilter, setImageFilter] = useState<string>("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [counts, setCounts] = useState<Counts>({});
@@ -51,6 +52,13 @@ export function RecipeList() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [actionLoading, setActionLoading] = useState(false);
+  const [pageSize, setPageSize] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = parseInt(localStorage.getItem("admin-page-size") || "", 10);
+      if ([25, 50, 100, 200].includes(saved)) return saved;
+    }
+    return 25;
+  });
   const [viewMode, setViewMode] = useState<"list" | "gallery">("list");
 
   const fetchRecipes = useCallback(async () => {
@@ -58,11 +66,12 @@ export function RecipeList() {
     try {
       const params = new URLSearchParams();
       params.set("page", String(page));
-      params.set("limit", "20");
+      params.set("limit", String(pageSize));
       params.set("sortBy", sortBy);
       params.set("sortDir", sortDir);
       if (sourceFilter) params.set("source", sourceFilter);
       if (publishedFilter) params.set("published", publishedFilter);
+      if (imageFilter) params.set("imageStatus", imageFilter);
 
       const res = await fetch(`/api/admin/recipes?${params.toString()}`);
       const data = await res.json();
@@ -77,18 +86,36 @@ export function RecipeList() {
     } finally {
       setLoading(false);
     }
-  }, [page, sourceFilter, publishedFilter, sortBy, sortDir]);
+  }, [page, pageSize, sourceFilter, publishedFilter, imageFilter, sortBy, sortDir]);
 
   useEffect(() => {
     fetchRecipes();
   }, [fetchRecipes]);
 
   useEffect(() => {
+    const saved = localStorage.getItem("admin-view-mode") as "list" | "gallery" | null;
+    if (saved === "gallery") setViewMode(saved);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("admin-view-mode", viewMode);
+  }, [viewMode]);
+
+  useEffect(() => {
+    localStorage.setItem("admin-page-size", String(pageSize));
+  }, [pageSize]);
+
+  useEffect(() => {
     setSelected(new Set());
-  }, [page, sourceFilter, publishedFilter]);
+  }, [page, sourceFilter, publishedFilter, imageFilter]);
 
   function handleSourceChange(source: string) {
     setSourceFilter(source);
+    setPage(1);
+  }
+
+  function handleImageFilterChange(value: string) {
+    setImageFilter(value);
     setPage(1);
   }
 
@@ -317,6 +344,30 @@ export function RecipeList() {
         >
           Published
         </button>
+      </div>
+
+      {/* Image status filter */}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        <span className="text-xs font-medium text-stone-400 uppercase tracking-wide mr-1">Image</span>
+        {[
+          { label: "All", value: "" },
+          { label: "Generated", value: "generated" },
+          { label: "Queued", value: "pending" },
+          { label: "Skip", value: "skip" },
+          { label: "None", value: "none" },
+        ].map(({ label, value }) => (
+          <button
+            key={value}
+            onClick={() => handleImageFilterChange(value)}
+            className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+              imageFilter === value
+                ? "bg-blue-600 text-white"
+                : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Source filter pills + view toggle */}
@@ -627,27 +678,53 @@ export function RecipeList() {
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page <= 1}
-            className="inline-flex items-center gap-1 rounded-lg border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" /> Previous
-          </button>
-          <span className="text-sm text-stone-500">
-            Page {page} of {totalPages}
-          </span>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page >= totalPages}
-            className="inline-flex items-center gap-1 rounded-lg border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          >
-            Next <ChevronRight className="h-4 w-4" />
-          </button>
+      <div className="mt-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {totalPages > 1 && (
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page <= 1}
+              className="inline-flex items-center gap-1 rounded-lg border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" /> Previous
+            </button>
+          )}
         </div>
-      )}
+        <div className="flex items-center gap-3">
+          {totalPages > 1 && (
+            <span className="text-sm text-stone-500">
+              Page {page} of {totalPages}
+            </span>
+          )}
+          <div className="flex items-center gap-1.5">
+            <label htmlFor="page-size" className="text-sm text-stone-500">Show</label>
+            <select
+              id="page-size"
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPage(1);
+              }}
+              className="rounded-lg border border-stone-300 px-2 py-1.5 text-sm text-stone-700 bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+            >
+              {[25, 50, 100, 200].map((size) => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {totalPages > 1 && (
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page >= totalPages}
+              className="inline-flex items-center gap-1 rounded-lg border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              Next <ChevronRight className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

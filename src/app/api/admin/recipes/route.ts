@@ -7,16 +7,21 @@ export async function GET(request: NextRequest) {
   const source = searchParams.get("source") || undefined;
   const published = searchParams.get("published");
   const page = parseInt(searchParams.get("page") || "1", 10);
-  const limit = parseInt(searchParams.get("limit") || "20", 10);
+  const limit = Math.min(parseInt(searchParams.get("limit") || "25", 10), 200);
   const sortBy = searchParams.get("sortBy") || "createdAt";
   const sortDir = searchParams.get("sortDir") === "asc" ? "asc" : "desc";
 
   const allowedSortFields = ["title", "createdAt", "source"];
   const orderField = allowedSortFields.includes(sortBy) ? sortBy : "createdAt";
 
+  const imageStatus = searchParams.get("imageStatus") || undefined;
+
   const where: Record<string, unknown> = {};
   if (source) {
     where.source = source;
+  }
+  if (imageStatus) {
+    where.imageStatus = imageStatus;
   }
   if (published === "true") {
     where.published = true;

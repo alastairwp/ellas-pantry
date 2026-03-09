@@ -5,6 +5,30 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
+/** Check if Google auth is enabled via admin settings. Cached for 60s. */
+let _googleAuthCache: { value: boolean; expires: number } | null = null;
+export async function isGoogleAuthEnabled(): Promise<boolean> {
+  if (_googleAuthCache && Date.now() < _googleAuthCache.expires) {
+    return _googleAuthCache.value;
+  }
+  try {
+    const setting = await prisma.setting.findUnique({
+      where: { key: "google-auth-enabled" },
+    });
+    const enabled = setting?.value === "true";
+    _googleAuthCache = { value: enabled, expires: Date.now() + 60_000 };
+    return enabled;
+  } catch {
+    return false;
+  }
+}
+
+const googleProvider = Google({
+  clientId: process.env.GOOGLE_CLIENT_ID!,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  allowDangerousEmailAccountLinking: true,
+});
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   adapter: PrismaAdapter(prisma),
@@ -15,11 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
   },
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      allowDangerousEmailAccountLinking: true,
-    }),
+    googleProvider,
     Credentials({
       name: "credentials",
       credentials: {
@@ -58,6 +78,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ account }) {
+      // Block Google sign-in when disabled in admin settings
+      if (account?.provider === "google") {
+        const enabled = await isGoogleAuthEnabled();
+        if (!enabled) return false;
+      }
+      return true;
+    },
     async jwt({ token, user, account }) {
       if (user) {
         token.role = (user as { role?: string }).role;

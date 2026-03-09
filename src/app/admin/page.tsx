@@ -6,8 +6,9 @@ import { AIGenerator } from "./AIGenerator";
 import { RecipeList } from "./RecipeList";
 import { Duplicates } from "./Duplicates";
 import { NutritionBackfill } from "./NutritionBackfill";
+import { SiteSettings } from "./SiteSettings";
 
-type Tab = "recipes" | "generate" | "manual" | "duplicates" | "nutrition";
+type Tab = "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "settings";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<Tab>("recipes");
@@ -58,6 +59,12 @@ export default function AdminPage() {
         >
           Nutrition
         </button>
+        <button
+          onClick={() => setActiveTab("settings")}
+          className={tabClass("settings")}
+        >
+          Settings
+        </button>
       </div>
 
       {/* Tab Content */}
@@ -67,6 +74,7 @@ export default function AdminPage() {
         {activeTab === "manual" && <ManualRecipeForm />}
         {activeTab === "duplicates" && <Duplicates />}
         {activeTab === "nutrition" && <NutritionBackfill />}
+        {activeTab === "settings" && <SiteSettings />}
       </div>
     </div>
   );

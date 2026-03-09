@@ -12,7 +12,7 @@ export function RegisterForm() {
   const [googleEnabled, setGoogleEnabled] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/providers")
+    fetch("/api/auth-config")
       .then((r) => r.json())
       .then((d) => setGoogleEnabled(d.google))
       .catch(() => {});

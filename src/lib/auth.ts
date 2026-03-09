@@ -82,7 +82,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Block Google sign-in when disabled in admin settings
       if (account?.provider === "google") {
         const enabled = await isGoogleAuthEnabled();
-        if (!enabled) return false;
+        if (!enabled) {
+          console.log("[auth] Google sign-in blocked (disabled in settings)");
+          return false;
+        }
       }
       return true;
     },

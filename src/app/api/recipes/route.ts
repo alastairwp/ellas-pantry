@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
 import { requireAdmin } from "@/lib/auth-guard";
+import { filterInvalidDietaryTagIds } from "@/lib/dietary-validation";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -61,6 +62,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Filter dietary tags that contradict ingredients
+    const ingredientNames = (ingredients || []).map(
+      (ing: { name: string }) => ing.name
+    );
+    const validatedDietaryTagIds = await filterInvalidDietaryTagIds(
+      ingredientNames,
+      dietaryTagIds as number[]
+    );
+
     let slug = slugify(title);
 
     // Ensure unique slug
@@ -117,7 +127,7 @@ export async function POST(request: NextRequest) {
           })),
         },
         dietaryTags: {
-          create: (dietaryTagIds as number[]).map((id: number) => ({
+          create: (validatedDietaryTagIds).map((id: number) => ({
             dietaryTagId: id,
           })),
         },

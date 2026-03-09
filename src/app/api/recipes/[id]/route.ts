@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth-guard";
+import { filterInvalidDietaryTagIds } from "@/lib/dietary-validation";
 
 export async function GET(
   _request: NextRequest,
@@ -111,8 +112,24 @@ export async function PUT(
       }
 
       if (dietaryTagIds) {
+        // Determine ingredient names for validation
+        let ingNames: string[];
+        if (ingredients) {
+          ingNames = ingredients.map((ing: { name: string }) => ing.name);
+        } else {
+          const currentIngs = await tx.recipeIngredient.findMany({
+            where: { recipeId },
+            include: { ingredient: true },
+          });
+          ingNames = currentIngs.map((ri) => ri.ingredient.name);
+        }
+        const validatedTagIds = await filterInvalidDietaryTagIds(
+          ingNames,
+          dietaryTagIds as number[]
+        );
+
         await tx.recipeDietaryTag.deleteMany({ where: { recipeId } });
-        for (const tagId of dietaryTagIds) {
+        for (const tagId of validatedTagIds) {
           await tx.recipeDietaryTag.create({
             data: { recipeId, dietaryTagId: tagId },
           });

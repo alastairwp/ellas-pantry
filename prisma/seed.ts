@@ -3,6 +3,13 @@ import { PrismaClient } from "@prisma/client";
 import { parse } from "csv-parse/sync";
 import * as fs from "fs";
 import * as path from "path";
+import {
+  MEAT_KEYWORDS,
+  DAIRY_KEYWORDS,
+  EGG_KEYWORDS,
+  GLUTEN_KEYWORDS,
+  filterInvalidDietaryTags,
+} from "../src/lib/dietary-validation";
 
 const prisma = new PrismaClient();
 
@@ -56,59 +63,7 @@ const CATEGORY_MAP: Record<string, string> = {
   "Trusted Brands: Recipes and Tips": "Dinner",
 };
 
-// Simple vegan/vegetarian detection from ingredients
-const MEAT_KEYWORDS = [
-  "chicken",
-  "beef",
-  "pork",
-  "lamb",
-  "turkey",
-  "bacon",
-  "sausage",
-  "ham",
-  "steak",
-  "mince",
-  "ground beef",
-  "ground turkey",
-  "veal",
-  "duck",
-  "prosciutto",
-  "salami",
-  "pepperoni",
-  "anchov",
-  "shrimp",
-  "prawn",
-  "salmon",
-  "tuna",
-  "cod",
-  "fish",
-  "crab",
-  "lobster",
-  "clam",
-  "mussel",
-  "oyster",
-  "scallop",
-  "squid",
-  "calamari",
-];
-
-const DAIRY_KEYWORDS = [
-  "milk",
-  "butter",
-  "cream",
-  "cheese",
-  "yogurt",
-  "yoghurt",
-  "sour cream",
-  "cream cheese",
-  "whipping cream",
-  "heavy cream",
-  "half-and-half",
-  "buttermilk",
-  "ghee",
-];
-
-const EGG_KEYWORDS = ["egg"];
+// Keyword lists imported from shared dietary-validation module
 
 function detectDietaryTags(ingredients: string): string[] {
   const lower = ingredients.toLowerCase();
@@ -129,25 +84,8 @@ function detectDietaryTags(ingredients: string): string[] {
     if (!hasDairy) tags.push("dairy-free");
   }
 
-  // Gluten-free detection (rough — no flour, no bread, no pasta, no wheat)
-  const glutenKeywords = [
-    "flour",
-    "bread",
-    "pasta",
-    "noodle",
-    "wheat",
-    "cracker",
-    "crumb",
-    "tortilla",
-    "puff pastry",
-    "pie crust",
-    "pie pastry",
-    "biscuit",
-    "cake mix",
-    "brownie mix",
-    "soy sauce",
-  ];
-  const hasGluten = glutenKeywords.some((k) => lower.includes(k));
+  // Gluten-free detection using shared keyword list
+  const hasGluten = GLUTEN_KEYWORDS.some((k) => lower.includes(k));
   if (!hasGluten) tags.push("gluten-free");
 
   return tags;
@@ -161,17 +99,31 @@ function splitIngredients(ingredientsStr: string): string[] {
   const result: string[] = [];
   let current = "";
 
+  // Words that signal the start of a new ingredient (not a continuation/note)
+  const ingredientStartPattern =
+    /^([\d½¼¾⅓⅔⅛]+|a |an |one |two |three |four |cooking |fresh |dried |ground |whole |large |medium |small |boneless |skinless )/i;
+
+  // Words that signal a continuation/note (not a new ingredient)
+  const notePattern =
+    /^(peeled|pitted|chopped|diced|minced|sliced|grated|crushed|melted|softened|sifted|divided|beaten|trimmed|seeded|cored|thawed|drained|rinsed|to taste|or |plus |and |at room|cut |finely|thinly|roughly|coarsely|about )/i;
+
   for (const part of parts) {
     if (!current) {
       current = part;
+    } else if (notePattern.test(part)) {
+      // Definitely a continuation/note
+      current += ", " + part;
+    } else if (ingredientStartPattern.test(part)) {
+      // Looks like a new ingredient
+      result.push(current.trim());
+      current = part;
     } else {
-      // If this part starts with a number or quantity word, it's a new ingredient
-      if (/^[\d½¼¾⅓⅔⅛]+/.test(part) || /^\d/.test(part)) {
+      // Ambiguous - treat short fragments as notes, longer ones as new ingredients
+      if (part.length <= 25 && !/\b(cup|tablespoon|teaspoon|tbsp|tsp|pound|ounce|oz|lb|can|package|pkg|bunch|head|clove|sprig|stalk|pinch)\b/i.test(part)) {
+        current += ", " + part;
+      } else {
         result.push(current.trim());
         current = part;
-      } else {
-        // It's a continuation (notes like "peeled, cored and sliced")
-        current += ", " + part;
       }
     }
   }
@@ -388,9 +340,11 @@ async function main() {
         });
       }
 
-      // Assign dietary tags
+      // Assign dietary tags (detect then safety-filter against ingredients)
       const detectedTags = detectDietaryTags(ingredientsStr);
-      for (const tagSlug of detectedTags) {
+      const ingredientNames = ingredientsList.map((s) => s.toLowerCase());
+      const safeTags = filterInvalidDietaryTags(ingredientNames, detectedTags);
+      for (const tagSlug of safeTags) {
         if (tagMap[tagSlug]) {
           await prisma.recipeDietaryTag.create({
             data: {

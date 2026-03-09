@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import { slugify } from "./utils";
+import { filterInvalidDietaryTagIds } from "./dietary-validation";
 import type { GeneratedRecipe } from "./generate-recipe";
 
 /**
@@ -30,6 +31,13 @@ export async function saveGeneratedRecipe(
     const validDietaryTagIds = dietaryTagRecords
       .filter((t): t is NonNullable<typeof t> => t !== null)
       .map((t) => t.id);
+
+    // Filter out dietary tags that contradict ingredients
+    const ingredientNames = recipe.ingredients.map((ing) => ing.name);
+    const filteredDietaryTagIds = await filterInvalidDietaryTagIds(
+      ingredientNames,
+      validDietaryTagIds
+    );
 
     // Resolve category IDs
     const categoryRecords = await Promise.all(
@@ -103,7 +111,7 @@ export async function saveGeneratedRecipe(
             })),
         },
         dietaryTags: {
-          create: validDietaryTagIds.map((id) => ({ dietaryTagId: id })),
+          create: filteredDietaryTagIds.map((id) => ({ dietaryTagId: id })),
         },
         categories: {
           create: validCategoryIds.map((id) => ({ categoryId: id })),

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { generateRecipe } from "@/lib/generate-recipe";
+import { generateRecipeAuto } from "@/lib/generate-recipe";
 import { findRecipeImage } from "@/lib/unsplash";
 import { saveGeneratedRecipe } from "@/lib/save-recipe";
 import { downloadRecipeImage } from "@/lib/download-image";
@@ -67,7 +67,7 @@ export async function processGenerationJob(jobId: number) {
 
         const results = await Promise.allSettled(
           chunk.map(async (dishName: string) => {
-            const recipe = await generateRecipe(dishName);
+            const recipe = await generateRecipeAuto(dishName);
             const imageUrl = await findRecipeImage(dishName);
             const saved = await saveGeneratedRecipe(recipe, imageUrl);
             if (!saved) throw new Error("Failed to save");

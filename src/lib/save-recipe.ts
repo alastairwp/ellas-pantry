@@ -94,11 +94,13 @@ export async function saveGeneratedRecipe(
           create: uniqueIngredientData,
         },
         steps: {
-          create: recipe.steps.map((step, index) => ({
-            stepNumber: index + 1,
-            instruction: step.instruction,
-            tipText: step.tipText || null,
-          })),
+          create: recipe.steps
+            .filter((step) => step.instruction)
+            .map((step, index) => ({
+              stepNumber: index + 1,
+              instruction: step.instruction,
+              tipText: step.tipText || null,
+            })),
         },
         dietaryTags: {
           create: validDietaryTagIds.map((id) => ({ dietaryTagId: id })),

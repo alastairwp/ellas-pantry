@@ -15,6 +15,9 @@ const recipeIncludes = {
   categories: {
     include: { category: true },
   },
+  occasions: {
+    include: { occasion: true },
+  },
 };
 
 const recipeCardSelect = {

@@ -14,9 +14,18 @@ declare global {
   }
 }
 
+const AD_DIMENSIONS: Record<string, { minHeight: number; aspectRatio?: string }> = {
+  horizontal: { minHeight: 90 },
+  rectangle: { minHeight: 280, aspectRatio: "336/280" },
+  vertical: { minHeight: 600, aspectRatio: "160/600" },
+  auto: { minHeight: 250 },
+};
+
 export function AdUnit({ adSlot, adFormat, className = "" }: AdUnitProps) {
   const adRef = useRef<HTMLModElement>(null);
   const isProduction = process.env.NODE_ENV === "production";
+
+  const dimensions = AD_DIMENSIONS[adFormat] || AD_DIMENSIONS.auto;
 
   useEffect(() => {
     if (!isProduction) return;
@@ -31,7 +40,8 @@ export function AdUnit({ adSlot, adFormat, className = "" }: AdUnitProps) {
   if (!isProduction) {
     return (
       <div
-        className={`ad-unit no-print flex items-center justify-center bg-stone-100 border-2 border-dashed border-stone-300 rounded-lg text-stone-400 text-sm font-medium min-h-[90px] ${className}`}
+        className={`ad-unit no-print flex items-center justify-center bg-stone-100 border-2 border-dashed border-stone-300 rounded-lg text-stone-400 text-sm font-medium ${className}`}
+        style={{ minHeight: dimensions.minHeight }}
         role="presentation"
       >
         Ad Placeholder ({adSlot})
@@ -40,7 +50,10 @@ export function AdUnit({ adSlot, adFormat, className = "" }: AdUnitProps) {
   }
 
   return (
-    <div className={`ad-unit no-print ${className}`}>
+    <div
+      className={`ad-unit no-print ${className}`}
+      style={{ minHeight: dimensions.minHeight }}
+    >
       <ins
         ref={adRef}
         className="adsbygoogle"

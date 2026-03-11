@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { getRecipeBySlug } from "@/lib/recipes";
 import { auth } from "@/lib/auth";
 import { RecipeHero } from "@/components/recipe/RecipeHero";
@@ -16,13 +17,16 @@ import { RecipeRating } from "@/components/recipe/RecipeRating";
 import { AdminEditButton } from "@/components/recipe/AdminEditButton";
 import { SaveRecipeButton } from "@/components/recipe/SaveRecipeButton";
 import { CookModeButton } from "@/components/recipe/CookMode";
-import { ReviewSection } from "@/components/recipe/ReviewSection";
 import { AddToMealPlan } from "@/components/recipe/AddToMealPlan";
 import { NutritionPanel } from "@/components/recipe/NutritionPanel";
 import { AddToCollectionButton } from "@/components/recipe/AddToCollectionButton";
 import { RelatedRecipes } from "@/components/recipe/RelatedRecipes";
 import { SubstitutionsPanel } from "@/components/recipe/SubstitutionsPanel";
 import { RecipeImage } from "@/components/recipe/RecipeImage";
+
+const ReviewSection = dynamic(
+  () => import("@/components/recipe/ReviewSection").then((mod) => mod.ReviewSection),
+);
 
 interface RecipePageProps {
   params: Promise<{ slug: string }>;
@@ -86,6 +90,8 @@ export default async function RecipePage({ params }: RecipePageProps) {
         updatedAt={recipe.updatedAt}
         ratingAverage={recipe.ratingAverage}
         ratingCount={recipe.ratingCount}
+        calories={recipe.calories}
+        occasions={recipe.occasions}
       />
 
       <RecipeHero

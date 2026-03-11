@@ -24,6 +24,12 @@ interface JsonLdDietaryTag {
   };
 }
 
+interface JsonLdOccasion {
+  occasion: {
+    name: string;
+  };
+}
+
 interface RecipeJsonLdProps {
   title: string;
   description: string;
@@ -39,6 +45,8 @@ interface RecipeJsonLdProps {
   updatedAt: Date | string;
   ratingAverage?: number;
   ratingCount?: number;
+  calories?: number | null;
+  occasions?: JsonLdOccasion[];
 }
 
 const dietaryTagToSchemaOrg: Record<string, string> = {
@@ -72,25 +80,40 @@ export function RecipeJsonLd({
   updatedAt,
   ratingAverage,
   ratingCount,
+  calories,
+  occasions,
 }: RecipeJsonLdProps) {
   const suitableForDiet = dietaryTags
     .map((dt) => dietaryTagToSchemaOrg[dt.dietaryTag.slug])
     .filter(Boolean);
+
+  const fullImageUrl = heroImage.startsWith("/")
+    ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.ellaspantry.co.uk"}${heroImage}`
+    : heroImage;
+
+  const keywords = occasions
+    ?.map((o) => o.occasion.name)
+    .filter(Boolean)
+    .join(", ");
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Recipe",
     name: title,
     description,
-    image: heroImage.startsWith("/")
-      ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.ellaspantry.co.uk"}${heroImage}`
-      : heroImage,
+    image: [fullImageUrl],
+    author: {
+      "@type": "Organization",
+      name: "Ella's Pantry",
+      url: "https://www.ellaspantry.co.uk",
+    },
     prepTime: toIsoDuration(prepTime),
     cookTime: toIsoDuration(cookTime),
     totalTime: toIsoDuration(prepTime + cookTime),
     recipeYield: `${servings} servings`,
     recipeCategory: categories.map((c) => c.category.name),
     ...(suitableForDiet.length > 0 && { suitableForDiet }),
+    ...(keywords && { keywords }),
     recipeIngredient: ingredients.map((item) => {
       let text = item.quantity;
       if (item.unit) text += ` ${item.unit}`;
@@ -100,10 +123,20 @@ export function RecipeJsonLd({
     recipeInstructions: steps.map((step) => ({
       "@type": "HowToStep",
       position: step.stepNumber,
+      name:
+        step.instruction.length > 50
+          ? step.instruction.substring(0, 50).trimEnd() + "…"
+          : step.instruction,
       text: step.instruction,
     })),
     datePublished: new Date(createdAt).toISOString(),
     dateModified: new Date(updatedAt).toISOString(),
+    ...(calories != null && {
+      nutrition: {
+        "@type": "NutritionInformation",
+        calories: `${calories} calories`,
+      },
+    }),
     ...(ratingCount && ratingAverage
       ? {
           aggregateRating: {

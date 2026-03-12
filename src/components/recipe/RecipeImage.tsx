@@ -36,6 +36,7 @@ export function RecipeImage({ src, alt }: RecipeImageProps) {
           height={160}
           className="w-full h-full object-cover"
           sizes="160px"
+          unoptimized={src.startsWith("/")}
         />
       </button>
 
@@ -63,7 +64,8 @@ export function RecipeImage({ src, alt }: RecipeImageProps) {
               height={900}
               className="w-full h-auto max-h-[90vh] object-contain rounded-lg"
               sizes="(max-width: 1200px) 100vw, 1200px"
-                />
+              unoptimized={src.startsWith("/")}
+            />
           </div>
         </div>
       )}

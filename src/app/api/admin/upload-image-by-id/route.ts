@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     await prisma.recipe.update({
       where: { id: parseInt(recipeId) },
-      data: { heroImage: localPath },
+      data: { heroImage: localPath, imageStatus: "generated" },
     });
 
     return NextResponse.json({ path: localPath, slug: recipe.slug });

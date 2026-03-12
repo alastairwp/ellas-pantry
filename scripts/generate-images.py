@@ -215,22 +215,33 @@ def authenticate(api_url, email, password):
         return None
 
 
-def upload_image(session, api_url, recipe_id, image_bytes):
-    """Upload image to the app via API."""
-    files = {"file": ("image.webp", image_bytes, "image/webp")}
-    data = {"recipeId": str(recipe_id)}
+def upload_image(session, api_url, recipe_id, image_bytes, max_retries=3):
+    """Upload image to the app via API with retry logic."""
+    for attempt in range(1, max_retries + 1):
+        try:
+            files = {"file": ("image.webp", image_bytes, "image/webp")}
+            data = {"recipeId": str(recipe_id)}
 
-    resp = session.post(
-        f"{api_url}/api/admin/upload-image-by-id",
-        files=files,
-        data=data,
-    )
+            resp = session.post(
+                f"{api_url}/api/admin/upload-image-by-id",
+                files=files,
+                data=data,
+                timeout=30,
+            )
 
-    if resp.status_code == 200:
-        return resp.json()
-    else:
-        print(f"  Upload failed: {resp.status_code} {resp.text[:200]}")
-        return None
+            if resp.status_code == 200:
+                return resp.json()
+            else:
+                print(f"  Upload failed (attempt {attempt}/{max_retries}): {resp.status_code} {resp.text[:200]}")
+        except requests.exceptions.RequestException as e:
+            print(f"  Upload connection error (attempt {attempt}/{max_retries}): {e}")
+
+        if attempt < max_retries:
+            wait = attempt * 2
+            print(f"  Retrying in {wait}s...")
+            time.sleep(wait)
+
+    return None
 
 
 def main():
@@ -318,14 +329,16 @@ def main():
                 else:
                     print("  Upload failed, image saved locally")
 
-            # Mark as generated in database
-            update_cur = conn.cursor()
-            update_cur.execute(
-                """UPDATE "Recipe" SET "imageStatus" = 'generated' WHERE id = %s""",
-                (recipe["id"],),
-            )
-            conn.commit()
-            update_cur.close()
+            # Note: imageStatus is now set to 'generated' by the upload API endpoint.
+            # For save-only mode, update the DB directly.
+            if not session or not args.api_url:
+                update_cur = conn.cursor()
+                update_cur.execute(
+                    """UPDATE "Recipe" SET "imageStatus" = 'generated' WHERE id = %s""",
+                    (recipe["id"],),
+                )
+                conn.commit()
+                update_cur.close()
 
             # Log success
             log_entry = {

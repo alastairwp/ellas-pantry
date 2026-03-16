@@ -1,17 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ManualRecipeForm } from "./ManualRecipeForm";
 import { AIGenerator } from "./AIGenerator";
 import { RecipeList } from "./RecipeList";
 import { Duplicates } from "./Duplicates";
 import { NutritionBackfill } from "./NutritionBackfill";
 import { SiteSettings } from "./SiteSettings";
+import { UserManagement } from "./UserManagement";
 
-type Tab = "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "settings";
+type Tab = "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "users" | "settings";
+
+const VALID_TABS: Tab[] = ["recipes", "generate", "manual", "duplicates", "nutrition", "users", "settings"];
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("recipes");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const initialTab = VALID_TABS.includes(searchParams.get("tab") as Tab)
+    ? (searchParams.get("tab") as Tab)
+    : "recipes";
+
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+
+  const handleTabChange = useCallback((tab: Tab) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(searchParams.toString());
+    if (tab === "recipes") {
+      params.delete("tab");
+    } else {
+      params.set("tab", tab);
+    }
+    const qs = params.toString();
+    router.replace(`/admin${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [searchParams, router]);
 
   const tabClass = (tab: Tab) =>
     `px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
@@ -30,37 +53,43 @@ export default function AdminPage() {
       {/* Tabs */}
       <div className="mt-8 flex gap-1 border-b border-stone-200">
         <button
-          onClick={() => setActiveTab("recipes")}
+          onClick={() => handleTabChange("recipes")}
           className={tabClass("recipes")}
         >
           Recipes
         </button>
         <button
-          onClick={() => setActiveTab("generate")}
+          onClick={() => handleTabChange("generate")}
           className={tabClass("generate")}
         >
           AI Generator
         </button>
         <button
-          onClick={() => setActiveTab("manual")}
+          onClick={() => handleTabChange("manual")}
           className={tabClass("manual")}
         >
           Manual Entry
         </button>
         <button
-          onClick={() => setActiveTab("duplicates")}
+          onClick={() => handleTabChange("duplicates")}
           className={tabClass("duplicates")}
         >
           Duplicates
         </button>
         <button
-          onClick={() => setActiveTab("nutrition")}
+          onClick={() => handleTabChange("nutrition")}
           className={tabClass("nutrition")}
         >
           Nutrition
         </button>
         <button
-          onClick={() => setActiveTab("settings")}
+          onClick={() => handleTabChange("users")}
+          className={tabClass("users")}
+        >
+          Users
+        </button>
+        <button
+          onClick={() => handleTabChange("settings")}
           className={tabClass("settings")}
         >
           Settings
@@ -74,6 +103,7 @@ export default function AdminPage() {
         {activeTab === "manual" && <ManualRecipeForm />}
         {activeTab === "duplicates" && <Duplicates />}
         {activeTab === "nutrition" && <NutritionBackfill />}
+        {activeTab === "users" && <UserManagement />}
         {activeTab === "settings" && <SiteSettings />}
       </div>
     </div>

@@ -3,12 +3,16 @@
 Local AI recipe image generator.
 
 Fetches AI-generated recipes that need images from the database,
-generates food photography using Stable Diffusion SDXL Turbo locally,
+generates food photography using Stable Diffusion locally,
 and uploads them to the app via API.
+
+Supports two models:
+  - sdxl-turbo: Fast (~3-5s/image), lower quality, weak negative prompt support
+  - sdxl:       Slower (~30-60s/image), higher quality, strong negative prompt support
 
 Usage:
     python generate-images.py --limit 50 --api-url http://localhost:3003
-    python generate-images.py --limit 50 --api-url https://ellaspantry.com
+    python generate-images.py --model sdxl --limit 50 --api-url https://ellaspantry.com
     python generate-images.py --slugs thai-green-curry chocolate-lava-cake --api-url http://localhost:3003
     python generate-images.py --limit 10 --save-only  # Just save to generated-images/
 """
@@ -92,7 +96,22 @@ def fetch_pending_recipes(conn, limit, slugs=None):
     ]
 
 
-def build_prompt(title, description, ingredients):
+def fetch_image_gen_settings(conn):
+    """Fetch custom prompt settings from the database."""
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT key, value FROM "Setting" WHERE key IN ('image-gen-extra-prompt', 'image-gen-extra-negative', 'image-gen-model')"""
+    )
+    settings = dict(cur.fetchall())
+    cur.close()
+    return {
+        "extra_prompt": (settings.get("image-gen-extra-prompt") or "").strip(),
+        "extra_negative": (settings.get("image-gen-extra-negative") or "").strip(),
+        "model": (settings.get("image-gen-model") or "sdxl").strip(),
+    }
+
+
+def build_prompt(title, description, ingredients, extra_prompt="", extra_negative=""):
     """Build a Stable Diffusion prompt from recipe data."""
     ing_text = ", ".join(ingredients[:5]) if ingredients else ""
     prompt = (
@@ -106,19 +125,47 @@ def build_prompt(title, description, ingredients):
         "natural window lighting, shallow depth of field, "
         "overhead angle, appetizing, high detail, warm tones"
     )
+    if extra_prompt:
+        prompt += f", {extra_prompt}"
+    if extra_negative:
+        prompt += f", without {extra_negative}"
     return prompt
 
 
-NEGATIVE_PROMPT = (
+BASE_NEGATIVE_PROMPT = (
     "text, watermark, logo, blurry, cartoon, illustration, drawing, "
     "ugly, deformed, disfigured, low quality, bad anatomy, "
     "oversaturated, underexposed"
 )
 
 
-def load_model():
-    """Load SDXL Turbo model for Apple Silicon (MPS)."""
-    print("Loading SDXL Turbo model (first run downloads ~5GB)...")
+def build_negative_prompt(extra_negative=""):
+    """Build the full negative prompt."""
+    if extra_negative:
+        return f"{BASE_NEGATIVE_PROMPT}, {extra_negative}"
+    return BASE_NEGATIVE_PROMPT
+
+
+MODEL_CONFIGS = {
+    "sdxl-turbo": {
+        "repo": "stabilityai/sdxl-turbo",
+        "num_inference_steps": 4,
+        "guidance_scale": 1.5,
+        "label": "SDXL Turbo (fast, ~3-5s/image)",
+    },
+    "sdxl": {
+        "repo": "stabilityai/stable-diffusion-xl-base-1.0",
+        "num_inference_steps": 30,
+        "guidance_scale": 7.5,
+        "label": "SDXL 1.0 (high quality, ~30-60s/image)",
+    },
+}
+
+
+def load_model(model_name):
+    """Load a Stable Diffusion model by name."""
+    config = MODEL_CONFIGS[model_name]
+    print(f"Loading {config['label']} (first run downloads model)...")
     import torch
     from diffusers import AutoPipelineForText2Image
 
@@ -135,7 +182,7 @@ def load_model():
         print("WARNING: No GPU detected. Generation will be very slow on CPU.")
 
     pipe = AutoPipelineForText2Image.from_pretrained(
-        "stabilityai/sdxl-turbo",
+        config["repo"],
         torch_dtype=dtype,
         variant="fp16" if dtype == torch.float16 else None,
     )
@@ -148,15 +195,16 @@ def load_model():
     return pipe
 
 
-def generate_image(pipe, prompt):
+def generate_image(pipe, prompt, negative_prompt, model_name):
     """Generate a single image from a prompt."""
     import torch
 
+    config = MODEL_CONFIGS[model_name]
     result = pipe(
         prompt=prompt,
-        negative_prompt=NEGATIVE_PROMPT,
-        num_inference_steps=4,  # SDXL Turbo needs only 1-4 steps
-        guidance_scale=0.0,  # SDXL Turbo works best with 0 guidance
+        negative_prompt=negative_prompt,
+        num_inference_steps=config["num_inference_steps"],
+        guidance_scale=config["guidance_scale"],
         width=768,
         height=1024,  # Portrait orientation (close to 2:3 ratio)
     )
@@ -252,6 +300,7 @@ def main():
     parser.add_argument("--email", type=str, help="Admin email for auth")
     parser.add_argument("--password", type=str, help="Admin password for auth")
     parser.add_argument("--slugs", nargs="+", help="Specific recipe slugs to process")
+    parser.add_argument("--model", type=str, choices=list(MODEL_CONFIGS.keys()), help="Model to use (overrides admin setting)")
     parser.add_argument("--save-only", action="store_true", help="Save to folder, don't upload")
     parser.add_argument("--output-dir", type=str, default="generated-images", help="Output directory")
     args = parser.parse_args()
@@ -285,8 +334,21 @@ def main():
         if not session:
             print("Failed to authenticate. Falling back to save-only mode.")
 
+    # Fetch custom prompt settings from the admin panel
+    gen_settings = fetch_image_gen_settings(conn)
+    negative_prompt = build_negative_prompt(gen_settings["extra_negative"])
+    model_name = args.model or gen_settings["model"]
+    if model_name not in MODEL_CONFIGS:
+        print(f"Unknown model '{model_name}', falling back to 'sdxl'")
+        model_name = "sdxl"
+    print(f"Model: {MODEL_CONFIGS[model_name]['label']}")
+    if gen_settings["extra_prompt"]:
+        print(f"Extra prompt: {gen_settings['extra_prompt']}")
+    if gen_settings["extra_negative"]:
+        print(f"Extra negative: {gen_settings['extra_negative']}")
+
     # Load the model
-    pipe = load_model()
+    pipe = load_model(model_name)
 
     # Generate images
     success = 0
@@ -301,12 +363,14 @@ def main():
                 recipe["title"],
                 recipe["description"],
                 recipe["ingredients"],
+                extra_prompt=gen_settings["extra_prompt"],
+                extra_negative=gen_settings["extra_negative"],
             )
             print(f"  Prompt: {prompt[:100]}...")
 
             # Generate
             start = time.time()
-            image = generate_image(pipe, prompt)
+            image = generate_image(pipe, prompt, negative_prompt, model_name)
             elapsed = time.time() - start
             print(f"  Generated in {elapsed:.1f}s")
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Trash2,
   ExternalLink,
@@ -16,6 +17,8 @@ import {
   LayoutGrid,
   LayoutList,
   ImageIcon,
+  Search,
+  X,
 } from "lucide-react";
 
 interface RecipeItem {
@@ -38,15 +41,21 @@ interface Counts {
 }
 
 export function RecipeList() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const [recipes, setRecipes] = useState<RecipeItem[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [page, setPage] = useState(1);
-  const [sourceFilter, setSourceFilter] = useState<string>("");
-  const [publishedFilter, setPublishedFilter] = useState<string>("");
-  const [imageFilter, setImageFilter] = useState<string>("");
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [page, setPage] = useState(() => {
+    const p = parseInt(searchParams.get("page") || "", 10);
+    return p > 0 ? p : 1;
+  });
+  const [sourceFilter, setSourceFilter] = useState<string>(searchParams.get("source") || "");
+  const [publishedFilter, setPublishedFilter] = useState<string>(searchParams.get("published") || "");
+  const [imageFilter, setImageFilter] = useState<string>(searchParams.get("image") || "");
+  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "createdAt");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">((searchParams.get("sortDir") as "asc" | "desc") || "desc");
   const [counts, setCounts] = useState<Counts>({});
   const [pendingCount, setPendingCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -60,6 +69,47 @@ export function RecipeList() {
     return 25;
   });
   const [viewMode, setViewMode] = useState<"list" | "gallery">("list");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get("search") || "");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Keep a ref to searchParams so the URL sync effect doesn't depend on it
+  const searchParamsRef = useRef(searchParams);
+  useEffect(() => {
+    searchParamsRef.current = searchParams;
+  }, [searchParams]);
+
+  // Sync filter/sort/page state to URL search params
+  useEffect(() => {
+    const params = new URLSearchParams(searchParamsRef.current.toString());
+
+    const setOrDelete = (key: string, value: string, defaultValue = "") => {
+      if (value && value !== defaultValue) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    };
+
+    setOrDelete("search", debouncedSearch);
+    setOrDelete("source", sourceFilter);
+    setOrDelete("published", publishedFilter);
+    setOrDelete("image", imageFilter);
+    setOrDelete("sortBy", sortBy, "createdAt");
+    setOrDelete("sortDir", sortDir, "desc");
+    setOrDelete("page", String(page), "1");
+
+    const qs = params.toString();
+    router.replace(`/admin${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [debouncedSearch, sourceFilter, publishedFilter, imageFilter, sortBy, sortDir, page, router]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const fetchRecipes = useCallback(async () => {
     setLoading(true);
@@ -72,6 +122,7 @@ export function RecipeList() {
       if (sourceFilter) params.set("source", sourceFilter);
       if (publishedFilter) params.set("published", publishedFilter);
       if (imageFilter) params.set("imageStatus", imageFilter);
+      if (debouncedSearch) params.set("search", debouncedSearch);
 
       const res = await fetch(`/api/admin/recipes?${params.toString()}`);
       const data = await res.json();
@@ -86,7 +137,7 @@ export function RecipeList() {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, sourceFilter, publishedFilter, imageFilter, sortBy, sortDir]);
+  }, [page, pageSize, sourceFilter, publishedFilter, imageFilter, sortBy, sortDir, debouncedSearch]);
 
   useEffect(() => {
     fetchRecipes();
@@ -107,7 +158,7 @@ export function RecipeList() {
 
   useEffect(() => {
     setSelected(new Set());
-  }, [page, sourceFilter, publishedFilter, imageFilter]);
+  }, [page, sourceFilter, publishedFilter, imageFilter, debouncedSearch]);
 
   function handleSourceChange(source: string) {
     setSourceFilter(source);
@@ -307,6 +358,30 @@ export function RecipeList() {
 
   return (
     <div>
+      {/* Search */}
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+        <input
+          ref={searchInputRef}
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search recipes..."
+          className="w-full rounded-lg border border-stone-300 bg-white py-2.5 pl-10 pr-10 text-sm text-stone-800 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-colors"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              searchInputRef.current?.focus();
+            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
       {/* Status filter */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <button

@@ -15,8 +15,12 @@ export async function GET(request: NextRequest) {
   const orderField = allowedSortFields.includes(sortBy) ? sortBy : "createdAt";
 
   const imageStatus = searchParams.get("imageStatus") || undefined;
+  const search = searchParams.get("search")?.trim() || undefined;
 
   const where: Record<string, unknown> = {};
+  if (search) {
+    where.title = { contains: search, mode: "insensitive" };
+  }
   if (source) {
     where.source = source;
   }

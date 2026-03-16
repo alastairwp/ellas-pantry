@@ -305,6 +305,7 @@ model Share {
 model GenerationJob {
   id            Int      @id @default(autoincrement())
   status        String   @default("running") // "running", "stopping", "completed", "failed"
+  category      String   @default("general") // "general", "baking", "soups", "bread"
   startOffset   Int
   currentOffset Int
   targetCount   Int      @default(0) // 0 = unlimited (continuous)

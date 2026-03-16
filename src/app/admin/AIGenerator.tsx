@@ -13,6 +13,7 @@ import {
 interface GenerationJob {
   id: number;
   status: string;
+  category: string;
   startOffset: number;
   currentOffset: number;
   targetCount: number;
@@ -42,25 +43,35 @@ export function AIGenerator() {
   const [batchSize, setBatchSize] = useState("10");
   const [concurrency, setConcurrency] = useState("3");
   const [targetCount, setTargetCount] = useState("100");
+  const [category, setCategory] = useState("general");
 
   // Background job state
   const [activeJob, setActiveJob] = useState<GenerationJob | null>(null);
   const [jobError, setJobError] = useState<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
-  // Load offset on mount
+  // Load offset when category changes
   useEffect(() => {
-    fetch("/api/admin/settings?key=generatorOffset")
+    const offsetKeys: Record<string, string> = {
+      general: "generatorOffset",
+      baking: "bakingGeneratorOffset",
+      soups: "soupsGeneratorOffset",
+      bread: "breadGeneratorOffset",
+    };
+    const key = offsetKeys[category] || "generatorOffset";
+    setOffsetLoaded(false);
+    fetch(`/api/admin/settings?key=${key}`)
       .then((r) => {
         if (!r.ok) throw new Error("Failed to fetch offset");
         return r.json();
       })
       .then((data) => {
         if (data.value != null) setGeneratorOffset(parseInt(data.value, 10));
+        else setGeneratorOffset(0);
         setOffsetLoaded(true);
       })
       .catch(() => setOffsetLoaded(true));
-  }, []);
+  }, [category]);
 
   // Check for active job on mount
   useEffect(() => {
@@ -114,11 +125,17 @@ export function AIGenerator() {
   }
 
   async function saveOffset() {
+    const offsetKeys: Record<string, string> = {
+      general: "generatorOffset",
+      baking: "bakingGeneratorOffset",
+      soups: "soupsGeneratorOffset",
+      bread: "breadGeneratorOffset",
+    };
     try {
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: "generatorOffset", value: String(generatorOffset) }),
+        body: JSON.stringify({ key: offsetKeys[category] || "generatorOffset", value: String(generatorOffset) }),
       });
       if (!res.ok) throw new Error("Failed to save offset");
     } catch {
@@ -180,6 +197,7 @@ export function AIGenerator() {
           targetCount: unlimited ? 0 : parseInt(targetCount, 10) || 100,
           batchSize: parseInt(batchSize, 10) || 10,
           concurrency: parseInt(concurrency, 10) || 3,
+          category,
         }),
       });
 
@@ -313,6 +331,22 @@ export function AIGenerator() {
         {/* Settings (only show when no active job) */}
         {!isJobActive && (
           <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-stone-700 mb-1">
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className={inputClass}
+              >
+                <option value="general">General (700k+ dishes)</option>
+                <option value="baking">Baking &amp; Desserts (22k+ names)</option>
+                <option value="soups">Soups (500+ names)</option>
+                <option value="bread">Bread (400+ names)</option>
+              </select>
+            </div>
+
             <div className="grid grid-cols-2 gap-4 mb-4 sm:grid-cols-4">
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1">

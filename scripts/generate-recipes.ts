@@ -40,7 +40,7 @@ function parseArgs() {
     provider: (opts["provider"] || process.env.RECIPE_LLM_PROVIDER || "local") as "local" | "claude",
     model: opts["model"] || process.env.OLLAMA_MODEL || "mistral",
     ollamaUrl: opts["ollama-url"] || process.env.OLLAMA_BASE_URL || "http://localhost:11434",
-    category: (opts["category"] || "general") as "general" | "baking",
+    category: (opts["category"] || "general") as "general" | "baking" | "soups" | "bread",
   };
 }
 
@@ -356,6 +356,108 @@ function generateBakingDishNames(count: number, offset: number = 0): string[] {
     for (const type of pairingTypes) {
       allNames.push(`${f1} and ${f2} ${type}`);
     }
+  }
+
+  const unique = [...new Set(allNames)];
+  return unique.slice(offset, offset + count);
+}
+
+// ── Soup name generation (500+ unique names) ─────────────────────────────
+
+function generateSoupNames(count: number, offset: number = 0): string[] {
+  const allNames: string[] = [];
+
+  const soupStyles = [
+    "Soup", "Bisque", "Chowder", "Broth", "Velouté", "Potage",
+    "Stew", "Gumbo", "Laksa", "Pho",
+  ];
+
+  const soupBases = [
+    "Tomato", "Mushroom", "Chicken", "Beef", "Lentil", "Butternut Squash",
+    "Pumpkin", "Leek and Potato", "Carrot and Coriander", "Broccoli and Stilton",
+    "Pea and Mint", "Sweet Potato", "Cauliflower", "Roasted Red Pepper",
+    "Courgette", "French Onion", "Celery", "Asparagus", "Corn", "Beetroot",
+    "Parsnip", "Spinach", "Watercress", "Cabbage", "Coconut",
+    "Crab", "Lobster", "Prawn", "Clam", "Fish",
+    "Chickpea", "Black Bean", "White Bean", "Split Pea", "Miso",
+    "Noodle", "Wonton", "Dumpling", "Oxtail", "Ham and Pea",
+    "Sausage", "Bacon and Sweetcorn", "Turkey", "Duck", "Lamb",
+    "Wild Garlic", "Roasted Garlic", "Fennel", "Artichoke",
+  ];
+
+  const soupCuisines = [
+    "Italian", "French", "Thai", "Indian", "Japanese", "Chinese",
+    "Mexican", "Moroccan", "Vietnamese", "Korean", "Turkish",
+    "Hungarian", "Spanish", "Greek", "Caribbean",
+  ];
+
+  for (const base of soupBases) {
+    for (const style of soupStyles) {
+      allNames.push(`${base} ${style}`);
+    }
+  }
+
+  for (const cuisine of soupCuisines) {
+    for (const base of soupBases) {
+      allNames.push(`${cuisine} ${base} Soup`);
+    }
+  }
+
+  for (const base of soupBases.slice(0, 25)) {
+    allNames.push(`Cream of ${base} Soup`);
+  }
+
+  for (const base of soupBases.slice(0, 25)) {
+    allNames.push(`Roasted ${base} Soup`);
+  }
+
+  for (const base of soupBases.slice(0, 25)) {
+    allNames.push(`Spiced ${base} Soup`);
+  }
+
+  const unique = [...new Set(allNames)];
+  return unique.slice(offset, offset + count);
+}
+
+// ── Bread name generation (100+ unique names) ────────────────────────────
+
+function generateBreadNames(count: number, offset: number = 0): string[] {
+  const allNames: string[] = [];
+
+  const breadTypes = [
+    "Sourdough", "Focaccia", "Brioche", "Ciabatta", "Baguette",
+    "Rye Bread", "Wholemeal Bread", "Soda Bread", "Flatbread", "Naan",
+    "Pita", "Challah", "Cornbread", "Pumpernickel", "Bagels",
+    "Rolls", "Buns", "English Muffins", "Crumpets", "Breadsticks",
+  ];
+
+  const breadFlavours = [
+    "Rosemary and Sea Salt", "Olive", "Garlic", "Sun-Dried Tomato",
+    "Cheese", "Onion", "Seeded", "Walnut", "Cranberry and Walnut",
+    "Cinnamon and Raisin", "Honey and Oat", "Herb", "Chilli",
+    "Parmesan", "Pesto", "Beetroot", "Turmeric", "Charcoal",
+    "Saffron", "Caraway",
+  ];
+
+  for (const type of breadTypes) {
+    allNames.push(type);
+  }
+
+  for (const flavour of breadFlavours) {
+    for (const type of breadTypes) {
+      allNames.push(`${flavour} ${type}`);
+    }
+  }
+
+  const classicBreads = [
+    "Tiger Bread", "Cottage Loaf", "Bloomer", "Cob Loaf",
+    "Pain de Campagne", "Fougasse", "Grissini", "Lavash", "Tortillas",
+    "Chapati", "Paratha", "Pretzel", "Monkey Bread", "Pull-Apart Bread",
+    "Banana Bread", "Beer Bread", "Damper", "Johnnycakes",
+    "Injera", "Mantou",
+  ];
+  for (const bread of classicBreads) {
+    allNames.push(bread);
   }
 
   const unique = [...new Set(allNames)];
@@ -689,7 +791,13 @@ async function main() {
 
   try {
     // Use a separate offset key per category so they don't interfere
-    const offsetKey = opts.category === "baking" ? "bakingGeneratorOffset" : "generatorOffset";
+    const offsetKeys: Record<string, string> = {
+      general: "generatorOffset",
+      baking: "bakingGeneratorOffset",
+      soups: "soupsGeneratorOffset",
+      bread: "breadGeneratorOffset",
+    };
+    const offsetKey = offsetKeys[opts.category] || "generatorOffset";
 
     // Get current offset
     let offset = opts.offset;
@@ -700,10 +808,14 @@ async function main() {
 
     console.log(`Starting at offset ${offset}, generating ${opts.count} recipes\n`);
 
-    const dishNames =
-      opts.category === "baking"
-        ? generateBakingDishNames(opts.count, offset)
-        : generateDishNames(opts.count, offset);
+    const dishNameGenerators: Record<string, (count: number, offset: number) => string[]> = {
+      general: generateDishNames,
+      baking: generateBakingDishNames,
+      soups: generateSoupNames,
+      bread: generateBreadNames,
+    };
+    const generator = dishNameGenerators[opts.category] || generateDishNames;
+    const dishNames = generator(opts.count, offset);
 
     if (dishNames.length === 0) {
       console.log("No more dish names available at this offset.");

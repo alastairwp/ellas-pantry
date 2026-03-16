@@ -61,10 +61,18 @@ export async function POST(request: NextRequest) {
       Math.max(parseInt(body.concurrency, 10) || 3, 1),
       5
     );
+    const validCategories = ["general", "baking", "soups", "bread"];
+    const category = validCategories.includes(body.category) ? body.category : "general";
 
-    // Get current offset from settings
+    // Get current offset from settings (category-specific)
+    const offsetKeys: Record<string, string> = {
+      general: "generatorOffset",
+      baking: "bakingGeneratorOffset",
+      soups: "soupsGeneratorOffset",
+      bread: "breadGeneratorOffset",
+    };
     const offsetSetting = await prisma.setting.findUnique({
-      where: { key: "generatorOffset" },
+      where: { key: offsetKeys[category] },
     });
     const startOffset = offsetSetting
       ? parseInt(offsetSetting.value, 10)
@@ -73,6 +81,7 @@ export async function POST(request: NextRequest) {
     const job = await prisma.generationJob.create({
       data: {
         status: "running",
+        category,
         startOffset,
         currentOffset: startOffset,
         targetCount,

@@ -236,6 +236,126 @@ export function generateDishNames(
 }
 
 /**
+ * Generate soup recipe names.
+ * Combines soup styles, bases, and cuisines for 500+ unique names.
+ */
+export function generateSoupNames(
+  count: number,
+  offset: number = 0
+): string[] {
+  const allNames: string[] = [];
+
+  const soupStyles = [
+    "Soup", "Bisque", "Chowder", "Broth", "Velouté", "Potage",
+    "Stew", "Gumbo", "Laksa", "Pho",
+  ];
+
+  const soupBases = [
+    "Tomato", "Mushroom", "Chicken", "Beef", "Lentil", "Butternut Squash",
+    "Pumpkin", "Leek and Potato", "Carrot and Coriander", "Broccoli and Stilton",
+    "Pea and Mint", "Sweet Potato", "Cauliflower", "Roasted Red Pepper",
+    "Courgette", "French Onion", "Celery", "Asparagus", "Corn", "Beetroot",
+    "Parsnip", "Spinach", "Watercress", "Cabbage", "Coconut",
+    "Crab", "Lobster", "Prawn", "Clam", "Fish",
+    "Chickpea", "Black Bean", "White Bean", "Split Pea", "Miso",
+    "Noodle", "Wonton", "Dumpling", "Oxtail", "Ham and Pea",
+    "Sausage", "Bacon and Sweetcorn", "Turkey", "Duck", "Lamb",
+    "Wild Garlic", "Roasted Garlic", "Fennel", "Artichoke",
+  ];
+
+  const soupCuisines = [
+    "Italian", "French", "Thai", "Indian", "Japanese", "Chinese",
+    "Mexican", "Moroccan", "Vietnamese", "Korean", "Turkish",
+    "Hungarian", "Spanish", "Greek", "Caribbean",
+  ];
+
+  // Strategy 1: [Base] [Style] — e.g. "Tomato Soup", "Lobster Bisque"
+  for (const base of soupBases) {
+    for (const style of soupStyles) {
+      allNames.push(`${base} ${style}`);
+    }
+  }
+
+  // Strategy 2: [Cuisine] [Base] Soup — e.g. "Thai Coconut Soup"
+  for (const cuisine of soupCuisines) {
+    for (const base of soupBases) {
+      allNames.push(`${cuisine} ${base} Soup`);
+    }
+  }
+
+  // Strategy 3: Cream of [Base] Soup
+  for (const base of soupBases.slice(0, 25)) {
+    allNames.push(`Cream of ${base} Soup`);
+  }
+
+  // Strategy 4: Roasted [Base] Soup
+  for (const base of soupBases.slice(0, 25)) {
+    allNames.push(`Roasted ${base} Soup`);
+  }
+
+  // Strategy 5: Spiced [Base] Soup
+  for (const base of soupBases.slice(0, 25)) {
+    allNames.push(`Spiced ${base} Soup`);
+  }
+
+  const unique = [...new Set(allNames)];
+  return unique.slice(offset, offset + count);
+}
+
+/**
+ * Generate bread recipe names.
+ * Combines bread types and flavours for 100+ unique names.
+ */
+export function generateBreadNames(
+  count: number,
+  offset: number = 0
+): string[] {
+  const allNames: string[] = [];
+
+  const breadTypes = [
+    "Sourdough", "Focaccia", "Brioche", "Ciabatta", "Baguette",
+    "Rye Bread", "Wholemeal Bread", "Soda Bread", "Flatbread", "Naan",
+    "Pita", "Challah", "Cornbread", "Pumpernickel", "Bagels",
+    "Rolls", "Buns", "English Muffins", "Crumpets", "Breadsticks",
+  ];
+
+  const breadFlavours = [
+    "Rosemary and Sea Salt", "Olive", "Garlic", "Sun-Dried Tomato",
+    "Cheese", "Onion", "Seeded", "Walnut", "Cranberry and Walnut",
+    "Cinnamon and Raisin", "Honey and Oat", "Herb", "Chilli",
+    "Parmesan", "Pesto", "Beetroot", "Turmeric", "Charcoal",
+    "Saffron", "Caraway",
+  ];
+
+  // Strategy 1: Plain bread types
+  for (const type of breadTypes) {
+    allNames.push(type);
+  }
+
+  // Strategy 2: [Flavour] [Bread Type]
+  for (const flavour of breadFlavours) {
+    for (const type of breadTypes) {
+      allNames.push(`${flavour} ${type}`);
+    }
+  }
+
+  // Strategy 3: Classic named breads
+  const classicBreads = [
+    "Tiger Bread", "Cottage Loaf", "Bloomer", "Cob Loaf",
+    "Pain de Campagne", "Fougasse", "Grissini", "Lavash", "Tortillas",
+    "Chapati", "Paratha", "Pretzel", "Monkey Bread", "Pull-Apart Bread",
+    "Banana Bread", "Beer Bread", "Damper", "Johnnycakes",
+    "Injera", "Mantou",
+  ];
+  for (const bread of classicBreads) {
+    allNames.push(bread);
+  }
+
+  const unique = [...new Set(allNames)];
+  return unique.slice(offset, offset + count);
+}
+
+/**
  * Get the total number of available unique dish names.
  */
 export function getTotalDishNames(): number {

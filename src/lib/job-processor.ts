@@ -3,7 +3,7 @@ import { generateRecipeAuto } from "@/lib/generate-recipe";
 import { findRecipeImage } from "@/lib/unsplash";
 import { saveGeneratedRecipe } from "@/lib/save-recipe";
 import { downloadRecipeImage } from "@/lib/download-image";
-import { generateDishNames } from "@/lib/dish-names";
+import { generateDishNames, generateSoupNames, generateBreadNames } from "@/lib/dish-names";
 
 /**
  * Process a generation job server-side.
@@ -36,8 +36,14 @@ export async function processGenerationJob(jobId: number) {
         thisBatch = Math.min(thisBatch, job.targetCount - produced);
       }
 
-      // Generate dish names from the pool
-      const dishNames = generateDishNames(thisBatch, job.currentOffset);
+      // Generate dish names from the pool based on category
+      const generators: Record<string, (count: number, offset: number) => string[]> = {
+        general: generateDishNames,
+        soups: generateSoupNames,
+        bread: generateBreadNames,
+      };
+      const generator = generators[job.category] || generateDishNames;
+      const dishNames = generator(thisBatch, job.currentOffset);
 
       if (dishNames.length === 0) {
         await prisma.generationJob.update({
@@ -98,10 +104,17 @@ export async function processGenerationJob(jobId: number) {
       });
 
       // Persist offset to settings so it's shared across jobs
+      const offsetKeys: Record<string, string> = {
+        general: "generatorOffset",
+        baking: "bakingGeneratorOffset",
+        soups: "soupsGeneratorOffset",
+        bread: "breadGeneratorOffset",
+      };
+      const offsetKey = offsetKeys[job.category] || "generatorOffset";
       await prisma.setting.upsert({
-        where: { key: "generatorOffset" },
+        where: { key: offsetKey },
         update: { value: String(newOffset) },
-        create: { key: "generatorOffset", value: String(newOffset) },
+        create: { key: offsetKey, value: String(newOffset) },
       });
 
       if (stopped) break;

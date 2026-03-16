@@ -111,7 +111,7 @@ def fetch_image_gen_settings(conn):
     }
 
 
-def build_prompt(title, description, ingredients, extra_prompt="", extra_negative=""):
+def build_prompt(title, description, ingredients, extra_prompt=""):
     """Build a Stable Diffusion prompt from recipe data."""
     ing_text = ", ".join(ingredients[:5]) if ingredients else ""
     prompt = (
@@ -123,12 +123,10 @@ def build_prompt(title, description, ingredients, extra_prompt="", extra_negativ
     prompt += (
         ", on a rustic wooden table, "
         "natural window lighting, shallow depth of field, "
-        "overhead angle, appetizing, high detail, warm tones"
+        "appetizing, high detail, warm tones"
     )
     if extra_prompt:
         prompt += f", {extra_prompt}"
-    if extra_negative:
-        prompt += f", without {extra_negative}"
     return prompt
 
 
@@ -364,7 +362,6 @@ def main():
                 recipe["description"],
                 recipe["ingredients"],
                 extra_prompt=gen_settings["extra_prompt"],
-                extra_negative=gen_settings["extra_negative"],
             )
             print(f"  Prompt: {prompt[:100]}...")
 

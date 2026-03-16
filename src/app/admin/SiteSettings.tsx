@@ -310,6 +310,27 @@ export function SiteSettings() {
           settingKey="image-gen-extra-negative"
           placeholder="e.g. hands, fingers, utensils, people, text overlay"
         />
+
+        <div className="py-4">
+          <p className="text-sm font-medium text-stone-800 mb-3">Prompt templates</p>
+          <p className="text-sm text-stone-500 mb-3">
+            These are the base prompts sent to the model for each recipe. Your extra prompt and negative settings above are appended to these.
+          </p>
+          <div className="space-y-3">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-1">Positive prompt</p>
+              <div className="rounded-md bg-stone-50 border border-stone-200 px-3 py-2 text-sm text-stone-600 font-mono leading-relaxed">
+                Professional food photography of <span className="text-amber-700 font-semibold">{"{{title}}"}</span>, beautifully plated and styled, made with <span className="text-amber-700 font-semibold">{"{{ingredients}}"}</span>, on a rustic wooden table, natural window lighting, shallow depth of field, appetizing, high detail, warm tones<span className="text-emerald-600 font-semibold">{", {{extra prompt}}"}</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-1">Negative prompt</p>
+              <div className="rounded-md bg-stone-50 border border-stone-200 px-3 py-2 text-sm text-stone-600 font-mono leading-relaxed">
+                text, watermark, logo, blurry, cartoon, illustration, drawing, ugly, deformed, disfigured, low quality, bad anatomy, oversaturated, underexposed<span className="text-emerald-600 font-semibold">{", {{extra negative}}"}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { generateRecipeAuto } from "@/lib/generate-recipe";
 import { findRecipeImage } from "@/lib/unsplash";
 import { saveGeneratedRecipe } from "@/lib/save-recipe";
 import { downloadRecipeImage } from "@/lib/download-image";
-import { generateDishNames, generateSoupNames, generateBreadNames } from "@/lib/dish-names";
+import { generateDishNames, generateSoupNames, generateBreadNames, generateSaladNames, generateCurryNames, generateAsianDishNames } from "@/lib/dish-names";
 
 /**
  * Process a generation job server-side.
@@ -41,6 +41,9 @@ export async function processGenerationJob(jobId: number) {
         general: generateDishNames,
         soups: generateSoupNames,
         bread: generateBreadNames,
+        salads: generateSaladNames,
+        curries: generateCurryNames,
+        asian: generateAsianDishNames,
       };
       const generator = generators[job.category] || generateDishNames;
       const dishNames = generator(thisBatch, job.currentOffset);
@@ -109,6 +112,9 @@ export async function processGenerationJob(jobId: number) {
         baking: "bakingGeneratorOffset",
         soups: "soupsGeneratorOffset",
         bread: "breadGeneratorOffset",
+        salads: "saladsGeneratorOffset",
+        curries: "curriesGeneratorOffset",
+        asian: "asianGeneratorOffset",
       };
       const offsetKey = offsetKeys[job.category] || "generatorOffset";
       await prisma.setting.upsert({

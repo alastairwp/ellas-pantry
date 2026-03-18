@@ -40,7 +40,7 @@ function parseArgs() {
     provider: (opts["provider"] || process.env.RECIPE_LLM_PROVIDER || "local") as "local" | "claude",
     model: opts["model"] || process.env.OLLAMA_MODEL || "mistral",
     ollamaUrl: opts["ollama-url"] || process.env.OLLAMA_BASE_URL || "http://localhost:11434",
-    category: (opts["category"] || "general") as "general" | "baking" | "soups" | "bread",
+    category: (opts["category"] || "general") as "general" | "baking" | "soups" | "bread" | "salads" | "curries" | "asian",
   };
 }
 
@@ -464,6 +464,293 @@ function generateBreadNames(count: number, offset: number = 0): string[] {
   return unique.slice(offset, offset + count);
 }
 
+// ── Salad name generation (1,500+ unique names) ──────────────────────────
+
+function generateSaladNames(count: number, offset: number = 0): string[] {
+  const allNames: string[] = [];
+
+  const saladCuisines = [
+    "Greek", "Thai", "Mexican", "Japanese", "Italian", "Middle Eastern",
+    "Vietnamese", "Korean", "Indian", "Moroccan", "French", "American",
+    "Mediterranean", "Chinese", "Indonesian", "Hawaiian", "Turkish",
+    "Lebanese", "Spanish", "Peruvian",
+  ];
+
+  const saladProteins = [
+    "Chicken", "Grilled Chicken", "Crispy Chicken", "Salmon", "Tuna",
+    "Prawn", "Steak", "Halloumi", "Goat Cheese", "Feta", "Mozzarella",
+    "Tofu", "Chickpea", "Lentil", "Quinoa", "Black Bean",
+    "Egg", "Bacon", "Duck", "Lamb", "Crab", "Lobster",
+    "Tempeh", "Edamame", "Paneer",
+  ];
+
+  const saladDressings = [
+    "Balsamic", "Ranch", "Caesar", "Tahini", "Lemon",
+    "Honey Mustard", "Vinaigrette", "Miso", "Peanut",
+    "Blue Cheese", "Greek", "Herb", "Citrus", "Sesame",
+    "Chimichurri", "Harissa", "Pomegranate",
+  ];
+
+  const saladGreens = [
+    "Caesar", "Garden", "Mixed Leaf", "Rocket", "Spinach", "Kale",
+    "Romaine", "Iceberg", "Watercress", "Radicchio", "Endive",
+    "Butter Lettuce", "Gem Lettuce", "Frisée", "Mesclun",
+  ];
+
+  const saladVegetables = [
+    "Avocado", "Beetroot", "Sweet Potato", "Roasted Pepper", "Tomato",
+    "Cucumber", "Corn", "Fennel", "Artichoke", "Asparagus",
+    "Broccoli", "Cauliflower", "Carrot", "Radish", "Courgette",
+    "Pumpkin", "Butternut Squash", "Green Bean", "Pea", "Mushroom",
+  ];
+
+  const saladStyles = [
+    "Salad", "Slaw", "Bowl", "Grain Bowl", "Power Bowl",
+    "Chopped Salad", "Tossed Salad", "Composed Salad",
+  ];
+
+  const classicSalads = [
+    "Caesar Salad", "Nicoise Salad", "Cobb Salad", "Waldorf Salad",
+    "Caprese Salad", "Greek Salad", "Fattoush", "Tabbouleh",
+    "Panzanella", "Larb", "Som Tum", "Gado Gado",
+    "Olivier Salad", "Potato Salad", "Coleslaw", "Pasta Salad",
+    "Cous Cous Salad", "Rice Salad", "Noodle Salad", "Orzo Salad",
+    "Pearl Barley Salad", "Bulgur Wheat Salad", "Grain Salad",
+    "Watermelon Salad", "Mango Salad", "Papaya Salad",
+    "Fennel and Orange Salad", "Pear and Walnut Salad",
+    "Fig and Prosciutto Salad", "Peach and Burrata Salad",
+  ];
+
+  for (const salad of classicSalads) allNames.push(salad);
+
+  for (const cuisine of saladCuisines) {
+    for (const protein of saladProteins) {
+      allNames.push(`${cuisine} ${protein} Salad`);
+    }
+  }
+
+  for (const protein of saladProteins) {
+    for (const veg of saladVegetables) {
+      allNames.push(`${protein} and ${veg} Salad`);
+    }
+  }
+
+  for (const dressing of saladDressings) {
+    for (const green of saladGreens) {
+      allNames.push(`${dressing} ${green} Salad`);
+    }
+  }
+
+  for (const cuisine of saladCuisines.slice(0, 10)) {
+    for (const veg of saladVegetables.slice(0, 10)) {
+      for (const style of saladStyles.slice(0, 4)) {
+        allNames.push(`${cuisine} ${veg} ${style}`);
+      }
+    }
+  }
+
+  for (const protein of saladProteins.slice(0, 15)) {
+    for (const veg of saladVegetables.slice(0, 10)) {
+      allNames.push(`Warm ${protein} and ${veg} Salad`);
+    }
+  }
+
+  const unique = [...new Set(allNames)];
+  return unique.slice(offset, offset + count);
+}
+
+// ── Curry name generation (700+ unique names) ─────────────────────────────
+
+function generateCurryNames(count: number, offset: number = 0): string[] {
+  const allNames: string[] = [];
+
+  const curryStyles = [
+    "Curry", "Masala", "Tikka Masala", "Korma", "Vindaloo",
+    "Jalfrezi", "Madras", "Rogan Josh", "Bhuna", "Dopiaza",
+    "Balti", "Dhansak", "Pathia", "Saag", "Keema",
+  ];
+
+  const thaiCurryStyles = [
+    "Green Curry", "Red Curry", "Yellow Curry", "Massaman Curry",
+    "Panang Curry", "Jungle Curry", "Khao Soi",
+  ];
+
+  const japaneseCurryStyles = [
+    "Katsu Curry", "Japanese Curry", "Curry Udon", "Curry Rice",
+  ];
+
+  const otherRegionalCurries = [
+    "Rendang", "Laksa", "Cape Malay Curry", "Bunny Chow",
+    "Trinidadian Curry", "Jamaican Curry", "Burmese Curry",
+    "Sri Lankan Curry", "Malaysian Curry", "Singaporean Curry",
+    "Indonesian Curry", "Filipino Curry", "Durban Curry",
+  ];
+
+  const curryProteins = [
+    "Chicken", "Lamb", "Beef", "Prawn", "Fish", "Pork",
+    "Goat", "Duck", "Turkey", "Tofu", "Paneer", "Chickpea",
+    "Lentil", "Mushroom", "Egg", "Aubergine", "Sweet Potato",
+    "Cauliflower", "Spinach", "Mixed Vegetable", "Kidney Bean",
+    "Butternut Squash",
+  ];
+
+  const curryExtras = [
+    "and Spinach", "and Potato", "and Coconut", "and Lentil",
+    "and Chickpea", "and Rice", "and Naan",
+  ];
+
+  for (const protein of curryProteins) {
+    for (const style of curryStyles) {
+      allNames.push(`${protein} ${style}`);
+    }
+  }
+
+  for (const protein of curryProteins.slice(0, 15)) {
+    for (const style of thaiCurryStyles) {
+      allNames.push(`${protein} ${style}`);
+    }
+  }
+
+  for (const protein of curryProteins.slice(0, 10)) {
+    for (const style of japaneseCurryStyles) {
+      allNames.push(`${protein} ${style}`);
+    }
+  }
+
+  for (const protein of curryProteins.slice(0, 12)) {
+    for (const regional of otherRegionalCurries) {
+      allNames.push(`${protein} ${regional}`);
+    }
+  }
+
+  for (const protein of curryProteins.slice(0, 12)) {
+    for (const extra of curryExtras) {
+      allNames.push(`${protein} Curry ${extra}`);
+    }
+  }
+
+  const classicCurries = [
+    "Butter Chicken", "Chicken Tikka Masala", "Lamb Rogan Josh",
+    "Beef Rendang", "Thai Green Curry", "Thai Red Curry",
+    "Massaman Curry", "Chana Masala", "Dal Makhani", "Dal Tadka",
+    "Palak Paneer", "Aloo Gobi", "Malai Kofta", "Matar Paneer",
+    "Biryani Curry", "Kadai Chicken", "Chettinad Chicken",
+    "Goan Fish Curry", "Kerala Fish Curry", "Malabar Prawn Curry",
+    "Saag Aloo", "Baingan Bharta", "Navratan Korma",
+  ];
+  for (const curry of classicCurries) allNames.push(curry);
+
+  const unique = [...new Set(allNames)];
+  return unique.slice(offset, offset + count);
+}
+
+// ── Asian dish name generation (12k+ unique names) ────────────────────────
+
+function generateAsianDishNames(count: number, offset: number = 0): string[] {
+  const allNames: string[] = [];
+
+  const asianCuisines = [
+    "Chinese", "Japanese", "Korean", "Thai", "Vietnamese",
+    "Indonesian", "Malaysian", "Singaporean", "Filipino",
+    "Burmese", "Taiwanese", "Cantonese", "Sichuan", "Hunan",
+  ];
+
+  const asianProteins = [
+    "Chicken", "Beef", "Pork", "Lamb", "Duck", "Salmon", "Tuna",
+    "Prawn", "Shrimp", "Squid", "Crab", "Scallop", "Fish",
+    "Tofu", "Tempeh", "Egg", "Pork Belly", "Ribs",
+    "Mussels", "Clams", "Octopus", "Eel",
+  ];
+
+  const asianDishTypes = [
+    "Stir Fry", "Fried Rice", "Noodles", "Ramen", "Pho",
+    "Dumplings", "Spring Rolls", "Bao Buns", "Curry",
+    "Laksa", "Pad Thai", "Satay", "Teriyaki", "Katsu",
+    "Bibimbap", "Gyoza", "Tempura", "Udon", "Soba",
+    "Congee", "Hot Pot", "Soup", "Salad", "Bowl",
+    "Rice Bowl", "Noodle Soup", "Lettuce Wraps", "Skewers",
+    "Pancakes", "Omelette", "Donburi",
+  ];
+
+  const asianFlavours = [
+    "Sesame", "Ginger", "Garlic", "Chilli", "Soy", "Miso",
+    "Teriyaki", "Sweet and Sour", "Black Bean", "Oyster Sauce",
+    "Hoisin", "Szechuan", "Lemongrass", "Coconut", "Peanut",
+    "Sriracha", "Gochujang", "Wasabi", "Yuzu", "Ponzu",
+    "Five Spice", "XO Sauce", "Sambal", "Tamarind", "Fish Sauce",
+    "Lime and Chilli", "Honey and Soy", "Kung Pao", "Bulgogi",
+  ];
+
+  const classicAsianDishes = [
+    "Kung Pao Chicken", "General Tso's Chicken", "Orange Chicken",
+    "Peking Duck", "Char Siu Pork", "Mapo Tofu", "Dan Dan Noodles",
+    "Wonton Soup", "Egg Drop Soup", "Hot and Sour Soup",
+    "Chow Mein", "Lo Mein", "Chop Suey", "Moo Shu Pork",
+    "Mongolian Beef", "Beef and Broccoli", "Sweet and Sour Pork",
+    "Crispy Aromatic Duck", "Salt and Pepper Squid",
+    "Sushi Bowl", "Poke Bowl", "Chirashi Don",
+    "Tonkotsu Ramen", "Shoyu Ramen", "Miso Ramen",
+    "Yakitori", "Takoyaki", "Okonomiyaki", "Teppanyaki",
+    "Chicken Katsu", "Tonkatsu", "Karaage", "Unagi Don",
+    "Kimchi Jjigae", "Japchae", "Tteokbokki", "Galbi",
+    "Samgyeopsal", "Bulgogi", "Kimchi Fried Rice",
+    "Pad Thai", "Pad See Ew", "Tom Yum Soup", "Tom Kha Gai",
+    "Som Tum", "Massaman Curry", "Green Papaya Salad",
+    "Banh Mi", "Pho Bo", "Pho Ga", "Bun Cha", "Goi Cuon",
+    "Nasi Goreng", "Mie Goreng", "Satay Chicken", "Gado Gado",
+    "Nasi Lemak", "Laksa", "Char Kway Teow", "Hainanese Chicken Rice",
+    "Rendang", "Lumpia", "Adobo", "Sinigang",
+    "Mohinga", "Tea Leaf Salad", "Oyster Omelette",
+    "Beef Pho", "Bun Bo Hue", "Xiao Long Bao", "Siu Mai",
+    "Har Gow", "Turnip Cake", "Congee with Century Egg",
+    "Clay Pot Rice", "Steamed Fish with Ginger",
+  ];
+
+  const asianVegetables = [
+    "Pak Choi", "Bean Sprout", "Edamame", "Bamboo Shoot",
+    "Lotus Root", "Daikon", "Water Chestnut", "Shiitake Mushroom",
+    "Enoki Mushroom", "Chinese Broccoli", "Morning Glory",
+    "Snow Pea", "Sugar Snap Pea", "Baby Corn", "Aubergine",
+    "Green Bean", "Bok Choy", "Napa Cabbage", "Kimchi",
+    "Seaweed", "Wakame",
+  ];
+
+  for (const dish of classicAsianDishes) allNames.push(dish);
+
+  for (const cuisine of asianCuisines) {
+    for (const protein of asianProteins) {
+      for (const dish of asianDishTypes) {
+        allNames.push(`${cuisine} ${protein} ${dish}`);
+      }
+    }
+  }
+
+  for (const flavour of asianFlavours) {
+    for (const protein of asianProteins) {
+      for (const dish of asianDishTypes.slice(0, 15)) {
+        allNames.push(`${flavour} ${protein} ${dish}`);
+      }
+    }
+  }
+
+  for (const cuisine of asianCuisines.slice(0, 8)) {
+    for (const veg of asianVegetables) {
+      for (const dish of asianDishTypes.slice(0, 10)) {
+        allNames.push(`${cuisine} ${veg} ${dish}`);
+      }
+    }
+  }
+
+  for (const flavour of asianFlavours.slice(0, 15)) {
+    for (const veg of asianVegetables) {
+      allNames.push(`${flavour} ${veg} Stir Fry`);
+    }
+  }
+
+  const unique = [...new Set(allNames)];
+  return unique.slice(offset, offset + count);
+}
+
 // ── Recipe generation ─────────────────────────────────────────────────────
 
 interface GeneratedRecipe {
@@ -796,6 +1083,9 @@ async function main() {
       baking: "bakingGeneratorOffset",
       soups: "soupsGeneratorOffset",
       bread: "breadGeneratorOffset",
+      salads: "saladsGeneratorOffset",
+      curries: "curriesGeneratorOffset",
+      asian: "asianGeneratorOffset",
     };
     const offsetKey = offsetKeys[opts.category] || "generatorOffset";
 
@@ -813,6 +1103,9 @@ async function main() {
       baking: generateBakingDishNames,
       soups: generateSoupNames,
       bread: generateBreadNames,
+      salads: generateSaladNames,
+      curries: generateCurryNames,
+      asian: generateAsianDishNames,
     };
     const generator = dishNameGenerators[opts.category] || generateDishNames;
     const dishNames = generator(opts.count, offset);

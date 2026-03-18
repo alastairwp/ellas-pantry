@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       Math.max(parseInt(body.concurrency, 10) || 3, 1),
       5
     );
-    const validCategories = ["general", "baking", "soups", "bread"];
+    const validCategories = ["general", "baking", "soups", "bread", "salads", "curries", "asian"];
     const category = validCategories.includes(body.category) ? body.category : "general";
 
     // Get current offset from settings (category-specific)
@@ -70,6 +70,9 @@ export async function POST(request: NextRequest) {
       baking: "bakingGeneratorOffset",
       soups: "soupsGeneratorOffset",
       bread: "breadGeneratorOffset",
+      salads: "saladsGeneratorOffset",
+      curries: "curriesGeneratorOffset",
+      asian: "asianGeneratorOffset",
     };
     const offsetSetting = await prisma.setting.findUnique({
       where: { key: offsetKeys[category] },

@@ -57,6 +57,9 @@ export function AIGenerator() {
       baking: "bakingGeneratorOffset",
       soups: "soupsGeneratorOffset",
       bread: "breadGeneratorOffset",
+      salads: "saladsGeneratorOffset",
+      curries: "curriesGeneratorOffset",
+      asian: "asianGeneratorOffset",
     };
     const key = offsetKeys[category] || "generatorOffset";
     setOffsetLoaded(false);
@@ -130,6 +133,9 @@ export function AIGenerator() {
       baking: "bakingGeneratorOffset",
       soups: "soupsGeneratorOffset",
       bread: "breadGeneratorOffset",
+      salads: "saladsGeneratorOffset",
+      curries: "curriesGeneratorOffset",
+      asian: "asianGeneratorOffset",
     };
     try {
       const res = await fetch("/api/admin/settings", {
@@ -344,6 +350,9 @@ export function AIGenerator() {
                 <option value="baking">Baking &amp; Desserts (22k+ names)</option>
                 <option value="soups">Soups (500+ names)</option>
                 <option value="bread">Bread (400+ names)</option>
+                <option value="salads">Salads (1,500+ names)</option>
+                <option value="curries">Curries (700+ names)</option>
+                <option value="asian">Asian Dishes (12k+ names)</option>
               </select>
             </div>
 

@@ -86,7 +86,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       {isOwner && (
         <section className="mt-10 space-y-8">
           <h2 className="text-xl font-semibold text-stone-800">Edit Profile</h2>
-          <AvatarUploadForm currentImage={user.image} userName={user.name} />
+          <AvatarUploadForm currentImage={user.image} userName={user.name || ""} />
           <ProfileSettingsForm initialName={user.name || ""} initialBio={user.bio || ""} />
         </section>
       )}

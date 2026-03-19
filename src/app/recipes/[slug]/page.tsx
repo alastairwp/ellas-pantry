@@ -141,6 +141,11 @@ export default async function RecipePage({ params }: RecipePageProps) {
         {/* Two Column Layout */}
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
+            {recipe.description && (
+              <div className="prose prose-stone mb-8">
+                <p className="text-stone-700 text-lg leading-relaxed">{recipe.description}</p>
+              </div>
+            )}
             <ScalableIngredientsList
               ingredients={recipe.ingredients}
               originalServings={recipe.servings}

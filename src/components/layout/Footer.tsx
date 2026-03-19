@@ -29,6 +29,12 @@ export function Footer() {
             >
               Contact
             </Link>
+            <Link
+              href="/sitemap.xml"
+              className="text-sm text-stone-500 hover:text-amber-700 transition-colors"
+            >
+              Sitemap
+            </Link>
           </nav>
         </div>
       </div>

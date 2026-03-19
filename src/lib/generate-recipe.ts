@@ -40,7 +40,7 @@ const RECIPE_PROMPT = (dishName: string) =>
 
 {
   "title": "Recipe Title",
-  "description": "A 1-2 sentence appetising description of the dish.",
+  "description": "A short introduction (under 100 words) written in the first person as a home cook. Warm, conversational tone. Mention at least one health benefit of a key ingredient and one practical advantage (speed, cost, simplicity). No hyphens or em dashes. Plain flowing prose, no title or formatting.",
   "prepTime": 15,
   "cookTime": 30,
   "servings": 4,

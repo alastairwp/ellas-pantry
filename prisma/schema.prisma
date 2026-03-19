@@ -88,6 +88,7 @@ model Recipe {
   fiber                Float?
   sugar                Float?
   nutritionEstimatedAt DateTime?
+  introGeneratedAt     DateTime?
 
   ingredients  RecipeIngredient[]
   steps        RecipeStep[]

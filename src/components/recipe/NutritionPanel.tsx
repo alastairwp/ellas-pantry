@@ -32,7 +32,7 @@ export function NutritionPanel({
   return (
     <div className="border border-stone-200 rounded-xl overflow-hidden mb-6">
       <div className="px-4 py-3 bg-stone-50 border-b border-stone-200">
-        <span className="font-medium text-stone-700">Estimated Nutrition</span>
+        <span className="font-medium text-stone-700">Estimated Nutritional Content</span>
         <span className="text-xs text-stone-400 ml-1">(per serving)</span>
       </div>
 
@@ -51,15 +51,10 @@ export function NutritionPanel({
         <MacroRow label="Sugar" value={sugar} unit="g" />
 
         {/* Disclaimer */}
-        <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-xs text-amber-800 leading-relaxed">
-            <span className="font-semibold">Estimates only.</span> These
-            nutrition values are AI-generated approximations and have not been
-            verified by a nutritionist. Actual values may vary based on specific
-            ingredients, brands, and preparation methods. Do not use for medical
-            dietary planning.
-          </p>
-        </div>
+        <p className="mt-4 text-xs text-stone-400 leading-relaxed text-center">
+          Nutritional values are approximate and may vary depending on ingredient
+          brands, sourcing, and where you purchase your produce.
+        </p>
       </div>
     </div>
   );

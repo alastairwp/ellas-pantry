@@ -7,12 +7,13 @@ import { AIGenerator } from "./AIGenerator";
 import { RecipeList } from "./RecipeList";
 import { Duplicates } from "./Duplicates";
 import { NutritionBackfill } from "./NutritionBackfill";
+import { IntroductionBackfill } from "./IntroductionBackfill";
 import { SiteSettings } from "./SiteSettings";
 import { UserManagement } from "./UserManagement";
 
-type Tab = "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "users" | "settings";
+type Tab = "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "introductions" | "users" | "settings";
 
-const VALID_TABS: Tab[] = ["recipes", "generate", "manual", "duplicates", "nutrition", "users", "settings"];
+const VALID_TABS: Tab[] = ["recipes", "generate", "manual", "duplicates", "nutrition", "introductions", "users", "settings"];
 
 export default function AdminPage() {
   const searchParams = useSearchParams();
@@ -83,6 +84,12 @@ export default function AdminPage() {
           Nutrition
         </button>
         <button
+          onClick={() => handleTabChange("introductions")}
+          className={tabClass("introductions")}
+        >
+          Intros
+        </button>
+        <button
           onClick={() => handleTabChange("users")}
           className={tabClass("users")}
         >
@@ -103,6 +110,7 @@ export default function AdminPage() {
         {activeTab === "manual" && <ManualRecipeForm />}
         {activeTab === "duplicates" && <Duplicates />}
         {activeTab === "nutrition" && <NutritionBackfill />}
+        {activeTab === "introductions" && <IntroductionBackfill />}
         {activeTab === "users" && <UserManagement />}
         {activeTab === "settings" && <SiteSettings />}
       </div>

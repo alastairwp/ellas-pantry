@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import type { RecipeFilters } from "@/types/recipe";
+import { ALLERGY_TO_DIETARY_TAG, type AllergyType } from "@/lib/allergies";
 
 const recipeIncludes = {
   ingredients: {
@@ -86,7 +87,7 @@ export async function getRecipes(filters: RecipeFilters = {}) {
   const {
     query, dietary, category, occasion,
     difficulty, maxCookTime, ingredient, sort,
-    page = 1, limit = 12,
+    page = 1, limit = 12, excludeAllergens,
   } = filters;
 
   const where: Record<string, unknown> = { published: true };
@@ -144,6 +145,20 @@ export async function getRecipes(filters: RecipeFilters = {}) {
         },
       },
     };
+  }
+
+  if (excludeAllergens && excludeAllergens.length > 0) {
+    const requiredTags = excludeAllergens
+      .map((a) => ALLERGY_TO_DIETARY_TAG[a as AllergyType])
+      .filter(Boolean);
+    if (requiredTags.length > 0) {
+      where.AND = [
+        ...((where.AND as unknown[]) || []),
+        ...requiredTags.map((slug) => ({
+          dietaryTags: { some: { dietaryTag: { slug } } },
+        })),
+      ];
+    }
   }
 
   let orderBy: Record<string, string>;

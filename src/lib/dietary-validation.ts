@@ -174,9 +174,10 @@ export function filterInvalidDietaryTags(
       tagsToRemove.add("dairy-free");
     }
 
-    // Egg check → contradicts vegan
+    // Egg check → contradicts vegan, egg-free
     if (EGG_KEYWORDS.some((k) => new RegExp(`\\b${k}s?\\b`).test(lower))) {
       tagsToRemove.add("vegan");
+      tagsToRemove.add("egg-free");
     }
 
     // Honey check → contradicts vegan

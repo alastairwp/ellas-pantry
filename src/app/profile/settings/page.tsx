@@ -17,11 +17,9 @@ export default async function ProfileSettingsPage() {
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: {
-      name: true,
       email: true,
-      bio: true,
-      image: true,
       passwordHash: true,
+      allergies: true,
       accounts: {
         select: { provider: true },
       },
@@ -31,15 +29,13 @@ export default async function ProfileSettingsPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="text-3xl font-bold text-stone-900">Profile Settings</h1>
-      <p className="mt-2 text-stone-500">Manage your account and profile.</p>
+      <p className="mt-2 text-stone-500">Manage your account settings.</p>
 
       <ProfileSettingsLayout
-        initialName={user?.name || ""}
-        initialBio={user?.bio || ""}
         currentEmail={user?.email || ""}
-        currentImage={user?.image || null}
         hasPassword={!!user?.passwordHash}
         accounts={user?.accounts || []}
+        initialAllergies={user?.allergies || []}
       />
     </div>
   );

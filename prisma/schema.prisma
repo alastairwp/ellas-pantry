@@ -16,6 +16,7 @@ model User {
   image         String?
   role          String    @default("user") // "user" or "admin"
   bio           String?
+  allergies     String[]  @default([])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

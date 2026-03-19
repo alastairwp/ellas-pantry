@@ -9,6 +9,7 @@ const DIETARY_OPTIONS = [
   { name: "Gluten-Free", slug: "gluten-free" },
   { name: "Dairy-Free", slug: "dairy-free" },
   { name: "Nut-Free", slug: "nut-free" },
+  { name: "Egg-Free", slug: "egg-free" },
 ];
 
 const activeClasses: Record<string, string> = {
@@ -17,6 +18,7 @@ const activeClasses: Record<string, string> = {
   "gluten-free": "bg-amber-100 text-amber-800 border-amber-300",
   "dairy-free": "bg-blue-100 text-blue-800 border-blue-300",
   "nut-free": "bg-purple-100 text-purple-800 border-purple-300",
+  "egg-free": "bg-orange-100 text-orange-800 border-orange-300",
 };
 
 export function DietaryFilter() {

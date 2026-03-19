@@ -39,4 +39,5 @@ export interface RecipeFilters {
   sort?: string;
   page?: number;
   limit?: number;
+  excludeAllergens?: string[];
 }

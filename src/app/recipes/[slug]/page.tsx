@@ -23,6 +23,8 @@ import { AddToCollectionButton } from "@/components/recipe/AddToCollectionButton
 import { RelatedRecipes } from "@/components/recipe/RelatedRecipes";
 import { SubstitutionsPanel } from "@/components/recipe/SubstitutionsPanel";
 import { RecipeImage } from "@/components/recipe/RecipeImage";
+import { AllergenWarning } from "@/components/recipe/AllergenWarning";
+import { AllergyProfileBanner } from "@/components/banners/AllergyProfileBanner";
 
 const ReviewSection = dynamic(
   () => import("@/components/recipe/ReviewSection").then((mod) => mod.ReviewSection),
@@ -102,6 +104,13 @@ export default async function RecipePage({ params }: RecipePageProps) {
       />
 
       <div className="mx-auto max-w-4xl px-4 py-8">
+        <div className="space-y-4 mb-6">
+          <AllergenWarning
+            ingredientNames={recipe.ingredients.map((i) => i.ingredient.name)}
+          />
+          <AllergyProfileBanner />
+        </div>
+
         <RecipeMeta
           prepTime={recipe.prepTime}
           cookTime={recipe.cookTime}
@@ -144,6 +153,12 @@ export default async function RecipePage({ params }: RecipePageProps) {
             {recipe.description && (
               <div className="prose prose-stone mb-8">
                 <p className="text-stone-700 text-lg leading-relaxed">{recipe.description}</p>
+                <p
+                  className="text-xl text-amber-700 mt-4"
+                  style={{ fontFamily: "cursive" }}
+                >
+                  Ella x
+                </p>
               </div>
             )}
             <ScalableIngredientsList

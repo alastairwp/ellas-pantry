@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import { Avatar } from "@/components/ui/Avatar";
+import { AvatarUploadForm } from "../settings/AvatarUploadForm";
+import { ProfileSettingsForm } from "../settings/ProfileSettingsForm";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
@@ -21,6 +24,8 @@ export async function generateMetadata({
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const { id } = await params;
+  const session = await auth();
+  const isOwner = session?.user?.id === id;
 
   const user = await prisma.user.findUnique({
     where: { id },
@@ -76,6 +81,15 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           )}
         </div>
       </div>
+
+      {/* Edit Profile (owner only) */}
+      {isOwner && (
+        <section className="mt-10 space-y-8">
+          <h2 className="text-xl font-semibold text-stone-800">Edit Profile</h2>
+          <AvatarUploadForm currentImage={user.image} userName={user.name} />
+          <ProfileSettingsForm initialName={user.name || ""} initialBio={user.bio || ""} />
+        </section>
+      )}
 
       {/* Stats */}
       <div className="mt-8 grid grid-cols-3 gap-4">

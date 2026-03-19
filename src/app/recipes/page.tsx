@@ -2,13 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getRecipes } from "@/lib/recipes";
 import { getCategories } from "@/lib/categories";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { RecipeCard } from "@/components/recipe/RecipeCard";
-import { DietaryFilter } from "@/components/filters/DietaryFilter";
-import { CategoryFilter } from "@/components/filters/CategoryFilter";
-import { DifficultyFilter } from "@/components/filters/DifficultyFilter";
-import { CookTimeFilter } from "@/components/filters/CookTimeFilter";
-import { SortFilter } from "@/components/filters/SortFilter";
-import { IngredientSearch } from "@/components/filters/IngredientSearch";
+import { FilterSidebar } from "@/components/filters/FilterSidebar";
 
 export const metadata: Metadata = {
   title: "Browse Recipes",
@@ -26,6 +23,7 @@ interface RecipesPageProps {
     ingredient?: string;
     sort?: string;
     page?: string;
+    forMe?: string;
   }>;
 }
 
@@ -39,72 +37,93 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
   const ingredient = sp.ingredient || undefined;
   const sort = sp.sort || undefined;
   const page = parseInt(sp.page || "1", 10);
+  const forMe = sp.forMe === "true";
+
+  // If "Recipes for me" is active, fetch user allergies
+  let excludeAllergens: string[] | undefined;
+  if (forMe) {
+    const session = await auth();
+    if (session?.user?.id) {
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { allergies: true },
+      });
+      if (user?.allergies?.length) {
+        excludeAllergens = user.allergies;
+      }
+    }
+  }
 
   const [{ recipes, total, totalPages }, categories] = await Promise.all([
-    getRecipes({ query, dietary, category, difficulty, maxCookTime, ingredient, sort, page }),
+    getRecipes({ query, dietary, category, difficulty, maxCookTime, ingredient, sort, page, excludeAllergens }),
     getCategories(),
   ]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-3xl font-bold text-stone-900">
-        {query ? `Results for "${query}"` : "All Recipes"}
-      </h1>
-      <p className="mt-2 text-stone-500">
-        {total} recipe{total !== 1 ? "s" : ""} found
-      </p>
-
-      {/* Filters */}
-      <div className="mt-6 space-y-3">
-        <DietaryFilter />
-        <CategoryFilter categories={categories} />
-        <div className="flex flex-wrap items-center gap-3">
-          <DifficultyFilter />
-          <CookTimeFilter />
-          <IngredientSearch />
-          <SortFilter />
-        </div>
+    <div className="mx-auto max-w-7xl px-4 py-8">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-stone-900">
+          {query ? `Results for "${query}"` : "All Recipes"}
+        </h1>
+        <p className="mt-2 text-stone-500">
+          {total} recipe{total !== 1 ? "s" : ""} found
+        </p>
       </div>
 
-      {/* Recipe Grid */}
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {recipes.map((recipe) => (
-          <RecipeCard key={recipe.slug} recipe={recipe} />
-        ))}
+      {/* Mobile filter button */}
+      <div className="mb-4 lg:hidden">
+        <FilterSidebar categories={categories} />
       </div>
 
-      {recipes.length === 0 && (
-        <div className="mt-12 text-center">
-          <p className="text-lg text-stone-500">
-            No recipes found matching your filters.
-          </p>
-          <Link
-            href="/recipes"
-            className="mt-4 inline-block text-amber-600 hover:text-amber-700"
-          >
-            Clear filters
-          </Link>
+      <div className="flex gap-8">
+        {/* Desktop sidebar */}
+        <div className="hidden lg:block">
+          <FilterSidebar categories={categories} />
         </div>
-      )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <nav className="mt-10 flex items-center justify-center gap-2">
-          {page > 1 && (
-            <PaginationLink page={page - 1} searchParams={sp}>
-              Previous
-            </PaginationLink>
+        {/* Main content */}
+        <div className="flex-1 min-w-0">
+          {/* Recipe Grid */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {recipes.map((recipe) => (
+              <RecipeCard key={recipe.slug} recipe={recipe} />
+            ))}
+          </div>
+
+          {recipes.length === 0 && (
+            <div className="mt-12 text-center">
+              <p className="text-lg text-stone-500">
+                No recipes found matching your filters.
+              </p>
+              <Link
+                href="/recipes"
+                className="mt-4 inline-block text-amber-600 hover:text-amber-700"
+              >
+                Clear filters
+              </Link>
+            </div>
           )}
-          <span className="px-3 py-2 text-sm text-stone-600">
-            Page {page} of {totalPages}
-          </span>
-          {page < totalPages && (
-            <PaginationLink page={page + 1} searchParams={sp}>
-              Next
-            </PaginationLink>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <nav className="mt-10 flex items-center justify-center gap-2">
+              {page > 1 && (
+                <PaginationLink page={page - 1} searchParams={sp}>
+                  Previous
+                </PaginationLink>
+              )}
+              <span className="px-3 py-2 text-sm text-stone-600">
+                Page {page} of {totalPages}
+              </span>
+              {page < totalPages && (
+                <PaginationLink page={page + 1} searchParams={sp}>
+                  Next
+                </PaginationLink>
+              )}
+            </nav>
           )}
-        </nav>
-      )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -126,6 +145,7 @@ function PaginationLink({
   if (searchParams.maxCookTime) params.set("maxCookTime", searchParams.maxCookTime);
   if (searchParams.ingredient) params.set("ingredient", searchParams.ingredient);
   if (searchParams.sort) params.set("sort", searchParams.sort);
+  if (searchParams.forMe) params.set("forMe", searchParams.forMe);
   params.set("page", String(page));
 
   return (

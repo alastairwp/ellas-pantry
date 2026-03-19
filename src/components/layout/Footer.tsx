@@ -24,6 +24,12 @@ export function Footer() {
               Terms &amp; Conditions
             </Link>
             <Link
+              href="/about"
+              className="text-sm text-stone-500 hover:text-amber-700 transition-colors"
+            >
+              About
+            </Link>
+            <Link
               href="/contact"
               className="text-sm text-stone-500 hover:text-amber-700 transition-colors"
             >

@@ -84,6 +84,9 @@ function detectDietaryTags(ingredients: string): string[] {
     if (!hasDairy) tags.push("dairy-free");
   }
 
+  // Egg-free detection
+  if (!hasEgg) tags.push("egg-free");
+
   // Gluten-free detection using shared keyword list
   const hasGluten = GLUTEN_KEYWORDS.some((k) => lower.includes(k));
   if (!hasGluten) tags.push("gluten-free");
@@ -178,6 +181,7 @@ async function main() {
       { name: "Gluten-Free", slug: "gluten-free" },
       { name: "Dairy-Free", slug: "dairy-free" },
       { name: "Nut-Free", slug: "nut-free" },
+      { name: "Egg-Free", slug: "egg-free" },
     ].map((tag) => prisma.dietaryTag.create({ data: tag }))
   );
   const tagMap = Object.fromEntries(

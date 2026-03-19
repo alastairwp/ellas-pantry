@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getFeaturedRecipes, getRecipeOfTheDay } from "@/lib/recipes";
 import { getCategories } from "@/lib/categories";
 import { RecipeCard } from "@/components/recipe/RecipeCard";
+import { AllergyProfileBanner } from "@/components/banners/AllergyProfileBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,11 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Allergy Profile Banner */}
+      <div className="mx-auto max-w-6xl px-4 pt-8">
+        <AllergyProfileBanner />
+      </div>
 
       {/* Recipe of the Day */}
       {recipeOfTheDay && (

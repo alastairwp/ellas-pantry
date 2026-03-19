@@ -108,6 +108,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.role = token.role as string;
         session.user.id = token.id as string;
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { image: true },
+        });
+        if (dbUser) session.user.image = dbUser.image;
       }
       return session;
     },

@@ -154,7 +154,7 @@ export function ReviewSection({ recipeId }: ReviewSectionProps) {
             <div key={review.id} className="border-b border-stone-100 pb-5 last:border-0">
               <div className="flex items-center gap-3 mb-2">
                 <Link href={`/profile/${review.user.id}`}>
-                  <Avatar name={review.user.name} size="sm" />
+                  <Avatar name={review.user.name} image={review.user.image} size="sm" />
                 </Link>
                 <div>
                   <Link

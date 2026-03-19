@@ -75,7 +75,7 @@ export function AuthButtons() {
             className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
           >
             <User className="h-4 w-4 text-stone-400" />
-            My Profile
+            Public Profile
           </Link>
 
           <Link

@@ -198,4 +198,52 @@ export const categoryContent: Record<string, CategoryContent> = {
     metaDescription:
       "Explore drink recipes including smoothies, shakes, and hot drinks — all with allergy filters, nutritional info, and dairy-free alternatives. Quick, easy, and delicious.",
   },
+
+  soups: {
+    heroTitle: "Soup Recipes",
+    heroSubtitle:
+      "Warming, nourishing bowls of comfort — from quick weeknight broths to slow-simmered showstoppers.",
+    intro:
+      "There are few things more comforting than a steaming bowl of homemade soup. Whether it's a silky butternut squash velout\u00e9 on a cold evening, a chunky minestrone packed with vegetables, or a spicy laksa that warms you from the inside out, soup is one of the most versatile and satisfying things you can cook. Our collection spans cuisines and seasons, with recipes for every skill level and every dietary need.",
+    sections: [
+      {
+        heading: "Soup that's safe for you",
+        text: "Hidden allergens lurk in many soup recipes — a knob of butter to finish, cream stirred in at the end, croutons made with wheat. On Ella's Pantry, every soup recipe is clearly labelled with dietary tags. Register your allergies in your profile and use the 'Recipes for Me' toggle to see only soups that are completely safe for your needs. Whether you're dairy-free, gluten-free, or managing multiple allergies, you'll find bowls of comfort you can enjoy without a second thought.",
+      },
+      {
+        heading: "Simmer, taste, perfect",
+        text: "Great soup is all about patience and timing. Our built-in recipe timers keep track of simmering times so you can walk away and come back to perfectly developed flavours. Step-by-step instructions guide you through every stage — from sweating onions to blending to the right consistency. And our hints and tips share the little secrets that elevate a good soup to a great one, like when to add herbs for maximum flavour or how to get a restaurant-quality finish.",
+      },
+      {
+        heading: "A bowl of goodness",
+        text: "Soup is one of the best ways to pack vegetables, fibre, and nutrients into a single meal. Every recipe includes a full nutritional breakdown — calories, protein, carbs, fat, fibre, and sugar — so you know exactly what you're eating. If you're looking to use up what's in your kitchen, try the 'My Fridge' feature to find soup recipes that match the ingredients you already have. It's the perfect way to turn odds and ends into something wonderful.",
+      },
+    ],
+    metaDescription:
+      "Browse hundreds of soup recipes with allergy filters, nutritional info, and step-by-step instructions. Warming broths, creamy velout\u00e9s, and hearty stews for every diet.",
+  },
+
+  salads: {
+    heroTitle: "Salad Recipes",
+    heroSubtitle:
+      "Fresh, vibrant, and full of flavour — salads that are anything but boring.",
+    intro:
+      "Forget sad, wilted leaves on the side of a plate. The salads in our collection are bold, satisfying meals in their own right. Think crispy halloumi on a bed of roasted vegetables, zingy Asian-style slaws, grain bowls loaded with colour and texture, and fresh summer plates that make the most of seasonal produce. Whether you're after a light lunch or a substantial dinner, these salads deliver on every front.",
+    sections: [
+      {
+        heading: "Allergy-friendly freshness",
+        text: "Salads seem safe, but dressings often contain hidden allergens — egg in mayonnaise, nuts in pesto, dairy in creamy dressings. Every salad on Ella's Pantry comes with complete allergy labelling. Set up your allergy profile and the 'Recipes for Me' filter will show you only salads that are genuinely safe. You'll discover dressings and toppings that are just as delicious without the ingredients you need to avoid.",
+      },
+      {
+        heading: "Assembly made simple",
+        text: "A great salad is all about the components coming together at the right moment. Our step-by-step instructions break down the prep clearly — what to roast, what to dress in advance, and what to add at the last minute for crunch. Built-in timers help with any roasting or toasting, and our hints and tips cover everything from making the perfect vinaigrette to keeping leaves crisp.",
+      },
+      {
+        heading: "Light, balanced, and trackable",
+        text: "Salads are naturally one of the healthiest options on the menu, and our nutritional breakdowns let you see exactly what's in each serving. Whether you're eating lighter, tracking macros, or simply want more vegetables in your diet, you can browse by cook time to find quick options or search by ingredient to build around what you already have. Rate your favourites and save them to your profile for easy access — your perfect salad is always just a tap away.",
+      },
+    ],
+    metaDescription:
+      "Discover vibrant salad recipes with allergy filters, nutritional info, and expert tips. Fresh grain bowls, roasted vegetable salads, and creative dressings for every diet.",
+  },
 };

@@ -215,6 +215,8 @@ async function main() {
     { name: "Sides", slug: "sides", description: "Side dishes and extras" },
     { name: "Baking", slug: "baking", description: "Breads, cakes, and more" },
     { name: "Drinks", slug: "drinks", description: "Beverages and smoothies" },
+    { name: "Soups", slug: "soups", description: "Warming soups and broths" },
+    { name: "Salads", slug: "salads", description: "Fresh salads and bowls" },
   ];
 
   const categories = await Promise.all(

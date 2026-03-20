@@ -36,6 +36,7 @@ interface RecipeEditData {
   steps: StepInput[];
   categoryIds: number[];
   dietaryTagIds: number[];
+  occasionIds: number[];
 }
 
 interface RecipeEditFormProps {
@@ -64,8 +65,10 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
   );
   const [selectedCategories, setSelectedCategories] = useState<number[]>(initialData.categoryIds);
   const [selectedDietaryTags, setSelectedDietaryTags] = useState<number[]>(initialData.dietaryTagIds);
+  const [selectedOccasions, setSelectedOccasions] = useState<number[]>(initialData.occasionIds);
   const [categories, setCategories] = useState<Option[]>([]);
   const [dietaryTags, setDietaryTags] = useState<Option[]>([]);
+  const [occasions, setOccasions] = useState<Option[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [fetchingImage, setFetchingImage] = useState<string | null>(null);
@@ -83,6 +86,7 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
       .then((data) => {
         setCategories(data.categories || []);
         setDietaryTags(data.dietaryTags || []);
+        setOccasions(data.occasions || []);
       })
       .catch(console.error);
   }, []);
@@ -186,6 +190,7 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
           steps: steps.filter((s) => s.instruction.trim()),
           categoryIds: selectedCategories,
           dietaryTagIds: selectedDietaryTags,
+          occasionIds: selectedOccasions,
         }),
       });
 
@@ -382,6 +387,19 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
               ))}
             </div>
           </div>
+          {occasions.length > 0 && (
+            <div>
+              <label className={labelClass}>Occasions</label>
+              <div className="flex flex-wrap gap-2">
+                {occasions.map((occ) => (
+                  <button key={occ.id} type="button" onClick={() => setSelectedOccasions((prev) => prev.includes(occ.id) ? prev.filter((o) => o !== occ.id) : [...prev, occ.id])}
+                    className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${selectedOccasions.includes(occ.id) ? "bg-purple-600 text-white" : "bg-stone-100 text-stone-600 hover:bg-stone-200"}`}>
+                    {occ.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="space-y-4">

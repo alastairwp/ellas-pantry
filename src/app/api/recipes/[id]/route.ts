@@ -46,7 +46,7 @@ export async function PUT(
       return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
     }
 
-    const { ingredients, steps, categoryIds, dietaryTagIds } = body;
+    const { ingredients, steps, categoryIds, dietaryTagIds, occasionIds } = body;
 
     await prisma.$transaction(async (tx) => {
       await tx.recipe.update({
@@ -132,6 +132,15 @@ export async function PUT(
         for (const tagId of validatedTagIds) {
           await tx.recipeDietaryTag.create({
             data: { recipeId, dietaryTagId: tagId },
+          });
+        }
+      }
+
+      if (occasionIds) {
+        await tx.recipeOccasion.deleteMany({ where: { recipeId } });
+        for (const occId of occasionIds) {
+          await tx.recipeOccasion.create({
+            data: { recipeId, occasionId: occId },
           });
         }
       }

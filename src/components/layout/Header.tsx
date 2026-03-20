@@ -37,7 +37,8 @@ export async function Header() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-xl font-bold text-amber-700 hover:text-amber-800 transition-colors"
+          className="flex items-center gap-2 text-2xl text-amber-700 hover:text-amber-800 transition-colors"
+          style={{ fontFamily: "cursive" }}
         >
           <span className="text-2xl" role="img" aria-hidden="true">
             {/* Inline SVG icon to avoid emoji */}

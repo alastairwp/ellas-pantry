@@ -11,10 +11,11 @@ import { NutritionBackfill } from "./NutritionBackfill";
 import { IntroductionBackfill } from "./IntroductionBackfill";
 import { SiteSettings } from "./SiteSettings";
 import { UserManagement } from "./UserManagement";
+import { OccasionManagement } from "./OccasionManagement";
 
-type Tab = "dashboard" | "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "introductions" | "users" | "settings";
+type Tab = "dashboard" | "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "introductions" | "occasions" | "users" | "settings";
 
-const VALID_TABS: Tab[] = ["dashboard", "recipes", "generate", "manual", "duplicates", "nutrition", "introductions", "users", "settings"];
+const VALID_TABS: Tab[] = ["dashboard", "recipes", "generate", "manual", "duplicates", "nutrition", "introductions", "occasions", "users", "settings"];
 
 export default function AdminPage() {
   const searchParams = useSearchParams();
@@ -97,6 +98,12 @@ export default function AdminPage() {
           Intros
         </button>
         <button
+          onClick={() => handleTabChange("occasions")}
+          className={tabClass("occasions")}
+        >
+          Occasions
+        </button>
+        <button
           onClick={() => handleTabChange("users")}
           className={tabClass("users")}
         >
@@ -119,6 +126,7 @@ export default function AdminPage() {
         {activeTab === "duplicates" && <Duplicates />}
         {activeTab === "nutrition" && <NutritionBackfill />}
         {activeTab === "introductions" && <IntroductionBackfill />}
+        {activeTab === "occasions" && <OccasionManagement />}
         {activeTab === "users" && <UserManagement />}
         {activeTab === "settings" && <SiteSettings />}
       </div>

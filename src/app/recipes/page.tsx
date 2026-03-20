@@ -5,7 +5,9 @@ import { getCategories } from "@/lib/categories";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { RecipeCard } from "@/components/recipe/RecipeCard";
+import { RecipeListItem } from "@/components/recipe/RecipeListItem";
 import { FilterSidebar } from "@/components/filters/FilterSidebar";
+import { ViewToggle } from "@/components/recipe/ViewToggle";
 
 export const metadata: Metadata = {
   title: "Browse Recipes",
@@ -24,6 +26,7 @@ interface RecipesPageProps {
     sort?: string;
     page?: string;
     forMe?: string;
+    view?: string;
   }>;
 }
 
@@ -38,6 +41,7 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
   const sort = sp.sort || undefined;
   const page = parseInt(sp.page || "1", 10);
   const forMe = sp.forMe === "true";
+  const viewMode = sp.view === "list" ? "list" : "grid";
 
   // If "Recipes for me" is active, fetch user allergies
   let excludeAllergens: string[] | undefined;
@@ -61,13 +65,16 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-stone-900">
-          {query ? `Results for "${query}"` : "All Recipes"}
-        </h1>
-        <p className="mt-2 text-stone-500">
-          {total} recipe{total !== 1 ? "s" : ""} found
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-stone-900">
+            {query ? `Results for "${query}"` : "All Recipes"}
+          </h1>
+          <p className="mt-2 text-stone-500">
+            {total} recipe{total !== 1 ? "s" : ""} found
+          </p>
+        </div>
+        <ViewToggle />
       </div>
 
       {/* Mobile filter button */}
@@ -83,12 +90,20 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
 
         {/* Main content */}
         <div className="flex-1 min-w-0">
-          {/* Recipe Grid */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {recipes.map((recipe) => (
-              <RecipeCard key={recipe.slug} recipe={recipe} />
-            ))}
-          </div>
+          {/* Recipes */}
+          {viewMode === "list" ? (
+            <div className="flex flex-col gap-3">
+              {recipes.map((recipe) => (
+                <RecipeListItem key={recipe.slug} recipe={recipe} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {recipes.map((recipe) => (
+                <RecipeCard key={recipe.slug} recipe={recipe} />
+              ))}
+            </div>
+          )}
 
           {recipes.length === 0 && (
             <div className="mt-12 text-center">
@@ -146,6 +161,7 @@ function PaginationLink({
   if (searchParams.ingredient) params.set("ingredient", searchParams.ingredient);
   if (searchParams.sort) params.set("sort", searchParams.sort);
   if (searchParams.forMe) params.set("forMe", searchParams.forMe);
+  if (searchParams.view) params.set("view", searchParams.view);
   params.set("page", String(page));
 
   return (

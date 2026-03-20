@@ -588,6 +588,18 @@ export function RecipeList() {
                   {sourceLabel(recipe.source)}
                   {imageStatusLabel(recipe.imageStatus)}
                 </div>
+                {recipe.categories.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {recipe.categories.map((c) => (
+                      <span
+                        key={c.category.name}
+                        className="inline-flex items-center rounded-full bg-stone-100 px-1.5 py-0.5 text-[10px] font-medium text-stone-500"
+                      >
+                        {c.category.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {/* Action buttons */}
                 <div className="mt-2 flex items-center gap-1.5">
                   {!recipe.published && (
@@ -653,6 +665,9 @@ export function RecipeList() {
                 <th className="px-4 py-3 text-left font-medium text-stone-600 w-24">
                   Status
                 </th>
+                <th className="px-4 py-3 text-left font-medium text-stone-600 w-32 hidden xl:table-cell">
+                  Category
+                </th>
                 <th className="px-4 py-3 text-left font-medium text-stone-600 w-24 hidden lg:table-cell">
                   Image
                 </th>
@@ -703,6 +718,22 @@ export function RecipeList() {
                   <td className="px-4 py-3">{sourceLabel(recipe.source)}</td>
                   <td className="px-4 py-3">
                     {statusLabel(recipe.published)}
+                  </td>
+                  <td className="px-4 py-3 hidden xl:table-cell">
+                    <div className="flex flex-wrap gap-1">
+                      {recipe.categories.length > 0 ? (
+                        recipe.categories.map((c) => (
+                          <span
+                            key={c.category.name}
+                            className="inline-flex items-center rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-600"
+                          >
+                            {c.category.name}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-xs text-stone-300">—</span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 hidden lg:table-cell">
                     {imageStatusLabel(recipe.imageStatus)}

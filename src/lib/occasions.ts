@@ -1,12 +1,18 @@
 import { prisma } from "./prisma";
 
-function isActiveOccasion(startMonth: number, endMonth: number): boolean {
-  const currentMonth = new Date().getMonth() + 1; // 1-12
-  if (startMonth <= endMonth) {
-    return currentMonth >= startMonth && currentMonth <= endMonth;
+function isActiveOccasion(startMonth: number, startDay: number, endMonth: number, endDay: number): boolean {
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1; // 1-12
+  const currentDay = now.getDate();
+  const current = currentMonth * 100 + currentDay; // e.g. March 20 = 320
+  const start = startMonth * 100 + startDay;
+  const end = endMonth * 100 + endDay;
+
+  if (start <= end) {
+    return current >= start && current <= end;
   }
-  // Wraps around year boundary (e.g. New Year: Dec-Jan)
-  return currentMonth >= startMonth || currentMonth <= endMonth;
+  // Wraps around year boundary (e.g. Dec 15 - Jan 5)
+  return current >= start || current <= end;
 }
 
 export async function getOccasions() {
@@ -17,7 +23,7 @@ export async function getOccasions() {
 
 export async function getActiveOccasions() {
   const all = await getOccasions();
-  return all.filter((o) => isActiveOccasion(o.startMonth, o.endMonth));
+  return all.filter((o) => isActiveOccasion(o.startMonth, o.startDay, o.endMonth, o.endDay));
 }
 
 export async function getOccasionBySlug(slug: string) {

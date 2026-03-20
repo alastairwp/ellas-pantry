@@ -218,7 +218,9 @@ model Occasion {
   slug        String  @unique
   description String?
   startMonth  Int
+  startDay    Int    @default(1)
   endMonth    Int
+  endDay      Int    @default(31)
 
   recipes RecipeOccasion[]
 }

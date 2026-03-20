@@ -20,6 +20,7 @@ export default async function EditRecipePage({ params }: EditPageProps) {
       steps: { orderBy: { stepNumber: "asc" } },
       categories: { include: { category: true } },
       dietaryTags: { include: { dietaryTag: true } },
+      occasions: { include: { occasion: true } },
     },
   });
 
@@ -48,6 +49,7 @@ export default async function EditRecipePage({ params }: EditPageProps) {
     })),
     categoryIds: recipe.categories.map((c) => c.category.id),
     dietaryTagIds: recipe.dietaryTags.map((dt) => dt.dietaryTag.id),
+    occasionIds: recipe.occasions.map((o) => o.occasion.id),
   };
 
   return (

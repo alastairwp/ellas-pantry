@@ -32,7 +32,7 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 
 # Ensure the recipe images directory is writable by nextjs user
-RUN mkdir -p /app/public/images/recipes && chown -R nextjs:nodejs /app/public/images/recipes
+RUN mkdir -p /app/public/images/recipes /app/public/images/avatars && chown -R nextjs:nodejs /app/public/images/recipes /app/public/images/avatars
 
 # Copy standalone build output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

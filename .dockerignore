@@ -7,3 +7,5 @@ node_modules
 .gitignore
 docs/
 .claude/
+scripts/.venv/
+__pycache__/

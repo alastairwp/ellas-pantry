@@ -25,6 +25,7 @@ services:
         condition: service_healthy
     volumes:
       - recipe-images:/app/public/images/recipes
+      - avatar-images:/app/public/images/avatars
 
   caddy:
     image: caddy:2-alpine
@@ -37,11 +38,13 @@ services:
       - caddy-data:/data
       - caddy-config:/config
       - recipe-images:/srv/recipe-images:ro
+      - avatar-images:/srv/avatar-images:ro
     depends_on:
       - app
 
 volumes:
   pgdata:
   recipe-images:
+  avatar-images:
   caddy-data:
   caddy-config:

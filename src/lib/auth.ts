@@ -80,7 +80,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ account }) {
       // Block Google sign-in when disabled in admin settings
-      if (account?.provider === "google") {
+      if (account?.provider === "google" && typeof (globalThis as Record<string, unknown>).EdgeRuntime === "undefined") {
         const enabled = await isGoogleAuthEnabled();
         if (!enabled) {
           console.log("[auth] Google sign-in blocked (disabled in settings)");
@@ -96,7 +96,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.picture = user.image;
       }
       // On OAuth sign-in, fetch role from DB (OAuth user object won't have it)
-      if (account && account.provider !== "credentials") {
+      if (account && account.provider !== "credentials" && typeof (globalThis as Record<string, unknown>).EdgeRuntime === "undefined") {
         const dbUser = await prisma.user.findUnique({
           where: { id: user?.id as string },
           select: { role: true, image: true },
@@ -116,7 +116,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token, trigger }) {
       if (session.user) {
         session.user.role = token.role as string;
         session.user.id = token.id as string;

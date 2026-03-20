@@ -4,6 +4,11 @@ www.ellaspantry.co.uk {
 		uri strip_prefix /images/recipes
 		file_server
 	}
+	handle /images/avatars/* {
+		root * /srv/avatar-images
+		uri strip_prefix /images/avatars
+		file_server
+	}
 	reverse_proxy app:3000
 }
 

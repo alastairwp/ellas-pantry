@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Dashboard } from "./Dashboard";
 import { ManualRecipeForm } from "./ManualRecipeForm";
 import { AIGenerator } from "./AIGenerator";
 import { RecipeList } from "./RecipeList";
@@ -11,9 +12,9 @@ import { IntroductionBackfill } from "./IntroductionBackfill";
 import { SiteSettings } from "./SiteSettings";
 import { UserManagement } from "./UserManagement";
 
-type Tab = "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "introductions" | "users" | "settings";
+type Tab = "dashboard" | "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "introductions" | "users" | "settings";
 
-const VALID_TABS: Tab[] = ["recipes", "generate", "manual", "duplicates", "nutrition", "introductions", "users", "settings"];
+const VALID_TABS: Tab[] = ["dashboard", "recipes", "generate", "manual", "duplicates", "nutrition", "introductions", "users", "settings"];
 
 export default function AdminPage() {
   const searchParams = useSearchParams();
@@ -21,14 +22,14 @@ export default function AdminPage() {
 
   const initialTab = VALID_TABS.includes(searchParams.get("tab") as Tab)
     ? (searchParams.get("tab") as Tab)
-    : "recipes";
+    : "dashboard";
 
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
   const handleTabChange = useCallback((tab: Tab) => {
     setActiveTab(tab);
     const params = new URLSearchParams(searchParams.toString());
-    if (tab === "recipes") {
+    if (tab === "dashboard") {
       params.delete("tab");
     } else {
       params.set("tab", tab);
@@ -45,14 +46,20 @@ export default function AdminPage() {
     }`;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-4 py-8">
       <h1 className="text-3xl font-bold text-stone-900">Recipe Admin</h1>
       <p className="mt-2 text-stone-500">
         Generate recipes with AI or add them manually.
       </p>
 
       {/* Tabs */}
-      <div className="mt-8 flex gap-1 border-b border-stone-200">
+      <div className="mt-8 flex gap-1 border-b border-stone-200 overflow-x-auto">
+        <button
+          onClick={() => handleTabChange("dashboard")}
+          className={tabClass("dashboard")}
+        >
+          Dashboard
+        </button>
         <button
           onClick={() => handleTabChange("recipes")}
           className={tabClass("recipes")}
@@ -105,6 +112,7 @@ export default function AdminPage() {
 
       {/* Tab Content */}
       <div className="mt-6">
+        {activeTab === "dashboard" && <Dashboard />}
         {activeTab === "recipes" && <RecipeList />}
         {activeTab === "generate" && <AIGenerator />}
         {activeTab === "manual" && <ManualRecipeForm />}

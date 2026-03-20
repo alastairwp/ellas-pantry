@@ -89,18 +89,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger }) {
       if (user) {
         token.role = (user as { role?: string }).role;
         token.id = user.id;
+        token.picture = user.image;
       }
       // On OAuth sign-in, fetch role from DB (OAuth user object won't have it)
       if (account && account.provider !== "credentials") {
         const dbUser = await prisma.user.findUnique({
           where: { id: user?.id as string },
-          select: { role: true },
+          select: { role: true, image: true },
         });
-        if (dbUser) token.role = dbUser.role;
+        if (dbUser) {
+          token.role = dbUser.role;
+          token.picture = dbUser.image;
+        }
+      }
+      // Refresh image from DB on session update
+      if (trigger === "update" && token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { image: true },
+        });
+        if (dbUser) token.picture = dbUser.image;
       }
       return token;
     },
@@ -108,11 +120,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.role = token.role as string;
         session.user.id = token.id as string;
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.id as string },
-          select: { image: true },
-        });
-        if (dbUser) session.user.image = dbUser.image;
+        session.user.image = token.picture as string | null;
       }
       return session;
     },

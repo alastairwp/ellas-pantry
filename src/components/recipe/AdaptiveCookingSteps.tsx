@@ -26,6 +26,8 @@ export function AdaptiveCookingSteps({
   const [error, setError] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
+  const cacheKey = `${recipeId}:${skillLevel}`;
+
   useEffect(() => {
     if (skillLevel === "intermediate") {
       setError(false);
@@ -33,7 +35,7 @@ export function AdaptiveCookingSteps({
     }
 
     // Already cached in context
-    if (adaptedSteps[recipeId] && !error) {
+    if (adaptedSteps[cacheKey] && !error) {
       return;
     }
 
@@ -53,7 +55,7 @@ export function AdaptiveCookingSteps({
       .then((res) => res.json())
       .then((data) => {
         if (!controller.signal.aborted) {
-          setAdaptedSteps(recipeId, data.steps);
+          setAdaptedSteps(recipeId, skillLevel, data.steps);
           if (data.fallback) {
             setError(true);
           }
@@ -72,8 +74,8 @@ export function AdaptiveCookingSteps({
   }, [skillLevel, recipeId]);
 
   const displaySteps =
-    skillLevel !== "intermediate" && adaptedSteps[recipeId]
-      ? adaptedSteps[recipeId]
+    skillLevel !== "intermediate" && adaptedSteps[cacheKey]
+      ? adaptedSteps[cacheKey]
       : originalSteps;
 
   return (

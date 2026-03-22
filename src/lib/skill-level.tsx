@@ -14,8 +14,8 @@ interface AdaptedStep {
 interface SkillLevelContextValue {
   skillLevel: SkillLevel;
   setSkillLevel: (level: SkillLevel) => void;
-  adaptedSteps: Record<number, AdaptedStep[]>;
-  setAdaptedSteps: (recipeId: number, steps: AdaptedStep[]) => void;
+  adaptedSteps: Record<string, AdaptedStep[]>;
+  setAdaptedSteps: (recipeId: number, level: SkillLevel, steps: AdaptedStep[]) => void;
 }
 
 const SkillLevelContext = createContext<SkillLevelContextValue | null>(null);
@@ -45,7 +45,7 @@ export function SkillLevelProvider({
   });
 
   const [adaptedSteps, setAdaptedStepsMap] = useState<
-    Record<number, AdaptedStep[]>
+    Record<string, AdaptedStep[]>
   >({});
 
   // Hydrate from localStorage on mount (for SSR mismatch prevention)
@@ -81,8 +81,8 @@ export function SkillLevelProvider({
   );
 
   const setAdaptedSteps = useCallback(
-    (recipeId: number, steps: AdaptedStep[]) => {
-      setAdaptedStepsMap((prev) => ({ ...prev, [recipeId]: steps }));
+    (recipeId: number, level: SkillLevel, steps: AdaptedStep[]) => {
+      setAdaptedStepsMap((prev) => ({ ...prev, [`${recipeId}:${level}`]: steps }));
     },
     []
   );

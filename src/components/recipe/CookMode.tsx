@@ -70,9 +70,10 @@ export function CookModeButton({ title, steps, recipeId }: CookModeProps) {
 
   if (steps.length === 0) return null;
 
+  const cacheKey = `${recipeId}:${skillLevel}`;
   const displaySteps =
-    recipeId && skillLevel !== "intermediate" && adaptedSteps[recipeId]
-      ? adaptedSteps[recipeId]
+    recipeId && skillLevel !== "intermediate" && adaptedSteps[cacheKey]
+      ? adaptedSteps[cacheKey]
       : steps;
 
   return (

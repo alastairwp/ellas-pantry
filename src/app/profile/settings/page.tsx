@@ -20,6 +20,7 @@ export default async function ProfileSettingsPage() {
       email: true,
       passwordHash: true,
       allergies: true,
+      skillLevel: true,
       accounts: {
         select: { provider: true },
       },
@@ -36,6 +37,7 @@ export default async function ProfileSettingsPage() {
         hasPassword={!!user?.passwordHash}
         accounts={user?.accounts || []}
         initialAllergies={user?.allergies || []}
+        initialSkillLevel={(user?.skillLevel as "beginner" | "intermediate" | "advanced") || "intermediate"}
       />
     </div>
   );

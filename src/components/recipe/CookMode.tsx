@@ -11,6 +11,7 @@ import {
   Play,
 } from "lucide-react";
 import { parseTimers, type ParsedTimer } from "@/lib/parse-timers";
+import { useSkillLevel } from "@/lib/skill-level";
 
 interface Step {
   stepNumber: number;
@@ -21,6 +22,7 @@ interface Step {
 interface CookModeProps {
   title: string;
   steps: Step[];
+  recipeId?: number;
 }
 
 interface ActiveTimer {
@@ -62,10 +64,16 @@ function playAlert() {
   }
 }
 
-export function CookModeButton({ title, steps }: CookModeProps) {
+export function CookModeButton({ title, steps, recipeId }: CookModeProps) {
   const [open, setOpen] = useState(false);
+  const { adaptedSteps, skillLevel } = useSkillLevel();
 
   if (steps.length === 0) return null;
+
+  const displaySteps =
+    recipeId && skillLevel !== "intermediate" && adaptedSteps[recipeId]
+      ? adaptedSteps[recipeId]
+      : steps;
 
   return (
     <>
@@ -81,7 +89,7 @@ export function CookModeButton({ title, steps }: CookModeProps) {
       {open && (
         <CookModeOverlay
           title={title}
-          steps={steps}
+          steps={displaySteps}
           onClose={() => setOpen(false)}
         />
       )}

@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/components/providers/SessionProvider";
 import { SavedRecipesProvider } from "@/components/recipe/SavedRecipesProvider";
+import { SkillLevelWrapper } from "@/components/providers/SkillLevelWrapper";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -53,9 +54,11 @@ export default function RootLayout({
       <body className={`${geistSans.variable} antialiased`}>
         <AuthProvider>
           <SavedRecipesProvider>
-            <Header />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
+            <SkillLevelWrapper>
+              <Header />
+              <main className="min-h-screen">{children}</main>
+              <Footer />
+            </SkillLevelWrapper>
           </SavedRecipesProvider>
         </AuthProvider>
       </body>

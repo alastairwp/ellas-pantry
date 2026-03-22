@@ -7,7 +7,7 @@ import { RecipeHero } from "@/components/recipe/RecipeHero";
 import { RecipeMeta } from "@/components/recipe/RecipeMeta";
 import { DietaryBadges } from "@/components/recipe/DietaryBadges";
 import { ScalableIngredientsList } from "@/components/recipe/ScalableIngredientsList";
-import { CookingSteps } from "@/components/recipe/CookingSteps";
+import { AdaptiveCookingSteps } from "@/components/recipe/AdaptiveCookingSteps";
 import { ShareButton } from "@/components/recipe/ShareButton";
 import { PrintButton } from "@/components/recipe/PrintButton";
 import { PriceEstimate } from "@/components/recipe/PriceEstimate";
@@ -132,7 +132,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
         {/* Action Bar + Image */}
         <div className="mt-6 flex flex-col sm:flex-row sm:items-start gap-4">
           <div className="flex flex-wrap gap-3 no-print flex-1">
-            <CookModeButton title={recipe.title} steps={recipe.steps} />
+            <CookModeButton title={recipe.title} steps={recipe.steps} recipeId={recipe.id} />
             <SaveRecipeButton recipeId={recipe.id} />
             <AddToMealPlan recipeId={recipe.id} />
             <AddToCollectionButton recipeId={recipe.id} />
@@ -168,7 +168,11 @@ export default async function RecipePage({ params }: RecipePageProps) {
               recipeTitle={recipe.title}
             />
             <div className="mt-10">
-              <CookingSteps steps={recipe.steps} />
+              <AdaptiveCookingSteps
+                originalSteps={recipe.steps}
+                recipeId={recipe.id}
+                recipeTitle={recipe.title}
+              />
             </div>
             <SubstitutionsPanel
               recipeId={recipe.id}

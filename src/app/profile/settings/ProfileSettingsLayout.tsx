@@ -7,14 +7,17 @@ import { ChangeEmailForm } from "./ChangeEmailForm";
 import { DeleteAccountSection } from "./DeleteAccountSection";
 import { LinkedAccountsSection } from "./LinkedAccountsSection";
 import { AllergySettingsForm } from "./AllergySettingsForm";
+import { SkillLevelSettingsForm } from "./SkillLevelSettingsForm";
+import type { SkillLevel } from "@/lib/skill-level";
 
-type SettingsTab = "security" | "accounts" | "dietary";
+type SettingsTab = "security" | "accounts" | "dietary" | "cooking";
 
 interface ProfileSettingsLayoutProps {
   currentEmail: string;
   hasPassword: boolean;
   accounts: { provider: string }[];
   initialAllergies: string[];
+  initialSkillLevel: SkillLevel;
 }
 
 export function ProfileSettingsLayout({
@@ -22,17 +25,18 @@ export function ProfileSettingsLayout({
   hasPassword,
   accounts,
   initialAllergies,
+  initialSkillLevel,
 }: ProfileSettingsLayoutProps) {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
   const initialTab =
-    tabParam && ["security", "accounts", "dietary"].includes(tabParam)
+    tabParam && ["security", "accounts", "dietary", "cooking"].includes(tabParam)
       ? (tabParam as SettingsTab)
       : "security";
   const [activeTab, setActiveTab] = useState<SettingsTab>(initialTab);
 
   useEffect(() => {
-    if (tabParam && ["security", "accounts", "dietary"].includes(tabParam)) {
+    if (tabParam && ["security", "accounts", "dietary", "cooking"].includes(tabParam)) {
       setActiveTab(tabParam as SettingsTab);
     }
   }, [tabParam]);
@@ -53,6 +57,9 @@ export function ProfileSettingsLayout({
         <button onClick={() => setActiveTab("dietary")} className={tabClass("dietary")}>
           Dietary
         </button>
+        <button onClick={() => setActiveTab("cooking")} className={tabClass("cooking")}>
+          Cooking
+        </button>
         <button onClick={() => setActiveTab("accounts")} className={tabClass("accounts")}>
           Accounts
         </button>
@@ -69,6 +76,10 @@ export function ProfileSettingsLayout({
 
         {activeTab === "dietary" && (
           <AllergySettingsForm initialAllergies={initialAllergies} />
+        )}
+
+        {activeTab === "cooking" && (
+          <SkillLevelSettingsForm initialSkillLevel={initialSkillLevel} />
         )}
 
         {activeTab === "accounts" && (

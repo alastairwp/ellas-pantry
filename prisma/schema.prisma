@@ -17,6 +17,7 @@ model User {
   role          String    @default("user") // "user" or "admin"
   bio           String?
   allergies     String[]  @default([])
+  skillLevel    String    @default("intermediate")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -102,6 +103,7 @@ model Recipe {
   mealPlanEntries MealPlanEntry[]
   collections    CollectionRecipe[]
   shares         Share[]
+  adaptedStepsCache AdaptedStepsCache[]
 }
 
 model Rating {
@@ -304,6 +306,19 @@ model Share {
   createdAt DateTime @default(now())
 
   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
+
+model AdaptedStepsCache {
+  id           Int      @id @default(autoincrement())
+  recipeId     Int
+  skillLevel   String
+  contentHash  String
+  adaptedSteps Json
+  createdAt    DateTime @default(now())
+  recipe       Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, skillLevel, contentHash])
+  @@index([recipeId, skillLevel])
 }
 
 model GenerationJob {

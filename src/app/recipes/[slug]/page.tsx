@@ -164,6 +164,8 @@ export default async function RecipePage({ params }: RecipePageProps) {
             <ScalableIngredientsList
               ingredients={recipe.ingredients}
               originalServings={recipe.servings}
+              recipeId={recipe.id}
+              recipeTitle={recipe.title}
             />
             <div className="mt-10">
               <CookingSteps steps={recipe.steps} />

@@ -6,7 +6,7 @@ import { FridgeScanner } from "./FridgeScanner";
 export const metadata: Metadata = {
   title: "What's In My Fridge?",
   description:
-    "Upload a photo of your fridge and get recipe suggestions based on the ingredients you have.",
+    "Scan a photo or manually add ingredients from your fridge, cupboard, or larder and get recipe suggestions.",
 };
 
 export default async function WhatsInMyFridgePage() {
@@ -21,8 +21,8 @@ export default async function WhatsInMyFridgePage() {
         What&apos;s In My Fridge?
       </h1>
       <p className="mt-2 text-stone-500">
-        Snap a photo of your fridge or freezer and we&apos;ll find recipes you
-        can make with what you have.
+        Scan a photo or add ingredients manually from your fridge, cupboard, or
+        larder and we&apos;ll find recipes you can make.
       </p>
 
       <div className="mt-8">

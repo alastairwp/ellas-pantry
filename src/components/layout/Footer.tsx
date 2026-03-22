@@ -30,6 +30,12 @@ export function Footer() {
               About
             </Link>
             <Link
+              href="/faq"
+              className="text-sm text-stone-500 hover:text-amber-700 transition-colors"
+            >
+              FAQ
+            </Link>
+            <Link
               href="/contact"
               className="text-sm text-stone-500 hover:text-amber-700 transition-colors"
             >

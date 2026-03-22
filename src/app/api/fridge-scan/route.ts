@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { matchIngredientNames, matchRecipesByIngredientIds } from "@/lib/fridge-match";
 
 const anthropic = new Anthropic();
 
@@ -68,84 +68,13 @@ export async function POST(request: NextRequest) {
     }
 
     const identifiedIngredients: string[] = JSON.parse(jsonMatch[0]);
-
-    // Match against Ingredient table
-    const matchedIngredients = await prisma.ingredient.findMany({
-      where: {
-        OR: identifiedIngredients.map((name) => ({
-          name: { contains: name.toLowerCase() },
-        })),
-      },
-      select: { id: true, name: true },
-    });
-
+    const matchedIngredients = await matchIngredientNames(identifiedIngredients);
     const matchedIds = matchedIngredients.map((i) => i.id);
-
-    if (matchedIds.length === 0) {
-      return NextResponse.json({
-        ingredients: identifiedIngredients,
-        recipes: [],
-      });
-    }
-
-    // Find recipes using matched ingredients
-    const recipes = await prisma.recipe.findMany({
-      where: {
-        published: true,
-        ingredients: {
-          some: { ingredientId: { in: matchedIds } },
-        },
-      },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        description: true,
-        heroImage: true,
-        prepTime: true,
-        cookTime: true,
-        dietaryTags: {
-          include: { dietaryTag: { select: { name: true, slug: true } } },
-        },
-        categories: {
-          include: { category: { select: { name: true, slug: true } } },
-        },
-        ingredients: {
-          select: { ingredientId: true },
-        },
-      },
-    });
-
-    // Score by missing ingredients (fewer missing = better match)
-    const matchedIdSet = new Set(matchedIds);
-    const scored = recipes
-      .map((recipe) => {
-        const totalIngredients = recipe.ingredients.length;
-        const matchCount = recipe.ingredients.filter((i) =>
-          matchedIdSet.has(i.ingredientId)
-        ).length;
-        const missingCount = totalIngredients - matchCount;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { ingredients: _, ...recipeCard } = recipe;
-        return {
-          ...recipeCard,
-          matchCount,
-          totalIngredients,
-          missingCount,
-        };
-      })
-      .sort((a, b) => {
-        // Sort by fewest missing ingredients first
-        if (a.missingCount !== b.missingCount)
-          return a.missingCount - b.missingCount;
-        // Tie-break: prefer recipes with fewer total ingredients (simpler)
-        return a.totalIngredients - b.totalIngredients;
-      })
-      .slice(0, 30);
+    const recipes = await matchRecipesByIngredientIds(matchedIds);
 
     return NextResponse.json({
       ingredients: identifiedIngredients,
-      recipes: scored,
+      recipes,
     });
   } catch (error) {
     console.error("Fridge scan error:", error);

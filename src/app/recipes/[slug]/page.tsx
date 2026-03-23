@@ -22,6 +22,7 @@ import { NutritionPanel } from "@/components/recipe/NutritionPanel";
 import { AddToCollectionButton } from "@/components/recipe/AddToCollectionButton";
 import { RelatedRecipes } from "@/components/recipe/RelatedRecipes";
 import { SubstitutionsPanel } from "@/components/recipe/SubstitutionsPanel";
+import { TroubleshooterPanel } from "@/components/recipe/TroubleshooterPanel";
 import { RecipeImage } from "@/components/recipe/RecipeImage";
 import { AllergenWarning } from "@/components/recipe/AllergenWarning";
 import { AllergyProfileBanner } from "@/components/banners/AllergyProfileBanner";
@@ -132,7 +133,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
         {/* Action Bar + Image */}
         <div className="mt-6 flex flex-col sm:flex-row sm:items-start gap-4">
           <div className="flex flex-wrap gap-3 no-print flex-1">
-            <CookModeButton title={recipe.title} steps={recipe.steps} recipeId={recipe.id} />
+            <CookModeButton title={recipe.title} steps={recipe.steps} recipeId={recipe.id} prepTime={recipe.prepTime} cookTime={recipe.cookTime} />
             <SaveRecipeButton recipeId={recipe.id} />
             <AddToMealPlan recipeId={recipe.id} />
             <AddToCollectionButton recipeId={recipe.id} />
@@ -178,6 +179,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
               recipeId={recipe.id}
               dietaryTags={dietaryTags.map((t) => t.slug)}
             />
+            <TroubleshooterPanel recipeId={recipe.id} />
           </div>
 
           <aside className="no-print">

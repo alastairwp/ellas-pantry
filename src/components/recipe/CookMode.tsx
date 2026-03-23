@@ -9,9 +9,13 @@ import {
   Timer,
   Pause,
   Play,
+  ListOrdered,
+  Clock,
 } from "lucide-react";
 import { parseTimers, type ParsedTimer } from "@/lib/parse-timers";
 import { useSkillLevel } from "@/lib/skill-level";
+import { requestNotificationPermission } from "@/lib/notifications";
+import { TimelineView } from "./TimelineView";
 
 interface Step {
   stepNumber: number;
@@ -23,6 +27,8 @@ interface CookModeProps {
   title: string;
   steps: Step[];
   recipeId?: number;
+  prepTime?: number | null;
+  cookTime?: number | null;
 }
 
 interface ActiveTimer {
@@ -64,7 +70,7 @@ function playAlert() {
   }
 }
 
-export function CookModeButton({ title, steps, recipeId }: CookModeProps) {
+export function CookModeButton({ title, steps, recipeId, prepTime, cookTime }: CookModeProps) {
   const [open, setOpen] = useState(false);
   const { adaptedSteps, skillLevel } = useSkillLevel();
 
@@ -91,6 +97,8 @@ export function CookModeButton({ title, steps, recipeId }: CookModeProps) {
         <CookModeOverlay
           title={title}
           steps={displaySteps}
+          prepTime={prepTime}
+          cookTime={cookTime}
           onClose={() => setOpen(false)}
         />
       )}
@@ -136,11 +144,17 @@ function CookModeOverlay({
   steps,
   onClose,
 }: CookModeProps & { onClose: () => void }) {
+  const [viewMode, setViewMode] = useState<"step" | "timeline">("step");
   const [current, setCurrent] = useState(0);
   const [timers, setTimers] = useState<ActiveTimer[]>([]);
   const timerIdCounter = useRef(0);
   const total = steps.length;
   const step = steps[current];
+
+  // Request notification permission on mount
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
 
   const prev = useCallback(() => {
     setCurrent((c) => Math.max(0, c - 1));
@@ -248,10 +262,41 @@ function CookModeOverlay({
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
         <div className="min-w-0">
           <p className="text-sm text-stone-400 truncate">{title}</p>
-          <p className="text-xs text-stone-500">
-            Step {current + 1} of {total}
-          </p>
+          {viewMode === "step" && (
+            <p className="text-xs text-stone-500">
+              Step {current + 1} of {total}
+            </p>
+          )}
         </div>
+
+        {/* View mode toggle */}
+        <div className="flex items-center gap-1 bg-stone-800 rounded-lg p-0.5">
+          <button
+            type="button"
+            onClick={() => setViewMode("step")}
+            className={`p-1.5 rounded-md transition-colors ${
+              viewMode === "step"
+                ? "bg-stone-600 text-white"
+                : "text-stone-400 hover:text-white"
+            }`}
+            aria-label="Step-by-step view"
+          >
+            <ListOrdered className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode("timeline")}
+            className={`p-1.5 rounded-md transition-colors ${
+              viewMode === "timeline"
+                ? "bg-stone-600 text-white"
+                : "text-stone-400 hover:text-white"
+            }`}
+            aria-label="Timeline view"
+          >
+            <Clock className="h-4 w-4" />
+          </button>
+        </div>
+
         <button
           type="button"
           onClick={onClose}
@@ -262,123 +307,141 @@ function CookModeOverlay({
         </button>
       </div>
 
-      {/* Step content */}
-      <div className="flex-1 flex items-center justify-center px-6 sm:px-12 overflow-y-auto">
-        <div className="max-w-2xl w-full text-center">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-600 text-2xl font-bold mb-6">
-            {step.stepNumber}
-          </div>
-          <p className="text-xl sm:text-2xl lg:text-3xl leading-relaxed font-light">
-            <InstructionWithTimers
-              instruction={step.instruction}
-              onStartTimer={startTimer}
-            />
-          </p>
-          {step.tipText && (
-            <div className="mt-6 p-4 bg-amber-900/30 border border-amber-700/50 rounded-xl inline-block max-w-lg">
-              <p className="text-sm sm:text-base text-amber-200">
-                <span className="font-semibold">Tip:</span> {step.tipText}
+      {viewMode === "timeline" ? (
+        <TimelineView steps={steps} onComplete={onClose} />
+      ) : (
+        <>
+          {/* Step content */}
+          <div className="flex-1 flex items-center justify-center px-6 sm:px-12 overflow-y-auto">
+            <div className="max-w-2xl w-full text-center">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-600 text-2xl font-bold mb-6">
+                {step.stepNumber}
+              </div>
+              <p className="text-xl sm:text-2xl lg:text-3xl leading-relaxed font-light">
+                <InstructionWithTimers
+                  instruction={step.instruction}
+                  onStartTimer={startTimer}
+                />
               </p>
+              {step.tipText && (
+                <div className="mt-6 p-4 bg-amber-900/30 border border-amber-700/50 rounded-xl inline-block max-w-lg">
+                  <p className="text-sm sm:text-base text-amber-200">
+                    <span className="font-semibold">Tip:</span> {step.tipText}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Active timers */}
+          {timers.length > 0 && (
+            <div className="px-4 py-2 bg-stone-800 border-t border-stone-700">
+              <div className="flex flex-wrap gap-2 justify-center">
+                {timers.map((t) => (
+                  <div
+                    key={t.id}
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
+                      t.remaining === 0
+                        ? "bg-green-600 animate-pulse"
+                        : "bg-stone-700"
+                    }`}
+                  >
+                    <Timer className="h-3.5 w-3.5" />
+                    <span>
+                      {t.remaining === 0 ? `${t.label} done!` : formatTime(t.remaining)}
+                    </span>
+                    {t.remaining > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => toggleTimer(t.id)}
+                        className="p-0.5 hover:bg-stone-600 rounded-full"
+                        aria-label={t.running ? "Pause" : "Resume"}
+                      >
+                        {t.running ? (
+                          <Pause className="h-3 w-3" />
+                        ) : (
+                          <Play className="h-3 w-3" />
+                        )}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeTimer(t.id)}
+                      className="p-0.5 hover:bg-stone-600 rounded-full"
+                      aria-label="Remove timer"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Active timers */}
-      {timers.length > 0 && (
-        <div className="px-4 py-2 bg-stone-800 border-t border-stone-700">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {timers.map((t) => (
-              <div
-                key={t.id}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
-                  t.remaining === 0
-                    ? "bg-green-600 animate-pulse"
-                    : "bg-stone-700"
-                }`}
+          {/* Navigation */}
+          <div className="flex items-center justify-between px-4 py-4 sm:px-6">
+            <button
+              type="button"
+              onClick={prev}
+              disabled={current === 0}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-stone-800"
+            >
+              <ChevronLeft className="h-5 w-5" />
+              Previous
+            </button>
+
+            {/* Step dots */}
+            <div className="hidden sm:flex gap-1.5">
+              {steps.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setCurrent(i)}
+                  className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                    i === current
+                      ? "bg-amber-500"
+                      : i < current
+                        ? "bg-amber-800"
+                        : "bg-stone-600"
+                  }`}
+                  aria-label={`Go to step ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            {current < total - 1 ? (
+              <button
+                type="button"
+                onClick={next}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-600 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
               >
-                <Timer className="h-3.5 w-3.5" />
-                <span>
-                  {t.remaining === 0 ? `${t.label} done!` : formatTime(t.remaining)}
-                </span>
-                {t.remaining > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => toggleTimer(t.id)}
-                    className="p-0.5 hover:bg-stone-600 rounded-full"
-                    aria-label={t.running ? "Pause" : "Resume"}
-                  >
-                    {t.running ? (
-                      <Pause className="h-3 w-3" />
-                    ) : (
-                      <Play className="h-3 w-3" />
-                    )}
-                  </button>
-                )}
+                Next
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            ) : (
+              <div className="flex flex-col items-end gap-1">
                 <button
                   type="button"
-                  onClick={() => removeTimer(t.id)}
-                  className="p-0.5 hover:bg-stone-600 rounded-full"
-                  aria-label="Remove timer"
+                  onClick={onClose}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
                 >
-                  <X className="h-3 w-3" />
+                  Done!
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    window.location.hash = "troubleshooter";
+                  }}
+                  className="text-sm text-stone-400 hover:text-amber-400 underline mt-2"
+                >
+                  Something didn&apos;t go right?
                 </button>
               </div>
-            ))}
+            )}
           </div>
-        </div>
+        </>
       )}
-
-      {/* Navigation */}
-      <div className="flex items-center justify-between px-4 py-4 sm:px-6">
-        <button
-          type="button"
-          onClick={prev}
-          disabled={current === 0}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-stone-800"
-        >
-          <ChevronLeft className="h-5 w-5" />
-          Previous
-        </button>
-
-        {/* Step dots */}
-        <div className="hidden sm:flex gap-1.5">
-          {steps.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setCurrent(i)}
-              className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                i === current
-                  ? "bg-amber-500"
-                  : i < current
-                    ? "bg-amber-800"
-                    : "bg-stone-600"
-              }`}
-              aria-label={`Go to step ${i + 1}`}
-            />
-          ))}
-        </div>
-
-        {current < total - 1 ? (
-          <button
-            type="button"
-            onClick={next}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-600 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
-          >
-            Next
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={onClose}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
-          >
-            Done!
-          </button>
-        )}
-      </div>
     </div>
   );
 }

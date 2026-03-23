@@ -27,6 +27,10 @@ const faqs = [
         a: "Below the cooking steps on each recipe, you'll find options like Vegan, Gluten-Free, Dairy-Free, and Budget. Click any of these to get AI-powered suggestions for swapping ingredients to suit that dietary need.",
       },
       {
+        q: "What is the \"What Went Wrong?\" troubleshooter?",
+        a: "If a dish didn't turn out right \u2014 cake didn't rise, sauce split, too salty \u2014 scroll to the \"What Went Wrong?\" section on any recipe page. Pick a common problem or describe your own, and our AI will diagnose what likely happened, suggest fixes for next time, and tell you if the dish can be salvaged. You can also reach it from Cook Mode by tapping \"Something didn't go right?\" after finishing.",
+      },
+      {
         q: "Can I save recipes for later?",
         a: "Absolutely. Click the heart icon on any recipe to save it to your collection. You can also organise saved recipes into custom collections for easy access.",
       },
@@ -67,7 +71,7 @@ const faqs = [
     questions: [
       {
         q: "Which features use AI?",
-        a: "Several features are powered by AI: ingredient substitution suggestions, recipe variations, the fridge scanner, and nutritional estimates. These are clearly marked throughout the site.",
+        a: "Several features are powered by AI: ingredient substitution suggestions, recipe variations, the fridge scanner, the \"What Went Wrong?\" troubleshooter, and nutritional estimates. These are clearly marked throughout the site.",
       },
       {
         q: "How accurate are the AI suggestions?",

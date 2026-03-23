@@ -14,9 +14,18 @@ export async function saveGeneratedRecipe(
   try {
     let slug = slugify(recipe.title);
 
-    // Check for duplicate slug
-    const existing = await prisma.recipe.findUnique({ where: { slug } });
-    if (existing) {
+    // Skip if a recipe with this title already exists
+    const existingByTitle = await prisma.recipe.findFirst({
+      where: { title: recipe.title },
+    });
+    if (existingByTitle) {
+      console.log(`Skipping duplicate recipe: "${recipe.title}" (existing ID: ${existingByTitle.id})`);
+      return { id: existingByTitle.id, slug: existingByTitle.slug };
+    }
+
+    // Ensure slug uniqueness (edge case: different title, same slug)
+    const existingBySlug = await prisma.recipe.findUnique({ where: { slug } });
+    if (existingBySlug) {
       slug = `${slug}-${Date.now()}`;
     }
 

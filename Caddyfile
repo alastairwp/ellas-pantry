@@ -12,6 +12,10 @@ www.ellaspantry.co.uk {
 	reverse_proxy app:3000
 }
 
+http://ellaspantry.co.uk {
+	redir https://www.ellaspantry.co.uk{uri} permanent
+}
+
 ellaspantry.co.uk {
 	redir https://www.ellaspantry.co.uk{uri} permanent
 }

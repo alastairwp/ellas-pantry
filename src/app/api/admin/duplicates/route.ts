@@ -6,8 +6,8 @@ export async function GET() {
   const duplicateGroups = await prisma.$queryRaw<
     { title: string; source: string; count: number }[]
   >`
-    SELECT title, source, COUNT(*) as count
-    FROM Recipe
+    SELECT title, source, CAST(COUNT(*) AS integer) as count
+    FROM "Recipe"
     GROUP BY title, source
     HAVING COUNT(*) > 1
     ORDER BY count DESC, title ASC

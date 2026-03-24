@@ -15,7 +15,9 @@ import {
 import { parseTimers, type ParsedTimer } from "@/lib/parse-timers";
 import { useSkillLevel } from "@/lib/skill-level";
 import { requestNotificationPermission } from "@/lib/notifications";
+import { useVoiceCook } from "@/lib/use-voice-cook";
 import { TimelineView } from "./TimelineView";
+import { VoiceControls } from "./VoiceControls";
 
 interface Step {
   stepNumber: number;
@@ -246,6 +248,38 @@ function CookModeOverlay({
     setTimers((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  // Voice cook mode
+  const voiceOnStartTimer = useCallback(() => {
+    const parsed = parseTimers(step.instruction);
+    if (parsed.length > 0) startTimer(parsed[0]);
+  }, [step.instruction, startTimer]);
+
+  const voiceOnPauseTimer = useCallback(() => {
+    const running = timers.find((t) => t.running && t.remaining > 0);
+    if (running) toggleTimer(running.id);
+  }, [timers, toggleTimer]);
+
+  const voiceOnResumeTimer = useCallback(() => {
+    const paused = timers.find((t) => !t.running && t.remaining > 0);
+    if (paused) toggleTimer(paused.id);
+  }, [timers, toggleTimer]);
+
+  const voice = useVoiceCook({
+    stepText: step.instruction,
+    tipText: step.tipText,
+    onNext: next,
+    onPrev: prev,
+    onStartTimer: voiceOnStartTimer,
+    onPauseTimer: voiceOnPauseTimer,
+    onResumeTimer: voiceOnResumeTimer,
+  });
+
+  // Cleanup voice on unmount
+  useEffect(() => {
+    return () => voice.cleanup();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const progress = ((current + 1) / total) * 100;
 
   return (
@@ -296,6 +330,19 @@ function CookModeOverlay({
             <Clock className="h-4 w-4" />
           </button>
         </div>
+
+        {viewMode === "step" && (
+          <VoiceControls
+            isActive={voice.isActive}
+            toggle={voice.toggle}
+            sttSupported={voice.sttSupported}
+            ttsSupported={voice.ttsSupported}
+            isListening={voice.isListening}
+            transcript={voice.transcript}
+            lastCommand={voice.lastCommand}
+            micError={voice.micError}
+          />
+        )}
 
         <button
           type="button"

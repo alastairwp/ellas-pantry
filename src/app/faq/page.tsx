@@ -37,6 +37,61 @@ const faqs = [
     ],
   },
   {
+    category: "Cook Mode",
+    questions: [
+      {
+        q: "What is Cook Mode?",
+        a: "Cook Mode gives you a full-screen, step-by-step view of any recipe \u2014 perfect for cooking hands-free. It keeps your screen awake, shows a progress bar, and you can navigate with your keyboard or swipe between steps.",
+      },
+      {
+        q: "Are there cooking timers?",
+        a: "Yes. When a step mentions a time (e.g. \"simmer for 15 minutes\"), a timer button appears inline. Tap it to start a countdown with an audio alert when it's done. You can run multiple timers at once.",
+      },
+      {
+        q: "Can I control Cook Mode with my voice?",
+        a: "Yes! Tap the microphone icon in Cook Mode to enable voice commands. You can say things like \"next step\", \"previous step\", \"repeat\", and \"start timer\" to navigate hands-free while you cook.",
+      },
+      {
+        q: "What are Adaptive Steps?",
+        a: "Recipes can adapt their instructions based on your skill level (beginner, intermediate, or advanced). Beginners get more detailed guidance, while advanced cooks see streamlined steps. Set your skill level in your profile settings.",
+      },
+    ],
+  },
+  {
+    category: "Meal Planning & Shopping",
+    questions: [
+      {
+        q: "How does the Meal Planner work?",
+        a: "Go to the Meal Planner page and you'll see a weekly grid with slots for breakfast, lunch, dinner, and snacks for each day. Click the + button on any slot, search for a recipe, and add it. Your plan is saved automatically.",
+      },
+      {
+        q: "How do I get a shopping list?",
+        a: "Once you've added recipes to your meal plan, switch to the Shopping List tab. It automatically generates an aggregated list of all ingredients you need, combining duplicates across recipes. You can tick items off, copy the list, or print it.",
+      },
+      {
+        q: "Can I get shopping list reminders on my phone?",
+        a: "Yes! If you're using the app on a supported browser (Chrome, Edge, Firefox on Android), enable push notifications from the Shopping List tab. Then tap \"Send to Phone\" to receive your shopping list as a notification you can check while you're out.",
+      },
+    ],
+  },
+  {
+    category: "Install & App",
+    questions: [
+      {
+        q: "Can I install Ella's Pantry as an app?",
+        a: "Yes! Ella's Pantry works as an installable app on your phone or desktop. On Chrome or Edge, look for the install icon in the address bar. On iPhone, tap the Share button in Safari, then \"Add to Home Screen\". Once installed, it opens in its own window like a native app.",
+      },
+      {
+        q: "Does the app work offline?",
+        a: "Pages you've previously visited are cached and available offline. This means you can still browse recipes you've looked at even without an internet connection \u2014 handy if your signal drops while shopping.",
+      },
+      {
+        q: "How do I enable or disable push notifications?",
+        a: "Head to the Meal Planner's Shopping List tab, where you'll find a notifications toggle. You can enable or disable them at any time. If you've blocked notifications in your browser settings, you'll need to allow them there first.",
+      },
+    ],
+  },
+  {
     category: "Allergies & Dietary Needs",
     questions: [
       {
@@ -71,7 +126,7 @@ const faqs = [
     questions: [
       {
         q: "Which features use AI?",
-        a: "Several features are powered by AI: ingredient substitution suggestions, recipe variations, the fridge scanner, the \"What Went Wrong?\" troubleshooter, and nutritional estimates. These are clearly marked throughout the site.",
+        a: "Several features are powered by AI: ingredient substitution suggestions, recipe variations, the fridge scanner, the \"What Went Wrong?\" troubleshooter, adaptive cooking steps based on your skill level, and nutritional estimates. These are clearly marked throughout the site.",
       },
       {
         q: "How accurate are the AI suggestions?",

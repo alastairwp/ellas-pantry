@@ -14,7 +14,10 @@ import {
   Copy,
   Check,
   Printer,
+  Bell,
+  Send,
 } from "lucide-react";
+import { PushNotificationPrompt, PushNotificationToggle } from "@/components/pwa/PushNotificationPrompt";
 
 interface RecipeSummary {
   id: number;
@@ -82,6 +85,8 @@ export function MealPlanner() {
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [shoppingLoading, setShoppingLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [sendingPush, setSendingPush] = useState(false);
+  const [pushSent, setPushSent] = useState(false);
 
   const fetchPlan = useCallback(async () => {
     try {
@@ -211,6 +216,21 @@ export function MealPlanner() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const sendShoppingListPush = async () => {
+    setSendingPush(true);
+    try {
+      const res = await fetch("/api/push/send-shopping-list", { method: "POST" });
+      if (res.ok) {
+        setPushSent(true);
+        setTimeout(() => setPushSent(false), 3000);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setSendingPush(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="text-center py-16">
@@ -335,6 +355,7 @@ export function MealPlanner() {
       {/* Shopping List */}
       {tab === "shopping" && (
         <div>
+          <PushNotificationPrompt />
           {shoppingLoading ? (
             <div className="text-center py-12">
               <Loader2 className="h-6 w-6 text-stone-400 mx-auto animate-spin" />
@@ -369,6 +390,22 @@ export function MealPlanner() {
                   <Printer className="h-4 w-4" />
                   Print
                 </button>
+                <button
+                  type="button"
+                  onClick={sendShoppingListPush}
+                  disabled={sendingPush}
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {pushSent ? (
+                    <Check className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                  {pushSent ? "Sent!" : sendingPush ? "Sending..." : "Send to Phone"}
+                </button>
+                <div className="ml-auto">
+                  <PushNotificationToggle />
+                </div>
               </div>
               <ul className="divide-y divide-stone-100">
                 {shoppingItems.map((item) => (

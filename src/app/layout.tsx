@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/components/providers/SessionProvider";
 import { SavedRecipesProvider } from "@/components/recipe/SavedRecipesProvider";
 import { SkillLevelWrapper } from "@/components/providers/SkillLevelWrapper";
+import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,6 +34,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#d97706" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Ella's Pantry" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3863316145439936"
           crossOrigin="anonymous"
@@ -58,6 +65,7 @@ export default function RootLayout({
               <Header />
               <main className="min-h-screen">{children}</main>
               <Footer />
+              <ServiceWorkerRegistration />
             </SkillLevelWrapper>
           </SavedRecipesProvider>
         </AuthProvider>

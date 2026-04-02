@@ -26,8 +26,9 @@ model User {
   ratings      Rating[]
   savedRecipes SavedRecipe[]
   reviews      Review[]
-  mealPlans    MealPlan[]
-  collections  Collection[]
+  mealPlans         MealPlan[]
+  collections       Collection[]
+  pushSubscriptions PushSubscription[]
 }
 
 model Account {
@@ -319,6 +320,19 @@ model AdaptedStepsCache {
 
   @@unique([recipeId, skillLevel, contentHash])
   @@index([recipeId, skillLevel])
+}
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model GenerationJob {

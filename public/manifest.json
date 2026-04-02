@@ -3,25 +3,38 @@
   "short_name": "Ella's Pantry",
   "description": "Discover thousands of delicious recipes with easy-to-follow instructions, meal planning, and smart shopping lists.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#fffbeb",
   "theme_color": "#d97706",
   "orientation": "portrait-primary",
+  "id": "/",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "categories": ["food", "lifestyle"],
-  "screenshots": [],
   "prefer_related_applications": false
 }

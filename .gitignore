@@ -58,6 +58,11 @@ next-env.d.ts
 
 # AI generated images
 /generated-images/
+/scripts/generated-images/
+/scripts/generated-recipes-log.jsonl
+
+# Claude Code
+.claude/
 
 # Python virtual env
 /scripts/venv/

@@ -55,6 +55,7 @@ export async function PUT(
           title: body.title,
           description: body.description,
           heroImage: body.heroImage,
+          imageStatus: body.imageStatus,
           prepTime: body.prepTime !== undefined ? parseInt(body.prepTime, 10) : undefined,
           cookTime: body.cookTime !== undefined ? parseInt(body.cookTime, 10) : undefined,
           servings: body.servings !== undefined ? parseInt(body.servings, 10) : undefined,

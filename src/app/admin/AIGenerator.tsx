@@ -45,6 +45,18 @@ export function AIGenerator() {
   const [targetCount, setTargetCount] = useState("100");
   const [category, setCategory] = useState("general");
 
+  // Dynamic categories from DB
+  const [dbCategories, setDbCategories] = useState<{ id: number; name: string; slug: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/admin/options")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.categories) setDbCategories(data.categories);
+      })
+      .catch(() => {});
+  }, []);
+
   // Background job state
   const [activeJob, setActiveJob] = useState<GenerationJob | null>(null);
   const [jobError, setJobError] = useState<string | null>(null);
@@ -52,16 +64,7 @@ export function AIGenerator() {
 
   // Load offset when category changes
   useEffect(() => {
-    const offsetKeys: Record<string, string> = {
-      general: "generatorOffset",
-      baking: "bakingGeneratorOffset",
-      soups: "soupsGeneratorOffset",
-      bread: "breadGeneratorOffset",
-      salads: "saladsGeneratorOffset",
-      curries: "curriesGeneratorOffset",
-      asian: "asianGeneratorOffset",
-    };
-    const key = offsetKeys[category] || "generatorOffset";
+    const key = category === "general" ? "generatorOffset" : `${category}GeneratorOffset`;
     setOffsetLoaded(false);
     fetch(`/api/admin/settings?key=${key}`)
       .then((r) => {
@@ -128,20 +131,12 @@ export function AIGenerator() {
   }
 
   async function saveOffset() {
-    const offsetKeys: Record<string, string> = {
-      general: "generatorOffset",
-      baking: "bakingGeneratorOffset",
-      soups: "soupsGeneratorOffset",
-      bread: "breadGeneratorOffset",
-      salads: "saladsGeneratorOffset",
-      curries: "curriesGeneratorOffset",
-      asian: "asianGeneratorOffset",
-    };
+    const key = category === "general" ? "generatorOffset" : `${category}GeneratorOffset`;
     try {
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: offsetKeys[category] || "generatorOffset", value: String(generatorOffset) }),
+        body: JSON.stringify({ key, value: String(generatorOffset) }),
       });
       if (!res.ok) throw new Error("Failed to save offset");
     } catch {
@@ -346,13 +341,12 @@ export function AIGenerator() {
                 onChange={(e) => setCategory(e.target.value)}
                 className={inputClass}
               >
-                <option value="general">General (700k+ dishes)</option>
-                <option value="baking">Baking &amp; Desserts (22k+ names)</option>
-                <option value="soups">Soups (500+ names)</option>
-                <option value="bread">Bread (400+ names)</option>
-                <option value="salads">Salads (1,500+ names)</option>
-                <option value="curries">Curries (700+ names)</option>
-                <option value="asian">Asian Dishes (12k+ names)</option>
+                <option value="general">General (all categories)</option>
+                {dbCategories.map((cat) => (
+                  <option key={cat.id} value={cat.slug}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
 

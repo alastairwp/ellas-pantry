@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, GripVertical, ImageIcon, Upload, Loader2, RefreshCw } from "lucide-react";
+import { Plus, Trash2, GripVertical, ImageIcon, Upload, Loader2, Sparkles } from "lucide-react";
 
 interface IngredientInput {
   name: string;
@@ -27,6 +27,7 @@ interface RecipeEditData {
   title: string;
   description: string;
   heroImage: string;
+  imageStatus: string;
   prepTime: number;
   cookTime: number;
   servings: number;
@@ -70,8 +71,9 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
   const [dietaryTags, setDietaryTags] = useState<Option[]>([]);
   const [occasions, setOccasions] = useState<Option[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [imageStatus, setImageStatus] = useState(initialData.imageStatus);
+  const [queuingImage, setQueuingImage] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [fetchingImage, setFetchingImage] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [imageCacheBuster, setImageCacheBuster] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -123,27 +125,28 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
     }
   }, [initialData.slug]);
 
-  const fetchFromSource = useCallback(async (source: "unsplash" | "pexels") => {
-    setFetchingImage(source);
+  const queueImageGeneration = useCallback(async () => {
+    setQueuingImage(true);
     setMessage(null);
     try {
-      const res = await fetch("/api/admin/refresh-image", {
-        method: "POST",
+      const res = await fetch(`/api/recipes/${initialData.id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recipeId: initialData.id, source }),
+        body: JSON.stringify({ imageStatus: "pending" }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to fetch image");
-      setHeroImage(data.path);
-      setImageCacheBuster(`?t=${Date.now()}`);
-      setMessage({ type: "success", text: `Image fetched from ${source}` });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to queue image");
+      }
+      setImageStatus("pending");
+      setMessage({ type: "success", text: "Image generation queued" });
     } catch (err) {
       setMessage({
         type: "error",
-        text: err instanceof Error ? err.message : "Image fetch failed",
+        text: err instanceof Error ? err.message : "Failed to queue image",
       });
     } finally {
-      setFetchingImage(null);
+      setQueuingImage(false);
     }
   }, [initialData.id]);
 
@@ -264,24 +267,6 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
                 <div className="absolute top-2 right-2 flex gap-1.5">
                   <button
                     type="button"
-                    onClick={() => fetchFromSource("unsplash")}
-                    disabled={!!fetchingImage}
-                    className="rounded-full bg-white/90 p-1.5 text-stone-600 hover:bg-amber-50 hover:text-amber-700 shadow-sm transition-colors disabled:opacity-50"
-                    title="Fetch from Unsplash"
-                  >
-                    {fetchingImage === "unsplash" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => fetchFromSource("pexels")}
-                    disabled={!!fetchingImage}
-                    className="rounded-full bg-white/90 px-2 py-1.5 text-xs font-medium text-stone-600 hover:bg-amber-50 hover:text-amber-700 shadow-sm transition-colors disabled:opacity-50"
-                    title="Fetch from Pexels"
-                  >
-                    {fetchingImage === "pexels" ? <Loader2 className="h-4 w-4 animate-spin" /> : "PX"}
-                  </button>
-                  <button
-                    type="button"
                     onClick={() => fileInputRef.current?.click()}
                     className="rounded-full bg-white/90 p-1.5 text-stone-600 hover:bg-amber-50 hover:text-amber-700 shadow-sm transition-colors"
                     title="Replace image"
@@ -295,6 +280,15 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
                     title="Remove image"
                   >
                     <Trash2 className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={queueImageGeneration}
+                    disabled={queuingImage || imageStatus === "pending"}
+                    className="rounded-full bg-white/90 p-1.5 text-stone-600 hover:bg-purple-50 hover:text-purple-700 shadow-sm transition-colors disabled:opacity-50"
+                    title={imageStatus === "pending" ? "Image generation already queued" : "Queue AI image generation"}
+                  >
+                    {queuingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
@@ -324,14 +318,26 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
                 )}
               </div>
             )}
-            <input
-              id="heroImage"
-              type="text"
-              value={heroImage}
-              onChange={(e) => setHeroImage(e.target.value)}
-              className={inputClass}
-              placeholder="Or enter an image URL"
-            />
+            <div className="flex gap-2">
+              <input
+                id="heroImage"
+                type="text"
+                value={heroImage}
+                onChange={(e) => setHeroImage(e.target.value)}
+                className={`${inputClass} flex-1`}
+                placeholder="Or enter an image URL"
+              />
+              <button
+                type="button"
+                onClick={queueImageGeneration}
+                disabled={queuingImage || imageStatus === "pending"}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                title={imageStatus === "pending" ? "Image generation already queued" : "Queue AI image generation"}
+              >
+                {queuingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                {imageStatus === "pending" ? "Queued" : "Generate"}
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
             <div>

@@ -163,8 +163,8 @@ export default function TermsPage() {
             copyright and other intellectual property laws.
           </p>
           <p className="mt-2">
-            Some recipe images are sourced from Unsplash and Pexels under their
-            respective licences. Attribution is provided where required.
+            Some recipe images are generated using AI. All generated images are
+            the property of Ella&apos;s Pantry.
           </p>
         </section>
 

@@ -132,10 +132,6 @@ export default function PrivacyPolicyPage() {
               </a>{" "}
               for details on how they handle data.
             </li>
-            <li>
-              <strong>Unsplash &amp; Pexels:</strong> we source recipe images from
-              these services. No personal data is shared with them.
-            </li>
           </ul>
         </section>
 

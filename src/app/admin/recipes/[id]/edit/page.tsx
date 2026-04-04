@@ -32,6 +32,7 @@ export default async function EditRecipePage({ params }: EditPageProps) {
     title: recipe.title,
     description: recipe.description,
     heroImage: recipe.heroImage,
+    imageStatus: recipe.imageStatus,
     prepTime: recipe.prepTime,
     cookTime: recipe.cookTime,
     servings: recipe.servings,

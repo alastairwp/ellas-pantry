@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { generateRecipeAuto } from "@/lib/generate-recipe";
-import { findRecipeImage } from "@/lib/unsplash";
 import { saveGeneratedRecipe } from "@/lib/save-recipe";
-import { downloadRecipeImage } from "@/lib/download-image";
 import { generateDishNames, generateSoupNames, generateBreadNames, generateSaladNames, generateCurryNames, generateAsianDishNames } from "@/lib/dish-names";
 
 /**
@@ -45,6 +43,7 @@ export async function processGenerationJob(jobId: number) {
         curries: generateCurryNames,
         asian: generateAsianDishNames,
       };
+      // Categories with dedicated name pools use their generator; others fall back to general
       const generator = generators[job.category] || generateDishNames;
       const dishNames = generator(thisBatch, job.currentOffset);
 
@@ -77,10 +76,8 @@ export async function processGenerationJob(jobId: number) {
         const results = await Promise.allSettled(
           chunk.map(async (dishName: string) => {
             const recipe = await generateRecipeAuto(dishName);
-            const imageUrl = await findRecipeImage(dishName);
-            const saved = await saveGeneratedRecipe(recipe, imageUrl);
+            const saved = await saveGeneratedRecipe(recipe, "");
             if (!saved) throw new Error("Failed to save");
-            await downloadRecipeImage(imageUrl, saved.slug, saved.id);
             return saved;
           })
         );
@@ -107,16 +104,7 @@ export async function processGenerationJob(jobId: number) {
       });
 
       // Persist offset to settings so it's shared across jobs
-      const offsetKeys: Record<string, string> = {
-        general: "generatorOffset",
-        baking: "bakingGeneratorOffset",
-        soups: "soupsGeneratorOffset",
-        bread: "breadGeneratorOffset",
-        salads: "saladsGeneratorOffset",
-        curries: "curriesGeneratorOffset",
-        asian: "asianGeneratorOffset",
-      };
-      const offsetKey = offsetKeys[job.category] || "generatorOffset";
+      const offsetKey = job.category === "general" ? "generatorOffset" : `${job.category}GeneratorOffset`;
       await prisma.setting.upsert({
         where: { key: offsetKey },
         update: { value: String(newOffset) },

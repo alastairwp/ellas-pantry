@@ -12,9 +12,10 @@ Supports two models:
 
 Usage:
     python generate-images.py --limit 50 --api-url http://localhost:3003
-    python generate-images.py --model sdxl --limit 50 --api-url https://ellaspantry.com
+    python generate-images.py --model sdxl --limit 50 --api-url https://www.ellaspantry.co.uk
     python generate-images.py --slugs thai-green-curry chocolate-lava-cake --api-url http://localhost:3003
     python generate-images.py --limit 10 --save-only  # Just save to generated-images/
+    python generate-images.py --watch --api-url http://localhost:3003  # Continuous mode
 """
 
 import argparse
@@ -301,6 +302,8 @@ def main():
     parser.add_argument("--model", type=str, choices=list(MODEL_CONFIGS.keys()), help="Model to use (overrides admin setting)")
     parser.add_argument("--save-only", action="store_true", help="Save to folder, don't upload")
     parser.add_argument("--output-dir", type=str, default="generated-images", help="Output directory")
+    parser.add_argument("--watch", action="store_true", help="Continuous mode: process one at a time, poll every 60s when idle")
+    parser.add_argument("--poll-interval", type=int, default=60, help="Seconds between polls in watch mode (default: 60)")
     args = parser.parse_args()
 
     # Ensure output directory exists
@@ -314,14 +317,16 @@ def main():
     print("Connecting to database...")
     conn = get_db_connection(args.db_url)
 
-    # Fetch pending recipes
-    recipes = fetch_pending_recipes(conn, args.limit, slugs=args.slugs)
-    print(f"Found {len(recipes)} recipes needing images")
+    # Fetch pending recipes (skip in watch mode — it polls continuously)
+    recipes = []
+    if not args.watch:
+        recipes = fetch_pending_recipes(conn, args.limit, slugs=args.slugs)
+        print(f"Found {len(recipes)} recipes needing images")
 
-    if not recipes:
-        print("No recipes need images. Done!")
-        conn.close()
-        return
+        if not recipes:
+            print("No recipes need images. Done!")
+            conn.close()
+            return
 
     # Set up auto-upload if requested
     session = None
@@ -352,8 +357,10 @@ def main():
     success = 0
     failed = 0
 
-    for i, recipe in enumerate(recipes):
-        print(f"\n[{i + 1}/{len(recipes)}] {recipe['title']}")
+    def process_recipe(recipe, counter_label=""):
+        """Process a single recipe. Returns True on success, False on failure."""
+        nonlocal success, failed
+        print(f"\n[{counter_label}] {recipe['title']}")
 
         try:
             # Build prompt
@@ -380,6 +387,7 @@ def main():
             print(f"  Saved: {local_path}")
 
             # Upload if session available
+            result = None
             if session and args.api_url:
                 buf = io.BytesIO()
                 image.save(buf, "WebP", quality=80)
@@ -416,6 +424,7 @@ def main():
                 f.write(json.dumps(log_entry) + "\n")
 
             success += 1
+            return True
 
         except Exception as e:
             print(f"  ERROR: {e}")
@@ -432,9 +441,29 @@ def main():
                 f.write(json.dumps(log_entry) + "\n")
 
             failed += 1
+            return False
+
+    if args.watch:
+        # Watch mode: process one at a time, poll when idle
+        print(f"\nWatch mode: processing one at a time, polling every {args.poll_interval}s when idle")
+        print("Press Ctrl+C to stop\n")
+        try:
+            while True:
+                recipe_batch = fetch_pending_recipes(conn, limit=1)
+                if recipe_batch:
+                    process_recipe(recipe_batch[0], counter_label=f"{success + failed + 1}")
+                else:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] No pending recipes. Waiting {args.poll_interval}s...")
+                    time.sleep(args.poll_interval)
+        except KeyboardInterrupt:
+            print(f"\n\nStopped. Generated: {success}, Failed: {failed}")
+    else:
+        # Batch mode: process all fetched recipes
+        for i, recipe in enumerate(recipes):
+            process_recipe(recipe, counter_label=f"{i + 1}/{len(recipes)}")
+        print(f"\nDone! Generated: {success}, Failed: {failed}")
 
     conn.close()
-    print(f"\nDone! Generated: {success}, Failed: {failed}")
     print(f"Images saved to: {output_dir}/")
 
 

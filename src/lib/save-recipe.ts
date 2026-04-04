@@ -1,6 +1,7 @@
 import { prisma } from "./prisma";
 import { slugify } from "./utils";
 import { filterInvalidDietaryTagIds } from "./dietary-validation";
+import { generateIntroduction } from "./generate-introduction";
 import type { GeneratedRecipe } from "./generate-recipe";
 
 /**
@@ -127,6 +128,29 @@ export async function saveGeneratedRecipe(
         },
       },
     });
+
+    // Generate a proper introduction and set introGeneratedAt
+    try {
+      const intro = await generateIntroduction(
+        recipe.title,
+        recipe.ingredients.map((ing) => ({
+          name: ing.name,
+          quantity: ing.quantity,
+          unit: ing.unit || null,
+        })),
+        recipe.prepTime,
+        recipe.cookTime
+      );
+      await prisma.recipe.update({
+        where: { id: saved.id },
+        data: {
+          description: intro,
+          introGeneratedAt: new Date(),
+        },
+      });
+    } catch (introError) {
+      console.warn(`Intro generation failed for "${recipe.title}", keeping original description:`, introError);
+    }
 
     return { id: saved.id, slug: saved.slug };
   } catch (error) {

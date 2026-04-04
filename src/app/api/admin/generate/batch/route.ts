@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateRecipe } from "@/lib/generate-recipe";
-import { findRecipeImage } from "@/lib/unsplash";
 import { saveGeneratedRecipe } from "@/lib/save-recipe";
-import { downloadRecipeImage } from "@/lib/download-image";
 import { generateDishNames } from "@/lib/dish-names";
 
 interface BatchResult {
@@ -52,15 +50,11 @@ export async function POST(request: NextRequest) {
         batch.map(async (dishName: string): Promise<BatchResult> => {
           try {
             const recipe = await generateRecipe(dishName);
-            const imageUrl = await findRecipeImage(dishName);
-            const saved = await saveGeneratedRecipe(recipe, imageUrl);
+            const saved = await saveGeneratedRecipe(recipe, "");
 
             if (!saved) {
               return { dishName, status: "error", error: "Failed to save" };
             }
-
-            // Download image locally
-            await downloadRecipeImage(imageUrl, saved.slug, saved.id);
 
             return { dishName, status: "success", slug: saved.slug };
           } catch (error) {

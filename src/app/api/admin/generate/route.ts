@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateRecipe } from "@/lib/generate-recipe";
-import { findRecipeImage } from "@/lib/unsplash";
 import { saveGeneratedRecipe } from "@/lib/save-recipe";
-import { downloadRecipeImage } from "@/lib/download-image";
 
 /**
  * POST /api/admin/generate
@@ -22,11 +20,8 @@ export async function POST(request: NextRequest) {
     // Generate recipe with AI
     const recipe = await generateRecipe(dishName);
 
-    // Find an image
-    const imageUrl = await findRecipeImage(dishName);
-
-    // Save to database
-    const saved = await saveGeneratedRecipe(recipe, imageUrl);
+    // Save to database (image will be generated later via Python script)
+    const saved = await saveGeneratedRecipe(recipe, "");
 
     if (!saved) {
       return NextResponse.json(
@@ -34,9 +29,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    // Download image locally
-    await downloadRecipeImage(imageUrl, saved.slug, saved.id);
 
     return NextResponse.json({
       success: true,

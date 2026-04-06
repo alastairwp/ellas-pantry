@@ -46,6 +46,7 @@ interface RecipeEditFormProps {
 
 export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
   const router = useRouter();
+  const [slug, setSlug] = useState(initialData.slug);
   const [title, setTitle] = useState(initialData.title);
   const [description, setDescription] = useState(initialData.description);
   const [heroImage, setHeroImage] = useState(initialData.heroImage);
@@ -182,6 +183,7 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
+          slug,
           description,
           heroImage,
           prepTime,
@@ -204,7 +206,7 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
 
       setMessage({ type: "success", text: "Recipe updated successfully!" });
       setTimeout(() => {
-        router.push(`/recipes/${initialData.slug}`);
+        router.push(`/recipes/${slug}`);
       }, 1000);
     } catch (err) {
       setMessage({
@@ -238,6 +240,10 @@ export function RecipeEditForm({ initialData }: RecipeEditFormProps) {
           <div>
             <label htmlFor="title" className={labelClass}>Title *</label>
             <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} className={inputClass} required />
+          </div>
+          <div>
+            <label htmlFor="slug" className={labelClass}>Slug</label>
+            <input id="slug" type="text" value={slug} onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/(^-|-$)/g, ""))} className={inputClass} required />
           </div>
           <div>
             <label htmlFor="description" className={labelClass}>Description *</label>

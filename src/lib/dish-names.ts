@@ -681,6 +681,78 @@ export function generateAsianDishNames(
 }
 
 /**
+ * Generate snack recipe names.
+ * Combines snack types, flavours, and styles for 1000+ unique names.
+ */
+export function generateSnackNames(
+  count: number,
+  offset: number = 0
+): string[] {
+  const allNames: string[] = [];
+
+  const snackBases = [
+    "Hummus", "Trail Mix", "Popcorn", "Crisps", "Crackers",
+    "Bruschetta", "Crostini", "Stuffed Mushrooms", "Devilled Eggs",
+    "Cheese Straws", "Sausage Rolls", "Scotch Eggs", "Pakoras",
+    "Bhajis", "Arancini", "Mini Quiches", "Blinis", "Canapes",
+    "Pita Chips", "Edamame Beans", "Roasted Chickpeas", "Granola Bars",
+    "Energy Balls", "Cheese Board", "Antipasti",
+    "Nachos", "Quesadillas", "Spring Rolls", "Samosas",
+    "Falafel", "Dip", "Guacamole", "Salsa", "Tzatziki",
+    "Flatbread", "Breadsticks", "Pretzels", "Muffins",
+    "Scones", "Flapjacks", "Rice Cakes", "Fruit Skewers",
+    "Yoghurt Bark", "Nut Butter Bites", "Stuffed Dates",
+    "Cheese Balls", "Pinwheels", "Mini Frittatas",
+    "Vegetable Crudités", "Wontons", "Gyoza", "Empanadas",
+  ];
+
+  const snackFlavours = [
+    "Spicy", "Smoky", "Honey", "Garlic", "Herb",
+    "Chilli", "Lime", "Sesame", "Cinnamon", "Paprika",
+    "Cumin", "Lemon", "Ranch", "Barbecue", "Sriracha",
+    "Truffle", "Parmesan", "Cheddar", "Pesto", "Harissa",
+    "Sweet Chilli", "Maple", "Rosemary", "Thyme", "Za'atar",
+  ];
+
+  const snackCuisines = [
+    "Italian", "Mexican", "Indian", "Greek", "Japanese",
+    "Korean", "Middle Eastern", "Spanish", "Thai", "Moroccan",
+    "Turkish", "Lebanese", "British", "American", "French",
+  ];
+
+  // Strategy 1: Plain snack names
+  for (const snack of snackBases) {
+    allNames.push(snack);
+  }
+
+  // Strategy 2: [Flavour] [Snack] — e.g. "Smoky Popcorn", "Garlic Hummus"
+  for (const flavour of snackFlavours) {
+    for (const snack of snackBases) {
+      allNames.push(`${flavour} ${snack}`);
+    }
+  }
+
+  // Strategy 3: [Cuisine] [Snack] — e.g. "Mexican Nachos", "Indian Pakoras"
+  for (const cuisine of snackCuisines) {
+    for (const snack of snackBases) {
+      allNames.push(`${cuisine} ${snack}`);
+    }
+  }
+
+  // Strategy 4: [Cuisine] [Flavour] [Snack] — e.g. "Japanese Sesame Edamame Beans"
+  for (const cuisine of snackCuisines.slice(0, 8)) {
+    for (const flavour of snackFlavours.slice(0, 10)) {
+      for (const snack of snackBases.slice(0, 15)) {
+        allNames.push(`${cuisine} ${flavour} ${snack}`);
+      }
+    }
+  }
+
+  const unique = [...new Set(allNames)];
+  return unique.slice(offset, offset + count);
+}
+
+/**
  * Get the total number of available unique dish names.
  */
 export function getTotalDishNames(): number {

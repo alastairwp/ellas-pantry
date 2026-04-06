@@ -61,21 +61,15 @@ export async function POST(request: NextRequest) {
       Math.max(parseInt(body.concurrency, 10) || 3, 1),
       5
     );
-    const validCategories = ["general", "baking", "soups", "bread", "salads", "curries", "asian"];
+    // Categories with dedicated name generators, plus DB categories that fall back to general
+    const validCategories = ["general", "baking", "soups", "bread", "salads", "curries", "asian", "snacks",
+      "dinner", "breakfast", "lunch", "sides", "desserts", "drinks"];
     const category = validCategories.includes(body.category) ? body.category : "general";
 
     // Get current offset from settings (category-specific)
-    const offsetKeys: Record<string, string> = {
-      general: "generatorOffset",
-      baking: "bakingGeneratorOffset",
-      soups: "soupsGeneratorOffset",
-      bread: "breadGeneratorOffset",
-      salads: "saladsGeneratorOffset",
-      curries: "curriesGeneratorOffset",
-      asian: "asianGeneratorOffset",
-    };
+    const offsetKey = category === "general" ? "generatorOffset" : `${category}GeneratorOffset`;
     const offsetSetting = await prisma.setting.findUnique({
-      where: { key: offsetKeys[category] },
+      where: { key: offsetKey },
     });
     const startOffset = offsetSetting
       ? parseInt(offsetSetting.value, 10)

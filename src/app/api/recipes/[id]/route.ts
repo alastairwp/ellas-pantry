@@ -53,6 +53,7 @@ export async function PUT(
         where: { id: recipeId },
         data: {
           title: body.title,
+          slug: body.slug,
           description: body.description,
           heroImage: body.heroImage,
           imageStatus: body.imageStatus,
@@ -158,7 +159,10 @@ export async function PUT(
     });
 
     // Revalidate pages so Next.js serves fresh content
-    if (full?.slug) {
+    if (existing.slug) {
+      revalidatePath(`/recipes/${existing.slug}`);
+    }
+    if (full?.slug && full.slug !== existing.slug) {
       revalidatePath(`/recipes/${full.slug}`);
     }
     revalidatePath("/");

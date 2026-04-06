@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { generateRecipeAuto } from "@/lib/generate-recipe";
 import { saveGeneratedRecipe } from "@/lib/save-recipe";
-import { generateDishNames, generateSoupNames, generateBreadNames, generateSaladNames, generateCurryNames, generateAsianDishNames } from "@/lib/dish-names";
+import { generateDishNames, generateSoupNames, generateBreadNames, generateSaladNames, generateCurryNames, generateAsianDishNames, generateSnackNames } from "@/lib/dish-names";
 
 /**
  * Process a generation job server-side.
@@ -42,6 +42,7 @@ export async function processGenerationJob(jobId: number) {
         salads: generateSaladNames,
         curries: generateCurryNames,
         asian: generateAsianDishNames,
+        snacks: generateSnackNames,
       };
       // Categories with dedicated name pools use their generator; others fall back to general
       const generator = generators[job.category] || generateDishNames;

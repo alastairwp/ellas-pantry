@@ -8,10 +8,10 @@ export async function GET() {
   if (!authResult.authorized) return authResult.response;
 
   const missing = await prisma.recipe.count({
-    where: { published: true, source: "ai", introGeneratedAt: null },
+    where: { published: true, introGeneratedAt: null },
   });
   const total = await prisma.recipe.count({
-    where: { published: true, source: "ai" },
+    where: { published: true },
   });
 
   return NextResponse.json({ missing, total });
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   const { count = 10 } = await request.json();
 
   const recipes = await prisma.recipe.findMany({
-    where: { published: true, source: "ai", introGeneratedAt: null },
+    where: { published: true, introGeneratedAt: null },
     include: {
       ingredients: {
         include: { ingredient: true },

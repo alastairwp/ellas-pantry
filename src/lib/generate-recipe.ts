@@ -52,7 +52,7 @@ const RECIPE_PROMPT = (dishName: string) =>
     {"instruction": "Step instruction here.", "tipText": "Optional helpful tip or null"}
   ],
   "dietaryTags": ["Vegan", "Gluten-Free"],
-  "categories": ["Dinner"],
+  "categories": ["<choose from allowed list>"],
   "nutrition": {"calories": 450, "protein": 25.0, "carbs": 55.0, "fat": 12.0, "fiber": 6.0, "sugar": 8.0}
 }
 

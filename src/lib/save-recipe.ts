@@ -95,6 +95,7 @@ export async function saveGeneratedRecipe(
         heroImage: imageUrl,
         source: "ai",
         published: false,
+        imageStatus: "pending",
         prepTime: recipe.prepTime,
         cookTime: recipe.cookTime,
         servings: recipe.servings,

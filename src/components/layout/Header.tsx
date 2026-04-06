@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { NavBar } from "./NavBar";
 import { SearchBar } from "./SearchBar";
 import { AuthButtons } from "./AuthButtons";
@@ -37,13 +38,16 @@ export async function Header() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-2xl text-amber-700 hover:text-amber-800 transition-colors"
-          style={{ fontFamily: "cursive" }}
+          className="flex items-center hover:opacity-90 transition-opacity"
         >
-          <span className="text-2xl" role="img" aria-hidden="true">
-            {/* Inline SVG icon to avoid emoji */}
-          </span>
-          Ella&apos;s Pantry
+          <Image
+            src="/images/ellas-pantry-logo-w.png"
+            alt="Ella's Pantry"
+            width={120}
+            height={48}
+            className="h-10 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop navigation + search */}

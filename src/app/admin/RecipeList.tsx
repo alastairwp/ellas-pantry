@@ -38,6 +38,7 @@ interface Counts {
   ai?: number;
   csv?: number;
   manual?: number;
+  external?: number;
 }
 
 export function RecipeList() {
@@ -279,7 +280,7 @@ export function RecipeList() {
   }
 
   const totalAll =
-    (counts.ai || 0) + (counts.csv || 0) + (counts.manual || 0);
+    (counts.ai || 0) + (counts.csv || 0) + (counts.manual || 0) + (counts.external || 0);
 
   const filterBtn = (label: string, value: string, count?: number) => (
     <button
@@ -309,6 +310,12 @@ export function RecipeList() {
         return (
           <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
             CSV
+          </span>
+        );
+      case "external":
+        return (
+          <span className="inline-flex items-center rounded-full bg-teal-100 px-2 py-0.5 text-xs font-medium text-teal-700">
+            External
           </span>
         );
       default:
@@ -449,6 +456,7 @@ export function RecipeList() {
       <div className="flex flex-wrap items-center gap-2 mb-6">
         {filterBtn("All Sources", "", totalAll)}
         {filterBtn("AI Generated", "ai", counts.ai)}
+        {filterBtn("External", "external", counts.external)}
         {filterBtn("CSV Import", "csv", counts.csv)}
         {filterBtn("Manual", "manual", counts.manual)}
         <div className="ml-auto flex items-center rounded-lg border border-stone-200 overflow-hidden">
@@ -523,9 +531,11 @@ export function RecipeList() {
             <strong>
               {sourceFilter === "ai"
                 ? "AI Generated"
-                : sourceFilter === "csv"
-                  ? "CSV Import"
-                  : "Manual"}
+                : sourceFilter === "external"
+                  ? "External"
+                  : sourceFilter === "csv"
+                    ? "CSV Import"
+                    : "Manual"}
             </strong>
             )
           </span>

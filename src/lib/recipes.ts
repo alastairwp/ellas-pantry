@@ -161,14 +161,18 @@ export async function getRecipes(filters: RecipeFilters = {}) {
     }
   }
 
-  let orderBy: Record<string, string>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let orderBy: any;
   switch (sort) {
     case "quickest":
       orderBy = { cookTime: "asc" };
       break;
     case "newest":
-    default:
       orderBy = { createdAt: "desc" };
+      break;
+    case "popular":
+    default:
+      orderBy = { popularity: { compositeScore: "desc" } };
   }
 
   const [rawRecipes, total] = await Promise.all([
@@ -200,7 +204,7 @@ export async function getFeaturedRecipes(count = 6) {
   const rawRecipes = await prisma.recipe.findMany({
     where: { published: true },
     select: recipeCardSelect,
-    orderBy: { createdAt: "desc" },
+    orderBy: { popularity: { compositeScore: "desc" } },
     take: count,
   });
 
@@ -228,13 +232,13 @@ export async function getRelatedRecipes(
       ],
     },
     select: recipeCardSelect,
-    orderBy: { createdAt: "desc" },
+    orderBy: { popularity: { compositeScore: "desc" } },
     take: count * 2,
   });
 
   let results = rawRecipes.slice(0, count);
 
-  // Backfill with recent recipes if not enough matches
+  // Backfill with popular recipes if not enough matches
   if (results.length < count) {
     const existingSlugs = [slug, ...results.map((r) => r.slug)];
     const backfill = await prisma.recipe.findMany({
@@ -243,7 +247,7 @@ export async function getRelatedRecipes(
         slug: { notIn: existingSlugs },
       },
       select: recipeCardSelect,
-      orderBy: { createdAt: "desc" },
+      orderBy: { popularity: { compositeScore: "desc" } },
       take: count - results.length,
     });
     results = [...results, ...backfill];

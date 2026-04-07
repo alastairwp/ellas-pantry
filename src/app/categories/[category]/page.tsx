@@ -12,7 +12,6 @@ import {
   BarChart3,
   Camera,
   Star,
-  ChefHat,
   ArrowRight,
 } from "lucide-react";
 
@@ -106,10 +105,6 @@ export default async function CategoryPage({
       {content && (
         <div className="bg-gradient-to-b from-amber-50 to-white">
           <div className="mx-auto max-w-4xl px-4 py-12 sm:py-16 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-1.5 text-sm font-medium text-amber-800 mb-6">
-              <ChefHat className="h-4 w-4" />
-              {total.toLocaleString()} recipes and counting
-            </div>
             <h1 className="text-4xl font-bold text-stone-900 sm:text-5xl">
               {content.heroTitle}
             </h1>
@@ -143,6 +138,57 @@ export default async function CategoryPage({
           </p>
         </div>
       )}
+
+      {/* Recipe Grid */}
+      <div className="mx-auto max-w-6xl px-4 py-12">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl font-bold text-stone-900">
+              Latest {category.name} Recipes
+            </h2>
+            <p className="mt-1 text-sm text-stone-500">
+              {total} recipe{total !== 1 ? "s" : ""} in this category
+            </p>
+          </div>
+          <Link
+            href={`/recipes?category=${slug}`}
+            className="text-sm font-medium text-amber-600 hover:text-amber-700 flex items-center gap-1"
+          >
+            View all with filters
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {recipes.map((recipe) => (
+            <RecipeCard key={recipe.slug} recipe={recipe} />
+          ))}
+        </div>
+
+        {totalPages > 1 && (
+          <nav className="mt-10 flex items-center justify-center gap-2">
+            {page > 1 && (
+              <Link
+                href={`/categories/${slug}?page=${page - 1}`}
+                className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
+              >
+                Previous
+              </Link>
+            )}
+            <span className="px-3 py-2 text-sm text-stone-600">
+              Page {page} of {totalPages}
+            </span>
+            {page < totalPages && (
+              <Link
+                href={`/categories/${slug}?page=${page + 1}`}
+                className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
+              >
+                Next
+              </Link>
+            )}
+          </nav>
+        )}
+      </div>
 
       {/* Feature Grid */}
       {content && (
@@ -218,57 +264,6 @@ export default async function CategoryPage({
           </div>
         </div>
       )}
-
-      {/* Recipe Grid */}
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-stone-900">
-              Latest {category.name} Recipes
-            </h2>
-            <p className="mt-1 text-sm text-stone-500">
-              {total} recipe{total !== 1 ? "s" : ""} in this category
-            </p>
-          </div>
-          <Link
-            href={`/recipes?category=${slug}`}
-            className="text-sm font-medium text-amber-600 hover:text-amber-700 flex items-center gap-1"
-          >
-            View all with filters
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe.slug} recipe={recipe} />
-          ))}
-        </div>
-
-        {totalPages > 1 && (
-          <nav className="mt-10 flex items-center justify-center gap-2">
-            {page > 1 && (
-              <Link
-                href={`/categories/${slug}?page=${page - 1}`}
-                className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
-              >
-                Previous
-              </Link>
-            )}
-            <span className="px-3 py-2 text-sm text-stone-600">
-              Page {page} of {totalPages}
-            </span>
-            {page < totalPages && (
-              <Link
-                href={`/categories/${slug}?page=${page + 1}`}
-                className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
-              >
-                Next
-              </Link>
-            )}
-          </nav>
-        )}
-      </div>
 
       {/* Ella Signature */}
       <div className="mx-auto max-w-3xl px-4 pb-12 text-center">

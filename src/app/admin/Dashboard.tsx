@@ -16,6 +16,7 @@ import {
   Clock,
   Loader2,
   AlertCircle,
+  Globe,
 } from "lucide-react";
 
 interface DashboardData {
@@ -45,6 +46,19 @@ interface DashboardData {
   sourceBreakdown: { source: string; count: number }[];
   difficultyBreakdown: { difficulty: string; count: number }[];
   topRatedRecipes: { title: string; slug: string; ratingCount: number }[];
+  externalData?: {
+    totalExternalRecipes: number;
+    bySource: { source: string; count: number }[];
+    recipesWithPopularity: number;
+    latestScrapeRun: {
+      sourceSite: string;
+      status: string;
+      recipesFound: number;
+      recipesNew: number;
+      startedAt: string;
+      finishedAt: string | null;
+    } | null;
+  };
 }
 
 function StatCard({
@@ -381,6 +395,71 @@ export function Dashboard() {
               </div>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* External Popularity Data */}
+      {data.externalData && (
+        <section>
+          <h2 className="text-lg font-semibold text-stone-800 mb-4 flex items-center gap-2">
+            <Globe className="h-5 w-5 text-amber-600" />
+            External Popularity Data
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+            <StatCard
+              label="External Recipes"
+              value={data.externalData.totalExternalRecipes.toLocaleString()}
+              icon={Globe}
+              color="blue"
+            />
+            <StatCard
+              label="With Popularity Score"
+              value={data.externalData.recipesWithPopularity.toLocaleString()}
+              icon={TrendingUp}
+              color="green"
+            />
+            <StatCard
+              label="Last Scrape"
+              value={
+                data.externalData.latestScrapeRun
+                  ? data.externalData.latestScrapeRun.status
+                  : "Never"
+              }
+              icon={Clock}
+              color={
+                data.externalData.latestScrapeRun?.status === "completed"
+                  ? "green"
+                  : data.externalData.latestScrapeRun?.status === "running"
+                    ? "amber"
+                    : "stone"
+              }
+              subtitle={
+                data.externalData.latestScrapeRun
+                  ? `${data.externalData.latestScrapeRun.sourceSite} — ${data.externalData.latestScrapeRun.recipesFound} found`
+                  : undefined
+              }
+            />
+          </div>
+          {data.externalData.bySource.length > 0 && (
+            <div className="rounded-xl border border-stone-200 bg-white p-5">
+              <h3 className="text-sm font-semibold text-stone-800 mb-3">
+                External Recipes by Source
+              </h3>
+              <div className="space-y-2">
+                {data.externalData.bySource.map((s) => (
+                  <div
+                    key={s.source}
+                    className="flex items-center justify-between"
+                  >
+                    <span className="text-sm text-stone-600">{s.source}</span>
+                    <span className="text-sm font-medium text-stone-800">
+                      {s.count.toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
       )}
     </div>

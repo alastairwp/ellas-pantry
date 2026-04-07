@@ -12,10 +12,11 @@ import { IntroductionBackfill } from "./IntroductionBackfill";
 import { SiteSettings } from "./SiteSettings";
 import { UserManagement } from "./UserManagement";
 import { OccasionManagement } from "./OccasionManagement";
+import { ExternalRecipes } from "./ExternalRecipes";
 
-type Tab = "dashboard" | "recipes" | "generate" | "manual" | "duplicates" | "nutrition" | "introductions" | "occasions" | "users" | "settings";
+type Tab = "dashboard" | "recipes" | "external" | "generate" | "manual" | "duplicates" | "nutrition" | "introductions" | "occasions" | "users" | "settings";
 
-const VALID_TABS: Tab[] = ["dashboard", "recipes", "generate", "manual", "duplicates", "nutrition", "introductions", "occasions", "users", "settings"];
+const VALID_TABS: Tab[] = ["dashboard", "recipes", "external", "generate", "manual", "duplicates", "nutrition", "introductions", "occasions", "users", "settings"];
 
 export default function AdminPage() {
   const searchParams = useSearchParams();
@@ -66,6 +67,12 @@ export default function AdminPage() {
           className={tabClass("recipes")}
         >
           Recipes
+        </button>
+        <button
+          onClick={() => handleTabChange("external")}
+          className={tabClass("external")}
+        >
+          External
         </button>
         <button
           onClick={() => handleTabChange("generate")}
@@ -121,6 +128,7 @@ export default function AdminPage() {
       <div className="mt-6">
         {activeTab === "dashboard" && <Dashboard />}
         {activeTab === "recipes" && <RecipeList />}
+        {activeTab === "external" && <ExternalRecipes />}
         {activeTab === "generate" && <AIGenerator />}
         {activeTab === "manual" && <ManualRecipeForm />}
         {activeTab === "duplicates" && <Duplicates />}

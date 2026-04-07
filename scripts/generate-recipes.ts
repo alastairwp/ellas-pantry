@@ -16,6 +16,7 @@ import { config } from "dotenv";
 import { resolve } from "path";
 import { appendFileSync } from "fs";
 import { jsonrepair } from "jsonrepair";
+import { titleWords, jaccard } from "../src/lib/similarity.js";
 
 // Load .env from project root
 config({ path: resolve(__dirname, "..", ".env") });
@@ -41,6 +42,8 @@ function parseArgs() {
     model: opts["model"] || process.env.OLLAMA_MODEL || "mistral",
     ollamaUrl: opts["ollama-url"] || process.env.OLLAMA_BASE_URL || "http://localhost:11434",
     category: (opts["category"] || "general") as "general" | "baking" | "soups" | "bread" | "salads" | "curries" | "asian",
+    source: (opts["source"] || "combinatorial") as "combinatorial" | "external",
+    dryRun: process.argv.includes("--dry-run"),
   };
 }
 
@@ -1058,6 +1061,77 @@ async function saveRecipe(
 
 // ── Main ──────────────────────────────────────────────────────────────────
 
+// ── External (demand-driven) dish names ──────────────────────────────────
+
+async function getExternalDishNames(
+  db: PrismaClient,
+  count: number
+): Promise<string[]> {
+  // Get high-popularity external recipes
+  const external = await db.externalRecipe.findMany({
+    where: {
+      ratingCount: { not: null, gte: 10 },
+      ratingValue: { not: null, gte: 3.5 },
+    },
+    select: { title: true, ratingCount: true, ratingValue: true },
+    orderBy: { ratingCount: "desc" },
+  });
+
+  if (external.length === 0) {
+    console.log("No external recipes found. Run the scraper first.");
+    return [];
+  }
+
+  // Get existing internal recipe titles for dedup
+  const existing = await db.recipe.findMany({
+    where: { published: true },
+    select: { title: true },
+  });
+  const existingTitleSets = existing.map((r) => titleWords(r.title));
+
+  // Filter to external recipes with no close internal match
+  const gaps: { title: string; score: number }[] = [];
+  for (const ext of external) {
+    const words = titleWords(ext.title);
+    const hasDuplicate = existingTitleSets.some(
+      (existing) => jaccard(words, existing) >= 0.4
+    );
+    if (!hasDuplicate) {
+      gaps.push({
+        title: ext.title,
+        score: (ext.ratingCount ?? 0) * (ext.ratingValue ?? 0),
+      });
+    }
+  }
+
+  // Sort by popularity and return top N
+  gaps.sort((a, b) => b.score - a.score);
+  console.log(`Found ${gaps.length} external recipes not yet in our database`);
+  return gaps.slice(0, count).map((g) => g.title);
+}
+
+// ── Duplicate checking ──────────────────────────────────────────────────
+
+async function loadExistingTitleSets(
+  db: PrismaClient
+): Promise<Set<string>[]> {
+  const existing = await db.recipe.findMany({
+    select: { title: true },
+  });
+  return existing.map((r) => titleWords(r.title));
+}
+
+function isDuplicateTitle(
+  candidateTitle: string,
+  existingTitleSets: Set<string>[],
+  threshold = 0.6
+): boolean {
+  const words = titleWords(candidateTitle);
+  return existingTitleSets.some(
+    (existing) => jaccard(words, existing) >= threshold
+  );
+}
+
 async function main() {
   const opts = parseArgs();
 
@@ -1066,6 +1140,7 @@ async function main() {
     process.exit(1);
   }
 
+  console.log(`Source: ${opts.source}`);
   console.log(`Category: ${opts.category}`);
   console.log(`Provider: ${opts.provider}`);
   if (opts.provider === "local") {
@@ -1098,20 +1173,42 @@ async function main() {
 
     console.log(`Starting at offset ${offset}, generating ${opts.count} recipes\n`);
 
-    const dishNameGenerators: Record<string, (count: number, offset: number) => string[]> = {
-      general: generateDishNames,
-      baking: generateBakingDishNames,
-      soups: generateSoupNames,
-      bread: generateBreadNames,
-      salads: generateSaladNames,
-      curries: generateCurryNames,
-      asian: generateAsianDishNames,
-    };
-    const generator = dishNameGenerators[opts.category] || generateDishNames;
-    const dishNames = generator(opts.count, offset);
+    let dishNames: string[];
+
+    if (opts.source === "external") {
+      // Demand-driven: use popular external recipes not yet in our DB
+      dishNames = await getExternalDishNames(db, opts.count);
+    } else {
+      // Combinatorial: use generated dish names
+      const dishNameGenerators: Record<string, (count: number, offset: number) => string[]> = {
+        general: generateDishNames,
+        baking: generateBakingDishNames,
+        soups: generateSoupNames,
+        bread: generateBreadNames,
+        salads: generateSaladNames,
+        curries: generateCurryNames,
+        asian: generateAsianDishNames,
+      };
+      const generator = dishNameGenerators[opts.category] || generateDishNames;
+      dishNames = generator(opts.count, offset);
+    }
 
     if (dishNames.length === 0) {
-      console.log("No more dish names available at this offset.");
+      console.log("No more dish names available.");
+      return;
+    }
+
+    // Load existing titles for duplicate prevention
+    const existingTitleSets = await loadExistingTitleSets(db);
+    console.log(`Loaded ${existingTitleSets.length} existing recipes for duplicate checking`);
+
+    if (opts.dryRun) {
+      console.log(`\n[DRY RUN] Would generate ${dishNames.length} recipes:`);
+      for (const name of dishNames.slice(0, 20)) {
+        const dup = isDuplicateTitle(name, existingTitleSets);
+        console.log(`  ${dup ? "[SKIP]" : "[  OK]"} ${name}`);
+      }
+      if (dishNames.length > 20) console.log(`  ... and ${dishNames.length - 20} more`);
       return;
     }
 
@@ -1130,6 +1227,17 @@ async function main() {
       if (alreadyExists) {
         console.log(`  Skipped (already exists: id=${alreadyExists.id})`);
         // Advance offset so we don't revisit this slot
+        await db.setting.upsert({
+          where: { key: offsetKey },
+          update: { value: String(currentOffset + 1) },
+          create: { key: offsetKey, value: String(currentOffset + 1) },
+        });
+        continue;
+      }
+
+      // Skip if title is too similar to an existing recipe (fuzzy dedup)
+      if (isDuplicateTitle(dishName, existingTitleSets)) {
+        console.log(`  Skipped (similar recipe already exists)`);
         await db.setting.upsert({
           where: { key: offsetKey },
           update: { value: String(currentOffset + 1) },
@@ -1159,6 +1267,8 @@ async function main() {
         if (saved) {
           console.log(`  Saved: id=${saved.id} slug=${saved.slug}`);
           success++;
+          // Add to existing title sets so we don't generate duplicates in this batch
+          existingTitleSets.push(titleWords(recipe.title));
         } else {
           console.log("  Failed to save to database");
           failed++;

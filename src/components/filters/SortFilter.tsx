@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 const OPTIONS = [
+  { label: "Popular", value: "popular" },
   { label: "Newest", value: "newest" },
   { label: "Highest Rated", value: "rating" },
   { label: "Quickest", value: "quickest" },
@@ -12,12 +13,12 @@ const OPTIONS = [
 export function SortFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const active = searchParams.get("sort") || "newest";
+  const active = searchParams.get("sort") || "popular";
 
   const handleChange = useCallback(
     (value: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (value === "newest") {
+      if (value === "popular") {
         params.delete("sort");
       } else {
         params.set("sort", value);

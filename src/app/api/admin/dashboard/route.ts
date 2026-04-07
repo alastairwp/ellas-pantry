@@ -33,6 +33,10 @@ export async function GET() {
     recipesThisWeek,
     usersThisWeek,
     reviewsThisWeek,
+    totalExternalRecipes,
+    externalBySource,
+    totalWithPopularity,
+    latestScrapeRun,
   ] = await Promise.all([
     // Recipe counts
     prisma.recipe.count(),
@@ -133,6 +137,19 @@ export async function GET() {
     prisma.review.count({
       where: { createdAt: { gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) } },
     }),
+
+    // External recipe stats
+    prisma.externalRecipe.count(),
+    prisma.externalRecipe.groupBy({
+      by: ["sourceSite"],
+      _count: { id: true },
+    }),
+    prisma.recipePopularity.count({
+      where: { compositeScore: { gt: 0 } },
+    }),
+    prisma.scrapeRun.findFirst({
+      orderBy: { startedAt: "desc" },
+    }),
   ]);
 
   return NextResponse.json({
@@ -172,5 +189,23 @@ export async function GET() {
       slug: r.slug,
       ratingCount: r._count.ratings,
     })),
+    externalData: {
+      totalExternalRecipes,
+      bySource: externalBySource.map((s) => ({
+        source: s.sourceSite,
+        count: s._count.id,
+      })),
+      recipesWithPopularity: totalWithPopularity,
+      latestScrapeRun: latestScrapeRun
+        ? {
+            sourceSite: latestScrapeRun.sourceSite,
+            status: latestScrapeRun.status,
+            recipesFound: latestScrapeRun.recipesFound,
+            recipesNew: latestScrapeRun.recipesNew,
+            startedAt: latestScrapeRun.startedAt,
+            finishedAt: latestScrapeRun.finishedAt,
+          }
+        : null,
+    },
   });
 }

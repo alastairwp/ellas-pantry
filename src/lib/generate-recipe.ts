@@ -35,7 +35,7 @@ export interface GeneratedRecipe {
   };
 }
 
-const RECIPE_PROMPT = (dishName: string) =>
+export const RECIPE_PROMPT = (dishName: string) =>
   `Write an original recipe for "${dishName}". Return ONLY valid JSON with this exact structure, no other text. Do not wrap the JSON in code fences or markdown.
 
 {
@@ -69,7 +69,7 @@ Rules:
 - notes can be null if no preparation notes needed
 - nutrition: estimate calories (int, kcal), protein, carbs, fat, fiber, sugar (floats, grams) PER SERVING`;
 
-function repairJson(raw: string): string {
+export function repairJson(raw: string): string {
   // Strip non-printable control characters first (keep newline/tab)
   const stripped = raw.replace(/[\x00-\x1F\x7F]/g, (ch) =>
     ch === "\n" || ch === "\r" || ch === "\t" ? ch : ""
@@ -82,7 +82,7 @@ function repairJson(raw: string): string {
   }
 }
 
-function parseRecipeJson(text: string, dishName: string): GeneratedRecipe {
+export function parseRecipeJson(text: string, dishName: string): GeneratedRecipe {
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
     throw new Error(`No JSON found in response for "${dishName}"`);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateTroubleshooting } from "@/lib/generate-troubleshooting";
+import { checkRecipeAccess } from "@/lib/recipe-access";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -9,6 +10,11 @@ interface RouteParams {
 export async function POST(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
   const recipeId = parseInt(id, 10);
+
+  const access = await checkRecipeAccess(recipeId);
+  if (!access.ok) {
+    return NextResponse.json({ error: "Recipe not found" }, { status: access.status });
+  }
 
   const { problemDescription } = await request.json();
   if (

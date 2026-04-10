@@ -4,24 +4,43 @@ import { filterInvalidDietaryTagIds } from "./dietary-validation";
 import { generateIntroduction } from "./generate-introduction";
 import type { GeneratedRecipe } from "./generate-recipe";
 
+export interface SaveRecipeOptions {
+  source?: string; // defaults to "ai"
+  createdById?: string | null; // null for system/admin
+  visibility?: "public" | "private" | "shared"; // defaults to "public"
+  published?: boolean; // defaults to false
+  skipDuplicateCheck?: boolean; // user-owned recipes shouldn't dedupe against public titles
+}
+
 /**
  * Save a generated recipe to the database.
  * Handles ingredient upsert, step creation, and tag/category linking.
  */
 export async function saveGeneratedRecipe(
   recipe: GeneratedRecipe,
-  imageUrl: string
+  imageUrl: string,
+  opts: SaveRecipeOptions = {}
 ): Promise<{ id: number; slug: string } | null> {
+  const {
+    source = "ai",
+    createdById = null,
+    visibility = "public",
+    published = false,
+    skipDuplicateCheck = false,
+  } = opts;
   try {
     let slug = slugify(recipe.title);
 
-    // Skip if a recipe with this title already exists
-    const existingByTitle = await prisma.recipe.findFirst({
-      where: { title: recipe.title },
-    });
-    if (existingByTitle) {
-      console.log(`Skipping duplicate recipe: "${recipe.title}" (existing ID: ${existingByTitle.id})`);
-      return { id: existingByTitle.id, slug: existingByTitle.slug };
+    // Skip if a recipe with this title already exists (system/admin flow only).
+    // User-owned recipes should NOT dedupe against existing public titles.
+    if (!skipDuplicateCheck) {
+      const existingByTitle = await prisma.recipe.findFirst({
+        where: { title: recipe.title },
+      });
+      if (existingByTitle) {
+        console.log(`Skipping duplicate recipe: "${recipe.title}" (existing ID: ${existingByTitle.id})`);
+        return { id: existingByTitle.id, slug: existingByTitle.slug };
+      }
     }
 
     // Ensure slug uniqueness (edge case: different title, same slug)
@@ -93,8 +112,10 @@ export async function saveGeneratedRecipe(
         title: recipe.title,
         description: recipe.description,
         heroImage: imageUrl,
-        source: "ai",
-        published: false,
+        source,
+        published,
+        createdById,
+        visibility,
         imageStatus: "pending",
         prepTime: recipe.prepTime,
         cookTime: recipe.cookTime,

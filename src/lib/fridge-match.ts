@@ -1,14 +1,30 @@
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 
-export async function matchRecipesByIngredientIds(matchedIds: number[]) {
+export async function matchRecipesByIngredientIds(
+  matchedIds: number[],
+  userId?: string | null
+) {
   if (matchedIds.length === 0) return [];
+
+  // Visibility-aware: include public catalogue + (if logged in) the user's own
+  // recipes + recipes shared with the user.
+  const visibilityClauses: Prisma.RecipeWhereInput[] = [
+    { published: true, visibility: "public" },
+  ];
+  if (userId) {
+    visibilityClauses.push({ createdById: userId });
+    visibilityClauses.push({
+      sharedWith: { some: { sharedWithUserId: userId } },
+    });
+  }
 
   const recipes = await prisma.recipe.findMany({
     where: {
-      published: true,
       ingredients: {
         some: { ingredientId: { in: matchedIds } },
       },
+      OR: visibilityClauses,
     },
     select: {
       id: true,

@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     const matched = await matchIngredientNames(ingredientNames);
     const matchedIds = matched.map((i) => i.id);
-    const recipes = await matchRecipesByIngredientIds(matchedIds);
+    const recipes = await matchRecipesByIngredientIds(matchedIds, session.user.id);
     return NextResponse.json({ recipes });
   } catch (error) {
     console.error("Manual fridge match error:", error);

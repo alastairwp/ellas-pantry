@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Camera, Upload, Loader2, X, RefrigeratorIcon, Plus, Search, Trash2 } from "lucide-react";
 import { RecipeCard } from "@/components/recipe/RecipeCard";
 import type { RecipeCardData } from "@/types/recipe";
+import { resizeImage } from "@/lib/image-utils";
 
 type ScoredRecipe = RecipeCardData & {
   matchCount: number;
@@ -25,32 +26,6 @@ type Mode = "scan" | "manual";
 type ScanState = "idle" | "preview" | "scanning" | "results" | "error";
 type ManualState = "editing" | "searching" | "results" | "error";
 
-function resizeImage(file: File, maxSize: number): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new window.Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      let { width, height } = img;
-      if (width > maxSize || height > maxSize) {
-        if (width > height) {
-          height = (height / width) * maxSize;
-          width = maxSize;
-        } else {
-          width = (width / height) * maxSize;
-          height = maxSize;
-        }
-      }
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL("image/jpeg", 0.8));
-    };
-    img.onerror = reject;
-    img.src = URL.createObjectURL(file);
-  });
-}
-
 export function FridgeScanner() {
   const [mode, setMode] = useState<Mode>("scan");
 
@@ -59,8 +34,6 @@ export function FridgeScanner() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   // Manual state
   const [manualState, setManualState] = useState<ManualState>("editing");
@@ -311,45 +284,42 @@ export function FridgeScanner() {
               </p>
 
               <div className="flex flex-wrap justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors"
+                <label
+                  htmlFor="fridge-scan-upload"
+                  className="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors"
                 >
                   <Upload className="h-4 w-4" />
                   Upload Photo
-                </button>
-                <button
-                  type="button"
-                  onClick={() => cameraInputRef.current?.click()}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-stone-700 border border-stone-300 rounded-lg font-medium hover:bg-stone-50 transition-colors"
+                  <input
+                    id="fridge-scan-upload"
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleFile(file);
+                    }}
+                  />
+                </label>
+                <label
+                  htmlFor="fridge-scan-camera"
+                  className="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-white text-stone-700 border border-stone-300 rounded-lg font-medium hover:bg-stone-50 transition-colors"
                 >
                   <Camera className="h-4 w-4" />
                   Take Photo
-                </button>
+                  <input
+                    id="fridge-scan-camera"
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    className="sr-only"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleFile(file);
+                    }}
+                  />
+                </label>
               </div>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFile(file);
-                }}
-              />
-              <input
-                ref={cameraInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFile(file);
-                }}
-              />
 
               {scanError && (
                 <p className="mt-4 text-sm text-red-600">{scanError}</p>

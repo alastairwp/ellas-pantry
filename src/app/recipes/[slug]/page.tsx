@@ -41,7 +41,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const session = await auth();
   const isAdmin = session?.user?.role === "admin";
-  const recipe = await getRecipeBySlug(slug, isAdmin);
+  const recipe = await getRecipeBySlug(slug, isAdmin, session?.user?.id ?? null);
   if (!recipe) return { title: "Recipe Not Found" };
 
   return {
@@ -66,7 +66,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
   const { slug } = await params;
   const session = await auth();
   const isAdmin = session?.user?.role === "admin";
-  const recipe = await getRecipeBySlug(slug, isAdmin);
+  const recipe = await getRecipeBySlug(slug, isAdmin, session?.user?.id ?? null);
   if (!recipe) notFound();
 
   const dietaryTags = recipe.dietaryTags.map((t) => t.dietaryTag);

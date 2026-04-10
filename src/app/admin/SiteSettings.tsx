@@ -170,6 +170,101 @@ function SelectSetting({ label, description, settingKey, options, defaultValue }
   );
 }
 
+interface NumberSettingProps {
+  label: string;
+  description: string;
+  settingKey: string;
+  defaultValue: number;
+  min?: number;
+}
+
+function NumberSetting({ label, description, settingKey, defaultValue, min = 0 }: NumberSettingProps) {
+  const [value, setValue] = useState(String(defaultValue));
+  const [savedValue, setSavedValue] = useState(String(defaultValue));
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const savedTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => {
+    fetch(`/api/admin/settings?key=${settingKey}`)
+      .then((r) => r.json())
+      .then((d) => {
+        const v = d.value ?? String(defaultValue);
+        setValue(v);
+        setSavedValue(v);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [settingKey, defaultValue]);
+
+  async function save() {
+    const parsed = parseInt(value, 10);
+    if (!Number.isFinite(parsed) || parsed < min) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: settingKey, value: String(parsed) }),
+      });
+      if (res.ok) {
+        setSavedValue(String(parsed));
+        setValue(String(parsed));
+        setSaved(true);
+        clearTimeout(savedTimeout.current);
+        savedTimeout.current = setTimeout(() => setSaved(false), 2000);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-3 py-3">
+        <Loader2 className="h-4 w-4 animate-spin text-stone-400" />
+        <span className="text-sm text-stone-400">Loading...</span>
+      </div>
+    );
+  }
+
+  const isDirty = value !== savedValue;
+
+  return (
+    <div className="py-4 border-b border-stone-100 last:border-b-0">
+      <div className="mb-2">
+        <p className="text-sm font-medium text-stone-800">{label}</p>
+        <p className="text-sm text-stone-500">{description}</p>
+      </div>
+      <input
+        type="number"
+        min={min}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="w-32 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-colors"
+      />
+      <div className="mt-2 flex items-center gap-3">
+        <button
+          onClick={save}
+          disabled={saving || !isDirty}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+          Save
+        </button>
+        {saved && (
+          <span className="inline-flex items-center gap-1 text-sm text-green-600">
+            <Check className="h-3.5 w-3.5" /> Saved
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 interface TextSettingProps {
   label: string;
   description: string;
@@ -278,6 +373,19 @@ export function SiteSettings() {
           label="Google Sign-In"
           description="Allow users to sign in and register with their Google account."
           settingKey="google-auth-enabled"
+        />
+      </div>
+
+      <div className="mt-6 rounded-lg border border-stone-200 bg-white p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-2">
+          User Recipes
+        </h3>
+        <NumberSetting
+          label="Per-user recipe limit"
+          description="Maximum number of private recipes a non-admin user can create. Admins are exempt."
+          settingKey="user-recipe-limit"
+          defaultValue={50}
+          min={1}
         />
       </div>
 

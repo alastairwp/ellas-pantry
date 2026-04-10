@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     const identifiedIngredients: string[] = JSON.parse(jsonMatch[0]);
     const matchedIngredients = await matchIngredientNames(identifiedIngredients);
     const matchedIds = matchedIngredients.map((i) => i.id);
-    const recipes = await matchRecipesByIngredientIds(matchedIds);
+    const recipes = await matchRecipesByIngredientIds(matchedIds, session.user.id);
 
     return NextResponse.json({
       ingredients: identifiedIngredients,

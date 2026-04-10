@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateSubstitutions } from "@/lib/generate-substitutions";
+import { checkRecipeAccess } from "@/lib/recipe-access";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -11,6 +12,11 @@ const VALID_TYPES = ["vegan", "gluten-free", "dairy-free", "budget"];
 export async function POST(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
   const recipeId = parseInt(id, 10);
+
+  const access = await checkRecipeAccess(recipeId);
+  if (!access.ok) {
+    return NextResponse.json({ error: "Recipe not found" }, { status: access.status });
+  }
 
   const { type } = await request.json();
   if (!type || !VALID_TYPES.includes(type)) {

@@ -9,3 +9,5 @@ docs/
 .claude/
 scripts/.venv/
 __pycache__/
+public/images/recipes/
+public/images/avatars/

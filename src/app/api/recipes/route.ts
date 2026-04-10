@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get("limit") || "20", 10);
   const query = searchParams.get("query");
 
-  const where: Record<string, unknown> = { published: true };
+  const where: Record<string, unknown> = { published: true, visibility: "public" };
   if (query) {
     where.OR = [
       { title: { contains: query } },

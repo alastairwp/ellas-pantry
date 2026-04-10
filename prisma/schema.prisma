@@ -29,6 +29,8 @@ model User {
   mealPlans         MealPlan[]
   collections       Collection[]
   pushSubscriptions PushSubscription[]
+  createdRecipes     Recipe[]          @relation("UserRecipes")
+  sharedRecipeAccess RecipeShareUser[] @relation("SharedRecipes")
 }
 
 model Account {
@@ -77,11 +79,16 @@ model Recipe {
   cookTime    Int // minutes
   servings    Int
   difficulty  String   @default("Medium") // Easy, Medium, Hard
-  source      String   @default("manual") // "manual", "csv", "ai", "external"
+  source      String   @default("manual") // "manual", "csv", "ai", "external", "user-photo-dish"
   imageStatus String   @default("none") // "none", "pending", "generated", "skip"
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // User ownership & visibility (null createdById = system/admin recipe)
+  createdById String?
+  visibility  String  @default("public") // "public" | "private" | "shared"
+  shareToken  String? @unique // unguessable link token (nullable = link sharing off)
 
   // Estimated nutrition per serving (AI-generated, not verified)
   calories             Int?
@@ -106,6 +113,23 @@ model Recipe {
   shares         Share[]
   adaptedStepsCache AdaptedStepsCache[]
   popularity        RecipePopularity?
+  createdBy  User?             @relation("UserRecipes", fields: [createdById], references: [id], onDelete: SetNull)
+  sharedWith RecipeShareUser[]
+
+  @@index([createdById])
+  @@index([visibility])
+}
+
+model RecipeShareUser {
+  recipeId         Int
+  sharedWithUserId String
+  createdAt        DateTime @default(now())
+
+  recipe     Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  sharedWith User   @relation("SharedRecipes", fields: [sharedWithUserId], references: [id], onDelete: Cascade)
+
+  @@id([recipeId, sharedWithUserId])
+  @@index([sharedWithUserId])
 }
 
 model Rating {

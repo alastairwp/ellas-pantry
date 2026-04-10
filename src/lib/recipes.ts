@@ -1,6 +1,7 @@
 import { prisma } from "./prisma";
 import type { RecipeFilters } from "@/types/recipe";
 import { ALLERGY_TO_DIETARY_TAG, type AllergyType } from "@/lib/allergies";
+import { recipeVisibilityClause } from "@/lib/recipe-access";
 
 const recipeIncludes = {
   ingredients: {
@@ -62,9 +63,25 @@ async function withRatingStats<T extends { id: number }>(recipes: T[]) {
   });
 }
 
-export async function getRecipeBySlug(slug: string, includeUnpublished = false) {
-  const recipe = await prisma.recipe.findUnique({
-    where: { slug, ...(includeUnpublished ? {} : { published: true }) },
+/**
+ * Fetch a recipe by slug, restricted to what the current user can see.
+ *
+ * - `includeUnpublished` (admin) bypasses all filters.
+ * - Otherwise: public published recipes are always allowed; if `userId` is
+ *   provided, the user's own recipes and recipes shared with them are also
+ *   accessible.
+ */
+export async function getRecipeBySlug(
+  slug: string,
+  includeUnpublished = false,
+  userId: string | null = null
+) {
+  const where = includeUnpublished
+    ? { slug }
+    : { slug, ...recipeVisibilityClause(userId) };
+
+  const recipe = await prisma.recipe.findFirst({
+    where,
     include: recipeIncludes,
   });
 
@@ -90,7 +107,7 @@ export async function getRecipes(filters: RecipeFilters = {}) {
     page = 1, limit = 12, excludeAllergens,
   } = filters;
 
-  const where: Record<string, unknown> = { published: true };
+  const where: Record<string, unknown> = { published: true, visibility: "public" };
 
   if (query) {
     where.OR = [
@@ -202,7 +219,7 @@ export async function getRecipes(filters: RecipeFilters = {}) {
 
 export async function getFeaturedRecipes(count = 6) {
   const rawRecipes = await prisma.recipe.findMany({
-    where: { published: true },
+    where: { published: true, visibility: "public" },
     select: recipeCardSelect,
     orderBy: { popularity: { compositeScore: "desc" } },
     take: count,
@@ -221,6 +238,7 @@ export async function getRelatedRecipes(
   const rawRecipes = await prisma.recipe.findMany({
     where: {
       published: true,
+      visibility: "public",
       slug: { not: slug },
       OR: [
         ...(categoryIds.length > 0
@@ -244,6 +262,7 @@ export async function getRelatedRecipes(
     const backfill = await prisma.recipe.findMany({
       where: {
         published: true,
+        visibility: "public",
         slug: { notIn: existingSlugs },
       },
       select: recipeCardSelect,
@@ -259,11 +278,11 @@ export async function getRelatedRecipes(
 export async function getRecipeOfTheDay() {
   const today = new Date().toISOString().slice(0, 10); // "2026-03-04"
   const seed = [...today].reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  const count = await prisma.recipe.count({ where: { published: true } });
+  const count = await prisma.recipe.count({ where: { published: true, visibility: "public" } });
   if (count === 0) return null;
   const skip = seed % count;
   const [recipe] = await prisma.recipe.findMany({
-    where: { published: true },
+    where: { published: true, visibility: "public" },
     select: recipeCardSelect,
     skip,
     take: 1,
@@ -273,7 +292,7 @@ export async function getRecipeOfTheDay() {
 
 export async function getAllRecipeSlugs() {
   return prisma.recipe.findMany({
-    where: { published: true },
+    where: { published: true, visibility: "public" },
     select: { slug: true, updatedAt: true },
   });
 }

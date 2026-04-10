@@ -68,6 +68,12 @@ export async function Header() {
               My Fridge
             </Link>
             <Link
+              href="/my-recipes"
+              className="text-sm font-medium text-stone-600 hover:text-amber-700 transition-colors"
+            >
+              My Recipes
+            </Link>
+            <Link
               href="/collections"
               className="text-sm font-medium text-stone-600 hover:text-amber-700 transition-colors"
             >
@@ -94,6 +100,12 @@ export async function Header() {
               className="block px-3 py-2 text-base font-medium text-stone-700 hover:text-amber-700 hover:bg-stone-50 rounded-lg transition-colors"
             >
               My Fridge
+            </Link>
+            <Link
+              href="/my-recipes"
+              className="block px-3 py-2 text-base font-medium text-stone-700 hover:text-amber-700 hover:bg-stone-50 rounded-lg transition-colors"
+            >
+              My Recipes
             </Link>
             <Link
               href="/collections"

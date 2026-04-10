@@ -3,6 +3,7 @@ import { createHash } from "crypto";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { generateAdaptedSteps } from "@/lib/generate-adapted-steps";
+import { checkRecipeAccess } from "@/lib/recipe-access";
 
 const VALID_LEVELS = ["beginner", "advanced"] as const;
 
@@ -14,6 +15,11 @@ export async function POST(
   const recipeId = parseInt(id, 10);
   if (isNaN(recipeId)) {
     return NextResponse.json({ error: "Invalid recipe ID" }, { status: 400 });
+  }
+
+  const access = await checkRecipeAccess(recipeId);
+  if (!access.ok) {
+    return NextResponse.json({ error: "Recipe not found" }, { status: access.status });
   }
 
   const body = await request.json();

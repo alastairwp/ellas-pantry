@@ -182,14 +182,17 @@ export async function getRecipes(filters: RecipeFilters = {}) {
   let orderBy: any;
   switch (sort) {
     case "quickest":
-      orderBy = { cookTime: "asc" };
+      orderBy = [{ cookTime: "asc" }, { id: "asc" }];
       break;
     case "newest":
-      orderBy = { createdAt: "desc" };
+      orderBy = [{ createdAt: "desc" }, { id: "asc" }];
       break;
     case "popular":
     default:
-      orderBy = { popularity: { compositeScore: "desc" } };
+      orderBy = [
+        { popularity: { compositeScore: "desc" } },
+        { id: "asc" },
+      ];
   }
 
   const [rawRecipes, total] = await Promise.all([

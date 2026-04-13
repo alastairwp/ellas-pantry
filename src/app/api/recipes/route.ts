@@ -9,6 +9,8 @@ export async function GET(request: NextRequest) {
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "20", 10);
   const query = searchParams.get("query");
+  const category = searchParams.get("category");
+  const occasion = searchParams.get("occasion");
 
   const where: Record<string, unknown> = { published: true, visibility: "public" };
   if (query) {
@@ -17,20 +19,48 @@ export async function GET(request: NextRequest) {
       { description: { contains: query } },
     ];
   }
+  if (category) {
+    where.categories = { some: { category: { slug: category } } };
+  }
+  if (occasion) {
+    where.occasions = { some: { occasion: { slug: occasion } } };
+  }
 
-  const [recipes, total] = await Promise.all([
+  const [rawRecipes, total] = await Promise.all([
     prisma.recipe.findMany({
       where,
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        categories: { include: { category: true } },
-        dietaryTags: { include: { dietaryTag: true } },
+        categories: { include: { category: { select: { name: true, slug: true } } } },
+        dietaryTags: { include: { dietaryTag: { select: { name: true, slug: true } } } },
       },
     }),
     prisma.recipe.count({ where }),
   ]);
+
+  // Add rating stats
+  const recipeIds = rawRecipes.map((r) => r.id);
+  const ratings = recipeIds.length > 0
+    ? await prisma.rating.groupBy({
+        by: ["recipeId"],
+        where: { recipeId: { in: recipeIds } },
+        _avg: { score: true },
+        _count: { score: true },
+      })
+    : [];
+  const ratingMap = new Map(
+    ratings.map((r) => [r.recipeId, { avg: r._avg.score || 0, count: r._count.score }])
+  );
+  const recipes = rawRecipes.map((recipe) => {
+    const stats = ratingMap.get(recipe.id);
+    return {
+      ...recipe,
+      ratingAverage: stats ? Math.round(stats.avg * 10) / 10 : 0,
+      ratingCount: stats?.count || 0,
+    };
+  });
 
   return NextResponse.json({ recipes, total, page, totalPages: Math.ceil(total / limit) });
 }

@@ -3,11 +3,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getRecipes } from "@/lib/recipes";
 import { getOccasionBySlug } from "@/lib/occasions";
-import { RecipeCard } from "@/components/recipe/RecipeCard";
+import { ShowMoreRecipes } from "@/components/recipe/ShowMoreRecipes";
 
 interface OccasionPageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ page?: string }>;
 }
 
 export async function generateMetadata({
@@ -27,17 +26,14 @@ export async function generateMetadata({
 
 export default async function OccasionPage({
   params,
-  searchParams,
 }: OccasionPageProps) {
   const { slug } = await params;
-  const sp = await searchParams;
   const occasion = await getOccasionBySlug(slug);
   if (!occasion) notFound();
 
-  const page = parseInt(sp.page || "1", 10);
   const { recipes, total, totalPages } = await getRecipes({
     occasion: slug,
-    page,
+    limit: 36,
   });
 
   return (
@@ -48,7 +44,7 @@ export default async function OccasionPage({
       >
         &larr; All Recipes
       </Link>
-      <h1 className="mt-4 text-3xl font-bold text-stone-900">
+      <h1 id="recipes" className="mt-4 text-3xl font-bold text-stone-900 scroll-mt-4">
         {occasion.name} Recipes
       </h1>
       {occasion.description && (
@@ -71,35 +67,14 @@ export default async function OccasionPage({
           </Link>
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe.slug} recipe={recipe} />
-          ))}
+        <div className="mt-8">
+          <ShowMoreRecipes
+            initialRecipes={recipes}
+            totalPages={totalPages}
+            filterParam={`occasion=${slug}`}
+            limit={36}
+          />
         </div>
-      )}
-
-      {totalPages > 1 && (
-        <nav className="mt-10 flex items-center justify-center gap-2">
-          {page > 1 && (
-            <Link
-              href={`/occasions/${slug}?page=${page - 1}`}
-              className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
-            >
-              Previous
-            </Link>
-          )}
-          <span className="px-3 py-2 text-sm text-stone-600">
-            Page {page} of {totalPages}
-          </span>
-          {page < totalPages && (
-            <Link
-              href={`/occasions/${slug}?page=${page + 1}`}
-              className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
-            >
-              Next
-            </Link>
-          )}
-        </nav>
       )}
     </div>
   );

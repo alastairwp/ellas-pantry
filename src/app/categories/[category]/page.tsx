@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getRecipes } from "@/lib/recipes";
 import { getCategoryBySlug } from "@/lib/categories";
-import { RecipeCard } from "@/components/recipe/RecipeCard";
+import { ShowMoreRecipes } from "@/components/recipe/ShowMoreRecipes";
 import { categoryContent } from "@/lib/category-content";
 import {
   Shield,
@@ -17,7 +17,6 @@ import {
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>;
-  searchParams: Promise<{ page?: string }>;
 }
 
 export async function generateMetadata({
@@ -85,18 +84,15 @@ const features = [
 
 export default async function CategoryPage({
   params,
-  searchParams,
 }: CategoryPageProps) {
   const { category: slug } = await params;
-  const sp = await searchParams;
   const category = await getCategoryBySlug(slug);
   if (!category) notFound();
 
   const content = categoryContent[slug];
-  const page = parseInt(sp.page || "1", 10);
   const { recipes, total, totalPages } = await getRecipes({
     category: slug,
-    page,
+    limit: 36,
   });
 
   return (
@@ -143,7 +139,7 @@ export default async function CategoryPage({
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-stone-900">
+            <h2 id="recipes" className="text-2xl font-bold text-stone-900 scroll-mt-4">
               Latest {category.name} Recipes
             </h2>
             <p className="mt-1 text-sm text-stone-500">
@@ -159,35 +155,12 @@ export default async function CategoryPage({
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe.slug} recipe={recipe} />
-          ))}
-        </div>
-
-        {totalPages > 1 && (
-          <nav className="mt-10 flex items-center justify-center gap-2">
-            {page > 1 && (
-              <Link
-                href={`/categories/${slug}?page=${page - 1}`}
-                className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
-              >
-                Previous
-              </Link>
-            )}
-            <span className="px-3 py-2 text-sm text-stone-600">
-              Page {page} of {totalPages}
-            </span>
-            {page < totalPages && (
-              <Link
-                href={`/categories/${slug}?page=${page + 1}`}
-                className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
-              >
-                Next
-              </Link>
-            )}
-          </nav>
-        )}
+        <ShowMoreRecipes
+          initialRecipes={recipes}
+          totalPages={totalPages}
+          filterParam={`category=${slug}`}
+          limit={36}
+        />
       </div>
 
       {/* Feature Grid */}

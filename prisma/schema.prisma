@@ -181,7 +181,7 @@ model RecipeIngredient {
   recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   ingredient Ingredient @relation(fields: [ingredientId], references: [id])
 
-  @@unique([recipeId, ingredientId])
+  @@unique([recipeId, ingredientId, orderIndex])
 }
 
 model RecipeStep {

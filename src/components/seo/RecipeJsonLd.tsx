@@ -32,6 +32,7 @@ interface JsonLdOccasion {
 
 interface RecipeJsonLdProps {
   title: string;
+  slug: string;
   description: string;
   heroImage: string;
   prepTime: number;
@@ -67,6 +68,7 @@ function toIsoDuration(minutes: number): string {
 
 export function RecipeJsonLd({
   title,
+  slug,
   description,
   heroImage,
   prepTime,
@@ -83,18 +85,23 @@ export function RecipeJsonLd({
   calories,
   occasions,
 }: RecipeJsonLdProps) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.ellaspantry.co.uk";
+  const recipeUrl = `${siteUrl}/recipes/${slug}`;
+
   const suitableForDiet = dietaryTags
     .map((dt) => dietaryTagToSchemaOrg[dt.dietaryTag.slug])
     .filter(Boolean);
 
   const fullImageUrl = heroImage.startsWith("/")
-    ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.ellaspantry.co.uk"}${heroImage}`
+    ? `${siteUrl}${heroImage}`
     : heroImage;
 
-  const keywords = occasions
-    ?.map((o) => o.occasion.name)
-    .filter(Boolean)
-    .join(", ");
+  const keywordParts = [
+    ...(occasions?.map((o) => o.occasion.name) || []),
+    ...categories.map((c) => c.category.name),
+    ...dietaryTags.map((dt) => dt.dietaryTag.name),
+  ].filter(Boolean);
+  const keywords = keywordParts.length > 0 ? keywordParts.join(", ") : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -128,6 +135,7 @@ export function RecipeJsonLd({
           ? step.instruction.substring(0, 50).trimEnd() + "…"
           : step.instruction,
       text: step.instruction,
+      url: `${recipeUrl}#step-${step.stepNumber}`,
     })),
     datePublished: new Date(createdAt).toISOString(),
     dateModified: new Date(updatedAt).toISOString(),

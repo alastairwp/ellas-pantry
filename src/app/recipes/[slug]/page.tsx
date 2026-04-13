@@ -80,6 +80,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
       )}
       <RecipeJsonLd
         title={recipe.title}
+        slug={recipe.slug}
         description={recipe.description}
         heroImage={recipe.heroImage}
         prepTime={recipe.prepTime}

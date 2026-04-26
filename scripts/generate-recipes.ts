@@ -13,8 +13,8 @@
 
 import { PrismaClient } from "@prisma/client";
 import { config } from "dotenv";
-import { resolve } from "path";
-import { appendFileSync } from "fs";
+import { resolve, basename } from "path";
+import { appendFileSync, readdirSync, copyFileSync, mkdirSync, existsSync } from "fs";
 import { jsonrepair } from "jsonrepair";
 import { titleWords, jaccard } from "../src/lib/similarity.js";
 
@@ -42,8 +42,11 @@ function parseArgs() {
     model: opts["model"] || process.env.OLLAMA_MODEL || "mistral",
     ollamaUrl: opts["ollama-url"] || process.env.OLLAMA_BASE_URL || "http://localhost:11434",
     category: (opts["category"] || "general") as "general" | "baking" | "soups" | "bread" | "salads" | "curries" | "asian",
-    source: (opts["source"] || "combinatorial") as "combinatorial" | "external",
+    source: (opts["source"] || "combinatorial") as "combinatorial" | "external" | "image-files",
     dryRun: process.argv.includes("--dry-run"),
+    localImages: process.argv.includes("--local-images"),
+    localImagesDir: opts["local-images-dir"] || resolve(__dirname, "generated-images"),
+    publish: process.argv.includes("--publish"),
   };
 }
 
@@ -955,7 +958,8 @@ function slugify(text: string): string {
 async function saveRecipe(
   db: PrismaClient,
   recipe: GeneratedRecipe,
-  imageUrl: string
+  imageUrl: string,
+  saveOpts: { imageStatus?: string; published?: boolean } = {}
 ): Promise<{ id: number; slug: string } | null> {
   try {
     let slug = slugify(recipe.title);
@@ -1018,8 +1022,8 @@ async function saveRecipe(
         description: recipe.description,
         heroImage: imageUrl,
         source: "ai",
-        imageStatus: "pending",
-        published: false,
+        imageStatus: saveOpts.imageStatus ?? "pending",
+        published: saveOpts.published ?? false,
         prepTime: recipe.prepTime,
         cookTime: recipe.cookTime,
         servings: recipe.servings,
@@ -1174,8 +1178,29 @@ async function main() {
     console.log(`Starting at offset ${offset}, generating ${opts.count} recipes\n`);
 
     let dishNames: string[];
+    // Parallel array of source image filenames (for image-files mode); empty otherwise
+    let imageFilenames: string[] = [];
 
-    if (opts.source === "external") {
+    if (opts.source === "image-files") {
+      if (!existsSync(opts.localImagesDir)) {
+        console.error(`ERROR: --local-images-dir not found: ${opts.localImagesDir}`);
+        process.exit(1);
+      }
+      const all = readdirSync(opts.localImagesDir)
+        .filter((f) => /\.(webp|jpg|jpeg|png)$/i.test(f))
+        .sort();
+      const slice = all.slice(offset, offset + opts.count);
+      imageFilenames = slice;
+      dishNames = slice.map((f) => {
+        const stem = f.replace(/\.[^.]+$/, "");
+        return stem
+          .replace(/-/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase())
+          .replace(/\bAmp\b/g, "&")
+          .replace(/\bWw\b/g, "WW");
+      });
+      console.log(`Using ${dishNames.length} image filenames as dish names (offset ${offset})`);
+    } else if (opts.source === "external") {
       // Demand-driven: use popular external recipes not yet in our DB
       dishNames = await getExternalDishNames(db, opts.count);
     } else {
@@ -1215,6 +1240,23 @@ async function main() {
     const logPath = resolve(__dirname, "generated-recipes-log.jsonl");
     let success = 0;
     let failed = 0;
+
+    // Local-images pool (shuffled, used set tracked across this run)
+    let localImagePool: string[] = [];
+    if (opts.localImages) {
+      if (!existsSync(opts.localImagesDir)) {
+        console.error(`ERROR: --local-images dir not found: ${opts.localImagesDir}`);
+        process.exit(1);
+      }
+      const all = readdirSync(opts.localImagesDir).filter((f) => /\.(webp|jpg|jpeg|png)$/i.test(f));
+      // Fisher-Yates shuffle
+      for (let i = all.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [all[i], all[j]] = [all[j], all[i]];
+      }
+      localImagePool = all;
+      console.log(`Loaded ${localImagePool.length} local images from ${opts.localImagesDir}`);
+    }
 
     for (let i = 0; i < dishNames.length; i++) {
       const dishName = dishNames[i];
@@ -1259,11 +1301,36 @@ async function main() {
         const elapsed = ((Date.now() - start) / 1000).toFixed(1);
         console.log(`  Generated "${recipe.title}" in ${elapsed}s`);
 
-        // Placeholder image — the image script will replace it
-        const encoded = encodeURIComponent(recipe.title);
-        const imageUrl = `https://placehold.co/1200x1800/f59e0b/ffffff?text=${encoded}`;
+        let imageUrl: string;
+        const saveOpts: { imageStatus?: string; published?: boolean } = {};
 
-        const saved = await saveRecipe(db, recipe, imageUrl);
+        // Pick image: in image-files mode, use the matching filename; otherwise random from pool
+        let pickedFilename: string | null = null;
+        if (opts.source === "image-files" && imageFilenames[i]) {
+          pickedFilename = imageFilenames[i];
+        } else if (opts.localImages && localImagePool.length > 0) {
+          pickedFilename = localImagePool.pop()!;
+        }
+
+        if (pickedFilename) {
+          const slug = slugify(recipe.title);
+          const bucket = slug.slice(0, 2);
+          const ext = pickedFilename.split(".").pop() || "webp";
+          const destFilename = `${slug}.${ext}`;
+          const destDir = resolve(__dirname, "..", "public", "images", "recipes", bucket);
+          mkdirSync(destDir, { recursive: true });
+          copyFileSync(resolve(opts.localImagesDir, pickedFilename), resolve(destDir, destFilename));
+          imageUrl = `/images/recipes/${bucket}/${destFilename}`;
+          saveOpts.imageStatus = "ready";
+          saveOpts.published = opts.publish;
+        } else {
+          // Placeholder image — the image script will replace it
+          const encoded = encodeURIComponent(recipe.title);
+          imageUrl = `https://placehold.co/1200x1800/f59e0b/ffffff?text=${encoded}`;
+          if (opts.publish) saveOpts.published = true;
+        }
+
+        const saved = await saveRecipe(db, recipe, imageUrl, saveOpts);
         if (saved) {
           console.log(`  Saved: id=${saved.id} slug=${saved.slug}`);
           success++;

@@ -196,60 +196,60 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
       )}
 
       {/* Basics */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-stone-800">Basics</h2>
+      <div className="bg-white rounded-2xl border border-neutral-200 p-6 space-y-4">
+        <h2 className="text-lg font-semibold text-neutral-800">Basics</h2>
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">Title</label>
+          <label className="block text-sm font-medium text-neutral-700 mb-1">Title</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-lg border border-stone-300 px-3 py-2"
+            className="w-full rounded-lg border border-neutral-300 px-3 py-2"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">Description</label>
+          <label className="block text-sm font-medium text-neutral-700 mb-1">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
-            className="w-full rounded-lg border border-stone-300 px-3 py-2"
+            className="w-full rounded-lg border border-neutral-300 px-3 py-2"
           />
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Prep (min)</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Prep (min)</label>
             <input
               type="number"
               value={prepTime}
               onChange={(e) => setPrepTime(e.target.value)}
-              className="w-full rounded-lg border border-stone-300 px-3 py-2"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Cook (min)</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Cook (min)</label>
             <input
               type="number"
               value={cookTime}
               onChange={(e) => setCookTime(e.target.value)}
-              className="w-full rounded-lg border border-stone-300 px-3 py-2"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Servings</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Servings</label>
             <input
               type="number"
               value={servings}
               onChange={(e) => setServings(e.target.value)}
-              className="w-full rounded-lg border border-stone-300 px-3 py-2"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">Difficulty</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Difficulty</label>
             <select
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value)}
-              className="w-full rounded-lg border border-stone-300 px-3 py-2"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2"
             >
               <option value="Easy">Easy</option>
               <option value="Medium">Medium</option>
@@ -260,13 +260,13 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
       </div>
 
       {/* Ingredients */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6 space-y-3">
+      <div className="bg-white rounded-2xl border border-neutral-200 p-6 space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-stone-800">Ingredients</h2>
+          <h2 className="text-lg font-semibold text-neutral-800">Ingredients</h2>
           <button
             type="button"
             onClick={addIngredient}
-            className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-amber-700 hover:bg-amber-50 rounded-md"
+            className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-orange-700 hover:bg-orange-50 rounded-md"
           >
             <Plus className="h-4 w-4" />
             Add
@@ -279,33 +279,33 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
               placeholder="qty"
               value={ing.quantity}
               onChange={(e) => updateIngredient(i, { quantity: e.target.value })}
-              className="col-span-2 rounded-lg border border-stone-300 px-2 py-1.5 text-sm"
+              className="col-span-2 rounded-lg border border-neutral-300 px-2 py-1.5 text-sm"
             />
             <input
               type="text"
               placeholder="unit"
               value={ing.unit}
               onChange={(e) => updateIngredient(i, { unit: e.target.value })}
-              className="col-span-2 rounded-lg border border-stone-300 px-2 py-1.5 text-sm"
+              className="col-span-2 rounded-lg border border-neutral-300 px-2 py-1.5 text-sm"
             />
             <input
               type="text"
               placeholder="ingredient"
               value={ing.name}
               onChange={(e) => updateIngredient(i, { name: e.target.value })}
-              className="col-span-4 rounded-lg border border-stone-300 px-2 py-1.5 text-sm"
+              className="col-span-4 rounded-lg border border-neutral-300 px-2 py-1.5 text-sm"
             />
             <input
               type="text"
               placeholder="notes (e.g. diced)"
               value={ing.notes}
               onChange={(e) => updateIngredient(i, { notes: e.target.value })}
-              className="col-span-3 rounded-lg border border-stone-300 px-2 py-1.5 text-sm"
+              className="col-span-3 rounded-lg border border-neutral-300 px-2 py-1.5 text-sm"
             />
             <button
               type="button"
               onClick={() => removeIngredient(i)}
-              className="col-span-1 p-1.5 text-stone-400 hover:text-red-600"
+              className="col-span-1 p-1.5 text-neutral-400 hover:text-red-600"
               aria-label="Remove"
             >
               <Trash2 className="h-4 w-4" />
@@ -315,13 +315,13 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
       </div>
 
       {/* Steps */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6 space-y-3">
+      <div className="bg-white rounded-2xl border border-neutral-200 p-6 space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-stone-800">Method</h2>
+          <h2 className="text-lg font-semibold text-neutral-800">Method</h2>
           <button
             type="button"
             onClick={addStep}
-            className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-amber-700 hover:bg-amber-50 rounded-md"
+            className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-orange-700 hover:bg-orange-50 rounded-md"
           >
             <Plus className="h-4 w-4" />
             Add step
@@ -329,7 +329,7 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
         </div>
         {steps.map((step, i) => (
           <div key={i} className="flex gap-2 items-start">
-            <span className="mt-2 text-sm font-medium text-stone-500 w-6 text-right">
+            <span className="mt-2 text-sm font-medium text-neutral-500 w-6 text-right">
               {i + 1}.
             </span>
             <div className="flex-1 space-y-1.5">
@@ -338,20 +338,20 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
                 value={step.instruction}
                 onChange={(e) => updateStep(i, { instruction: e.target.value })}
                 rows={2}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
               />
               <input
                 type="text"
                 placeholder="Optional tip"
                 value={step.tipText}
                 onChange={(e) => updateStep(i, { tipText: e.target.value })}
-                className="w-full rounded-lg border border-stone-300 px-3 py-1.5 text-sm"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm"
               />
             </div>
             <button
               type="button"
               onClick={() => removeStep(i)}
-              className="mt-2 p-1.5 text-stone-400 hover:text-red-600"
+              className="mt-2 p-1.5 text-neutral-400 hover:text-red-600"
               aria-label="Remove"
             >
               <Trash2 className="h-4 w-4" />
@@ -361,9 +361,9 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
       </div>
 
       {/* Sharing */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-stone-800">Sharing</h2>
-        <p className="text-sm text-stone-500">
+      <div className="bg-white rounded-2xl border border-neutral-200 p-6 space-y-4">
+        <h2 className="text-lg font-semibold text-neutral-800">Sharing</h2>
+        <p className="text-sm text-neutral-500">
           Your recipes are private by default. They will never appear in the
           public catalogue. You can share with specific people or generate a
           private link.
@@ -372,8 +372,8 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
         <div>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-stone-800">Share link</h3>
-              <p className="text-xs text-stone-500">
+              <h3 className="text-sm font-medium text-neutral-800">Share link</h3>
+              <p className="text-xs text-neutral-500">
                 Anyone with the link can view this recipe.
               </p>
             </div>
@@ -381,7 +381,7 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
               <button
                 type="button"
                 onClick={disableShareLink}
-                className="px-3 py-1.5 text-sm text-stone-600 border border-stone-300 rounded-md hover:bg-stone-50"
+                className="px-3 py-1.5 text-sm text-neutral-600 border border-neutral-300 rounded-md hover:bg-neutral-50"
               >
                 Disable
               </button>
@@ -389,7 +389,7 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
               <button
                 type="button"
                 onClick={enableShareLink}
-                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-amber-700 border border-amber-300 rounded-md hover:bg-amber-50"
+                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-orange-700 border border-orange-300 rounded-md hover:bg-orange-50"
               >
                 <Link2 className="h-4 w-4" />
                 Enable
@@ -402,12 +402,12 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
                 type="text"
                 readOnly
                 value={shareLinkUrl}
-                className="flex-1 rounded-lg border border-stone-300 px-3 py-1.5 text-xs bg-stone-50 font-mono"
+                className="flex-1 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs bg-neutral-50 font-mono"
               />
               <button
                 type="button"
                 onClick={() => navigator.clipboard?.writeText(shareLinkUrl)}
-                className="px-3 py-1.5 text-sm text-amber-700 border border-amber-300 rounded-md hover:bg-amber-50"
+                className="px-3 py-1.5 text-sm text-orange-700 border border-orange-300 rounded-md hover:bg-orange-50"
               >
                 Copy
               </button>
@@ -416,19 +416,19 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
         </div>
 
         <div>
-          <h3 className="text-sm font-medium text-stone-800 mb-2">Share with specific people</h3>
+          <h3 className="text-sm font-medium text-neutral-800 mb-2">Share with specific people</h3>
           <div className="flex gap-2">
             <input
               type="email"
               placeholder="email address"
               value={shareEmail}
               onChange={(e) => setShareEmail(e.target.value)}
-              className="flex-1 rounded-lg border border-stone-300 px-3 py-1.5 text-sm"
+              className="flex-1 rounded-lg border border-neutral-300 px-3 py-1.5 text-sm"
             />
             <button
               type="button"
               onClick={addShareUser}
-              className="px-3 py-1.5 text-sm text-amber-700 border border-amber-300 rounded-md hover:bg-amber-50"
+              className="px-3 py-1.5 text-sm text-orange-700 border border-orange-300 rounded-md hover:bg-orange-50"
             >
               Share
             </button>
@@ -439,7 +439,7 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
               {sharedUsers.map((u) => (
                 <li
                   key={u.id}
-                  className="flex items-center justify-between text-sm text-stone-700 bg-stone-50 px-3 py-1.5 rounded-md"
+                  className="flex items-center justify-between text-sm text-neutral-700 bg-neutral-50 px-3 py-1.5 rounded-md"
                 >
                   <span>
                     {u.name ? `${u.name} (${u.email})` : u.email}
@@ -447,7 +447,7 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
                   <button
                     type="button"
                     onClick={() => removeShareUser(u.id)}
-                    className="text-stone-400 hover:text-red-600"
+                    className="text-neutral-400 hover:text-red-600"
                     aria-label="Remove"
                   >
                     <X className="h-4 w-4" />
@@ -464,7 +464,7 @@ export function UserRecipeEditForm({ initialData }: { initialData: UserRecipeEdi
           type="button"
           onClick={handleSave}
           disabled={submitting}
-          className="inline-flex items-center gap-2 px-6 py-2.5 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-6 py-2.5 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 disabled:opacity-50"
         >
           {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
           Save

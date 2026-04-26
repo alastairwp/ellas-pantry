@@ -49,8 +49,8 @@ export function RecipesForMeToggle() {
         onClick={handleToggle}
         className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
           isActive
-            ? "bg-amber-100 text-amber-800 border-amber-300"
-            : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50"
+            ? "bg-orange-100 text-orange-800 border-orange-300"
+            : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50"
         }`}
         aria-pressed={isActive}
       >
@@ -59,22 +59,22 @@ export function RecipesForMeToggle() {
       </button>
 
       {showPrompt && !hasAllergies && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg border border-stone-200 shadow-lg z-50 p-4">
-          <p className="text-sm text-stone-700 mb-3">
+        <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg border border-neutral-200 shadow-lg z-50 p-4">
+          <p className="text-sm text-neutral-700 mb-3">
             You haven&apos;t set up your allergy profile yet. Set your allergies
             so we can filter recipes that are safe for you.
           </p>
           <div className="flex gap-2">
             <Link
               href="/profile/settings?tab=dietary"
-              className="px-3 py-1.5 text-sm font-medium rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition-colors"
+              className="px-3 py-1.5 text-sm font-medium rounded-lg bg-orange-600 text-white hover:bg-orange-700 transition-colors"
             >
               Set up allergies
             </Link>
             <button
               type="button"
               onClick={() => setShowPrompt(false)}
-              className="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-700"
+              className="px-3 py-1.5 text-sm text-neutral-500 hover:text-neutral-700"
             >
               Dismiss
             </button>

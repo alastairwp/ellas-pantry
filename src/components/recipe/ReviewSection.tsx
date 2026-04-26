@@ -94,18 +94,18 @@ export function ReviewSection({ recipeId }: ReviewSectionProps) {
 
   return (
     <div className="mt-10 no-print">
-      <h2 className="text-xl font-semibold text-stone-800 mb-6 flex items-center gap-2">
+      <h2 className="text-xl font-semibold text-neutral-800 mb-6 flex items-center gap-2">
         <MessageSquare className="h-5 w-5" />
         Reviews
         {total > 0 && (
-          <span className="text-sm font-normal text-stone-400">({total})</span>
+          <span className="text-sm font-normal text-neutral-400">({total})</span>
         )}
       </h2>
 
       {/* Write Review Form */}
       {session?.user ? (
         <form onSubmit={handleSubmit} className="mb-8">
-          <label className="block text-sm font-medium text-stone-700 mb-2">
+          <label className="block text-sm font-medium text-neutral-700 mb-2">
             {userReview ? "Update your review" : "Write a review"}
           </label>
           <textarea
@@ -114,16 +114,16 @@ export function ReviewSection({ recipeId }: ReviewSectionProps) {
             rows={3}
             maxLength={2000}
             placeholder="Share your experience with this recipe..."
-            className="w-full rounded-lg border border-stone-300 px-3 py-2 text-stone-700 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none"
+            className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-neutral-700 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 resize-none"
           />
           <div className="mt-2 flex items-center justify-between">
-            <span className="text-xs text-stone-400">
+            <span className="text-xs text-neutral-400">
               {text.length}/2000
             </span>
             <button
               type="submit"
               disabled={!text.trim() || submitting}
-              className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
               {userReview ? "Update Review" : "Submit Review"}
@@ -131,8 +131,8 @@ export function ReviewSection({ recipeId }: ReviewSectionProps) {
           </div>
         </form>
       ) : (
-        <p className="mb-8 text-sm text-stone-500">
-          <a href="/login" className="text-amber-600 hover:text-amber-700 font-medium">
+        <p className="mb-8 text-sm text-neutral-500">
+          <a href="/login" className="text-orange-600 hover:text-orange-700 font-medium">
             Sign in
           </a>{" "}
           to write a review.
@@ -142,16 +142,16 @@ export function ReviewSection({ recipeId }: ReviewSectionProps) {
       {/* Reviews List */}
       {loading && reviews.length === 0 ? (
         <div className="text-center py-8">
-          <Loader2 className="h-6 w-6 text-stone-400 mx-auto animate-spin" />
+          <Loader2 className="h-6 w-6 text-neutral-400 mx-auto animate-spin" />
         </div>
       ) : reviews.length === 0 ? (
-        <p className="text-stone-500 text-center py-8">
+        <p className="text-neutral-500 text-center py-8">
           No reviews yet. Be the first to review this recipe!
         </p>
       ) : (
         <div className="space-y-6">
           {reviews.map((review) => (
-            <div key={review.id} className="border-b border-stone-100 pb-5 last:border-0">
+            <div key={review.id} className="border-b border-neutral-100 pb-5 last:border-0">
               <div className="flex items-center gap-3 mb-2">
                 <Link href={`/profile/${review.user.id}`}>
                   <Avatar name={review.user.name} image={review.user.image} size="sm" />
@@ -159,11 +159,11 @@ export function ReviewSection({ recipeId }: ReviewSectionProps) {
                 <div>
                   <Link
                     href={`/profile/${review.user.id}`}
-                    className="text-sm font-medium text-stone-800 hover:text-amber-700 transition-colors"
+                    className="text-sm font-medium text-neutral-800 hover:text-orange-700 transition-colors"
                   >
                     {review.user.name || "Anonymous"}
                   </Link>
-                  <p className="text-xs text-stone-400">
+                  <p className="text-xs text-neutral-400">
                     {new Date(review.createdAt).toLocaleDateString("en-GB", {
                       day: "numeric",
                       month: "short",
@@ -172,7 +172,7 @@ export function ReviewSection({ recipeId }: ReviewSectionProps) {
                   </p>
                 </div>
               </div>
-              <p className="text-stone-700 leading-relaxed">{review.text}</p>
+              <p className="text-neutral-700 leading-relaxed">{review.text}</p>
             </div>
           ))}
 
@@ -185,7 +185,7 @@ export function ReviewSection({ recipeId }: ReviewSectionProps) {
                 fetchReviews(nextPage, true);
               }}
               disabled={loading}
-              className="w-full py-2 text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors"
+              className="w-full py-2 text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors"
             >
               {loading ? "Loading..." : "Load more reviews"}
             </button>

@@ -40,7 +40,7 @@ export function ProfileSettingsForm({
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-stone-700"
+          className="block text-sm font-medium text-neutral-700"
         >
           Display Name
         </label>
@@ -50,14 +50,14 @@ export function ProfileSettingsForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           maxLength={100}
-          className="mt-1 block w-full rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+          className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm text-neutral-800 placeholder:text-neutral-400 focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400"
         />
       </div>
 
       <div>
         <label
           htmlFor="bio"
-          className="block text-sm font-medium text-stone-700"
+          className="block text-sm font-medium text-neutral-700"
         >
           Bio
         </label>
@@ -68,9 +68,9 @@ export function ProfileSettingsForm({
           maxLength={200}
           rows={3}
           placeholder="Tell others a bit about yourself..."
-          className="mt-1 block w-full rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 resize-none"
+          className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm text-neutral-800 placeholder:text-neutral-400 focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400 resize-none"
         />
-        <p className="mt-1 text-xs text-stone-400">{bio.length}/200</p>
+        <p className="mt-1 text-xs text-neutral-400">{bio.length}/200</p>
       </div>
 
       {message && (
@@ -86,7 +86,7 @@ export function ProfileSettingsForm({
       <button
         type="submit"
         disabled={saving}
-        className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50 transition-colors"
+        className="rounded-lg bg-orange-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-50 transition-colors"
       >
         {saving ? "Saving..." : "Save Changes"}
       </button>

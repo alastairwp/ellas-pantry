@@ -15,7 +15,7 @@ const DIETARY_OPTIONS = [
 const activeClasses: Record<string, string> = {
   vegan: "bg-green-100 text-green-800 border-green-300",
   vegetarian: "bg-emerald-100 text-emerald-800 border-emerald-300",
-  "gluten-free": "bg-amber-100 text-amber-800 border-amber-300",
+  "gluten-free": "bg-orange-100 text-orange-800 border-orange-300",
   "dairy-free": "bg-blue-100 text-blue-800 border-blue-300",
   "nut-free": "bg-purple-100 text-purple-800 border-purple-300",
   "egg-free": "bg-orange-100 text-orange-800 border-orange-300",
@@ -65,7 +65,7 @@ export function DietaryFilter() {
             className={`px-3 py-1.5 text-sm font-medium rounded-full border transition-colors ${
               isActive
                 ? activeClasses[option.slug]
-                : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50"
+                : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50"
             }`}
             aria-pressed={isActive}
           >

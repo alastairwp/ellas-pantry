@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      <h1 className="text-3xl font-bold text-stone-900">About Me</h1>
+      <h1 className="text-3xl font-bold text-neutral-900">About Me</h1>
 
-      <div className="mt-8 space-y-6 text-stone-700 leading-relaxed">
+      <div className="mt-8 space-y-6 text-neutral-700 leading-relaxed">
         <p>
           Hi, I&apos;m Ella, a teenager from Oxfordshire, and food is my
           absolute passion. But my journey with food hasn&apos;t always been
@@ -66,7 +66,7 @@ export default function AboutPage() {
         <p>Happy cooking!</p>
 
         <p
-          className="text-2xl text-amber-700 mt-8"
+          className="text-2xl text-orange-700 mt-8"
           style={{ fontFamily: "cursive" }}
         >
           Ella x

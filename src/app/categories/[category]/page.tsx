@@ -99,25 +99,25 @@ export default async function CategoryPage({
     <div>
       {/* Hero Section */}
       {content && (
-        <div className="bg-gradient-to-b from-amber-50 to-white">
+        <div className="bg-gradient-to-b from-orange-50 to-white">
           <div className="mx-auto max-w-4xl px-4 py-12 sm:py-16 text-center">
-            <h1 className="text-4xl font-bold text-stone-900 sm:text-5xl">
+            <h1 className="text-4xl font-bold text-neutral-900 sm:text-5xl">
               {content.heroTitle}
             </h1>
-            <p className="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
+            <p className="mt-4 text-lg text-neutral-600 max-w-2xl mx-auto">
               {content.heroSubtitle}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
                 href={`/recipes?category=${slug}`}
-                className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-700 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-700 transition-colors"
               >
                 Browse with filters
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 rounded-lg border border-stone-300 bg-white px-5 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
               >
                 Create free account
               </Link>
@@ -129,7 +129,7 @@ export default async function CategoryPage({
       {/* Introduction */}
       {content && (
         <div className="mx-auto max-w-3xl px-4 py-10">
-          <p className="text-lg text-stone-700 leading-relaxed">
+          <p className="text-lg text-neutral-700 leading-relaxed">
             {content.intro}
           </p>
         </div>
@@ -139,16 +139,16 @@ export default async function CategoryPage({
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 id="recipes" className="text-2xl font-bold text-stone-900 scroll-mt-4">
+            <h2 id="recipes" className="text-2xl font-bold text-neutral-900 scroll-mt-4">
               Latest {category.name} Recipes
             </h2>
-            <p className="mt-1 text-sm text-stone-500">
+            <p className="mt-1 text-sm text-neutral-500">
               {total} recipe{total !== 1 ? "s" : ""} in this category
             </p>
           </div>
           <Link
             href={`/recipes?category=${slug}`}
-            className="text-sm font-medium text-amber-600 hover:text-amber-700 flex items-center gap-1"
+            className="text-sm font-medium text-orange-600 hover:text-orange-700 flex items-center gap-1"
           >
             View all with filters
             <ArrowRight className="h-4 w-4" />
@@ -165,24 +165,24 @@ export default async function CategoryPage({
 
       {/* Feature Grid */}
       {content && (
-        <div className="bg-stone-50 py-12">
+        <div className="bg-neutral-50 py-12">
           <div className="mx-auto max-w-5xl px-4">
-            <h2 className="text-center text-2xl font-bold text-stone-900 mb-8">
+            <h2 className="text-center text-2xl font-bold text-neutral-900 mb-8">
               Why cook with Ella&apos;s Pantry?
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature) => (
                 <div
                   key={feature.title}
-                  className="rounded-xl bg-white border border-stone-200 p-5"
+                  className="rounded-xl bg-white border border-neutral-200 p-5"
                 >
-                  <div className="inline-flex items-center justify-center rounded-lg bg-amber-50 p-2.5 text-amber-600 mb-3">
+                  <div className="inline-flex items-center justify-center rounded-lg bg-orange-50 p-2.5 text-orange-600 mb-3">
                     <feature.icon className="h-5 w-5" />
                   </div>
-                  <h3 className="font-semibold text-stone-900">
+                  <h3 className="font-semibold text-neutral-900">
                     {feature.title}
                   </h3>
-                  <p className="mt-1 text-sm text-stone-600 leading-relaxed">
+                  <p className="mt-1 text-sm text-neutral-600 leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -197,10 +197,10 @@ export default async function CategoryPage({
         <div className="mx-auto max-w-3xl px-4 py-12 space-y-10">
           {content.sections.map((section, i) => (
             <div key={i}>
-              <h2 className="text-xl font-bold text-stone-900">
+              <h2 className="text-xl font-bold text-neutral-900">
                 {section.heading}
               </h2>
-              <p className="mt-3 text-stone-700 leading-relaxed">
+              <p className="mt-3 text-neutral-700 leading-relaxed">
                 {section.text}
               </p>
             </div>
@@ -210,26 +210,26 @@ export default async function CategoryPage({
 
       {/* CTA Banner */}
       {content && (
-        <div className="bg-amber-600 py-10">
+        <div className="bg-orange-600 py-10">
           <div className="mx-auto max-w-3xl px-4 text-center">
             <h2 className="text-2xl font-bold text-white">
               Ready to start cooking?
             </h2>
-            <p className="mt-2 text-amber-100">
+            <p className="mt-2 text-orange-100">
               Create a free account to save your allergies, bookmark favourites,
               rate recipes, and access personalised recommendations.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-amber-700 hover:bg-amber-50 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-orange-700 hover:bg-orange-50 transition-colors"
               >
                 Sign up free
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href={`/recipes?category=${slug}`}
-                className="inline-flex items-center gap-2 rounded-lg border border-amber-400 px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-700 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg border border-orange-400 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-700 transition-colors"
               >
                 Browse recipes
               </Link>
@@ -241,7 +241,7 @@ export default async function CategoryPage({
       {/* Ella Signature */}
       <div className="mx-auto max-w-3xl px-4 pb-12 text-center">
         <p
-          className="text-2xl text-amber-700"
+          className="text-2xl text-orange-700"
           style={{ fontFamily: "cursive" }}
         >
           Ella x

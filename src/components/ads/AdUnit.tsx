@@ -40,7 +40,7 @@ export function AdUnit({ adSlot, adFormat, className = "" }: AdUnitProps) {
   if (!isProduction) {
     return (
       <div
-        className={`ad-unit no-print flex items-center justify-center bg-stone-100 border-2 border-dashed border-stone-300 rounded-lg text-stone-400 text-sm font-medium ${className}`}
+        className={`ad-unit no-print flex items-center justify-center bg-neutral-100 border-2 border-dashed border-neutral-300 rounded-lg text-neutral-400 text-sm font-medium ${className}`}
         style={{ minHeight: dimensions.minHeight }}
         role="presentation"
       >

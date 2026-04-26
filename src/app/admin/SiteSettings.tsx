@@ -42,23 +42,23 @@ function ToggleSetting({ label, description, settingKey }: ToggleSettingProps) {
   if (loading) {
     return (
       <div className="flex items-center gap-3 py-3">
-        <Loader2 className="h-4 w-4 animate-spin text-stone-400" />
-        <span className="text-sm text-stone-400">Loading...</span>
+        <Loader2 className="h-4 w-4 animate-spin text-neutral-400" />
+        <span className="text-sm text-neutral-400">Loading...</span>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-between py-4 border-b border-stone-100 last:border-b-0">
+    <div className="flex items-center justify-between py-4 border-b border-neutral-100 last:border-b-0">
       <div>
-        <p className="text-sm font-medium text-stone-800">{label}</p>
-        <p className="text-sm text-stone-500">{description}</p>
+        <p className="text-sm font-medium text-neutral-800">{label}</p>
+        <p className="text-sm text-neutral-500">{description}</p>
       </div>
       <button
         onClick={toggle}
         disabled={saving}
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-          enabled ? "bg-amber-600" : "bg-stone-300"
+          enabled ? "bg-orange-600" : "bg-neutral-300"
         } ${saving ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
         role="switch"
         aria-checked={enabled}
@@ -126,8 +126,8 @@ function SelectSetting({ label, description, settingKey, options, defaultValue }
   if (loading) {
     return (
       <div className="flex items-center gap-3 py-3">
-        <Loader2 className="h-4 w-4 animate-spin text-stone-400" />
-        <span className="text-sm text-stone-400">Loading...</span>
+        <Loader2 className="h-4 w-4 animate-spin text-neutral-400" />
+        <span className="text-sm text-neutral-400">Loading...</span>
       </div>
     );
   }
@@ -135,15 +135,15 @@ function SelectSetting({ label, description, settingKey, options, defaultValue }
   const isDirty = value !== savedValue;
 
   return (
-    <div className="py-4 border-b border-stone-100 last:border-b-0">
+    <div className="py-4 border-b border-neutral-100 last:border-b-0">
       <div className="mb-2">
-        <p className="text-sm font-medium text-stone-800">{label}</p>
-        <p className="text-sm text-stone-500">{description}</p>
+        <p className="text-sm font-medium text-neutral-800">{label}</p>
+        <p className="text-sm text-neutral-500">{description}</p>
       </div>
       <select
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-colors"
+        className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-800 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-colors"
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
@@ -155,7 +155,7 @@ function SelectSetting({ label, description, settingKey, options, defaultValue }
         <button
           onClick={save}
           disabled={saving || !isDirty}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-orange-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
           Save
@@ -225,8 +225,8 @@ function NumberSetting({ label, description, settingKey, defaultValue, min = 0 }
   if (loading) {
     return (
       <div className="flex items-center gap-3 py-3">
-        <Loader2 className="h-4 w-4 animate-spin text-stone-400" />
-        <span className="text-sm text-stone-400">Loading...</span>
+        <Loader2 className="h-4 w-4 animate-spin text-neutral-400" />
+        <span className="text-sm text-neutral-400">Loading...</span>
       </div>
     );
   }
@@ -234,23 +234,23 @@ function NumberSetting({ label, description, settingKey, defaultValue, min = 0 }
   const isDirty = value !== savedValue;
 
   return (
-    <div className="py-4 border-b border-stone-100 last:border-b-0">
+    <div className="py-4 border-b border-neutral-100 last:border-b-0">
       <div className="mb-2">
-        <p className="text-sm font-medium text-stone-800">{label}</p>
-        <p className="text-sm text-stone-500">{description}</p>
+        <p className="text-sm font-medium text-neutral-800">{label}</p>
+        <p className="text-sm text-neutral-500">{description}</p>
       </div>
       <input
         type="number"
         min={min}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="w-32 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-colors"
+        className="w-32 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-800 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-colors"
       />
       <div className="mt-2 flex items-center gap-3">
         <button
           onClick={save}
           disabled={saving || !isDirty}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-orange-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
           Save
@@ -317,8 +317,8 @@ function TextSetting({ label, description, settingKey, placeholder, rows = 3 }: 
   if (loading) {
     return (
       <div className="flex items-center gap-3 py-3">
-        <Loader2 className="h-4 w-4 animate-spin text-stone-400" />
-        <span className="text-sm text-stone-400">Loading...</span>
+        <Loader2 className="h-4 w-4 animate-spin text-neutral-400" />
+        <span className="text-sm text-neutral-400">Loading...</span>
       </div>
     );
   }
@@ -326,23 +326,23 @@ function TextSetting({ label, description, settingKey, placeholder, rows = 3 }: 
   const isDirty = value !== savedValue;
 
   return (
-    <div className="py-4 border-b border-stone-100 last:border-b-0">
+    <div className="py-4 border-b border-neutral-100 last:border-b-0">
       <div className="mb-2">
-        <p className="text-sm font-medium text-stone-800">{label}</p>
-        <p className="text-sm text-stone-500">{description}</p>
+        <p className="text-sm font-medium text-neutral-800">{label}</p>
+        <p className="text-sm text-neutral-500">{description}</p>
       </div>
       <textarea
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-colors resize-y"
+        className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-800 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-colors resize-y"
       />
       <div className="mt-2 flex items-center gap-3">
         <button
           onClick={save}
           disabled={saving || !isDirty}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-orange-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
           Save
@@ -360,13 +360,13 @@ function TextSetting({ label, description, settingKey, placeholder, rows = 3 }: 
 export function SiteSettings() {
   return (
     <div>
-      <h2 className="text-lg font-semibold text-stone-800">Site Settings</h2>
-      <p className="mt-1 text-sm text-stone-500">
+      <h2 className="text-lg font-semibold text-neutral-800">Site Settings</h2>
+      <p className="mt-1 text-sm text-neutral-500">
         Configure authentication and site-wide options.
       </p>
 
-      <div className="mt-6 rounded-lg border border-stone-200 bg-white p-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-2">
+      <div className="mt-6 rounded-lg border border-neutral-200 bg-white p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-neutral-400 mb-2">
           Authentication
         </h3>
         <ToggleSetting
@@ -376,8 +376,8 @@ export function SiteSettings() {
         />
       </div>
 
-      <div className="mt-6 rounded-lg border border-stone-200 bg-white p-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-2">
+      <div className="mt-6 rounded-lg border border-neutral-200 bg-white p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-neutral-400 mb-2">
           User Recipes
         </h3>
         <NumberSetting
@@ -389,11 +389,11 @@ export function SiteSettings() {
         />
       </div>
 
-      <div className="mt-6 rounded-lg border border-stone-200 bg-white p-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-2">
+      <div className="mt-6 rounded-lg border border-neutral-200 bg-white p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-neutral-400 mb-2">
           Image Generation
         </h3>
-        <p className="text-sm text-stone-500 mb-2">
+        <p className="text-sm text-neutral-500 mb-2">
           Customise the model and prompts used for image generation. Changes apply to the next generation run.
         </p>
         <SelectSetting
@@ -420,20 +420,20 @@ export function SiteSettings() {
         />
 
         <div className="py-4">
-          <p className="text-sm font-medium text-stone-800 mb-3">Prompt templates</p>
-          <p className="text-sm text-stone-500 mb-3">
+          <p className="text-sm font-medium text-neutral-800 mb-3">Prompt templates</p>
+          <p className="text-sm text-neutral-500 mb-3">
             These are the base prompts sent to the model for each recipe. Your extra prompt and negative settings above are appended to these.
           </p>
           <div className="space-y-3">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-1">Positive prompt</p>
-              <div className="rounded-md bg-stone-50 border border-stone-200 px-3 py-2 text-sm text-stone-600 font-mono leading-relaxed">
-                Professional food photography of <span className="text-amber-700 font-semibold">{"{{title}}"}</span>, beautifully plated and styled, made with <span className="text-amber-700 font-semibold">{"{{ingredients}}"}</span>, on a rustic wooden table, natural window lighting, shallow depth of field, appetizing, high detail, warm tones<span className="text-emerald-600 font-semibold">{", {{extra prompt}}"}</span>
+              <p className="text-xs font-medium uppercase tracking-wider text-neutral-400 mb-1">Positive prompt</p>
+              <div className="rounded-md bg-neutral-50 border border-neutral-200 px-3 py-2 text-sm text-neutral-600 font-mono leading-relaxed">
+                Professional food photography of <span className="text-orange-700 font-semibold">{"{{title}}"}</span>, beautifully plated and styled, made with <span className="text-orange-700 font-semibold">{"{{ingredients}}"}</span>, on a rustic wooden table, natural window lighting, shallow depth of field, appetizing, high detail, warm tones<span className="text-emerald-600 font-semibold">{", {{extra prompt}}"}</span>
               </div>
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-1">Negative prompt</p>
-              <div className="rounded-md bg-stone-50 border border-stone-200 px-3 py-2 text-sm text-stone-600 font-mono leading-relaxed">
+              <p className="text-xs font-medium uppercase tracking-wider text-neutral-400 mb-1">Negative prompt</p>
+              <div className="rounded-md bg-neutral-50 border border-neutral-200 px-3 py-2 text-sm text-neutral-600 font-mono leading-relaxed">
                 text, watermark, logo, blurry, cartoon, illustration, drawing, ugly, deformed, disfigured, low quality, bad anatomy, oversaturated, underexposed<span className="text-emerald-600 font-semibold">{", {{extra negative}}"}</span>
               </div>
             </div>

@@ -8,21 +8,21 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      <h1 className="text-3xl font-bold text-stone-900">Contact Us</h1>
-      <p className="mt-2 text-stone-600">
+      <h1 className="text-3xl font-bold text-neutral-900">Contact Us</h1>
+      <p className="mt-2 text-neutral-600">
         We&apos;d love to hear from you. Whether you have a question, feedback,
         or just want to say hello, feel free to get in touch.
       </p>
 
-      <div className="mt-8 space-y-8 text-stone-700 leading-relaxed">
+      <div className="mt-8 space-y-8 text-neutral-700 leading-relaxed">
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">Email</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">Email</h2>
           <p className="mt-2">
             For general enquiries, recipe suggestions, or feedback, please email
             us at:{" "}
             <a
               href="mailto:hello@ellaspantry.co.uk"
-              className="text-amber-700 hover:text-amber-800 underline"
+              className="text-orange-700 hover:text-orange-800 underline"
             >
               hello@ellaspantry.co.uk
             </a>
@@ -30,7 +30,7 @@ export default function ContactPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">
+          <h2 className="text-xl font-semibold text-neutral-900">
             Report an Issue
           </h2>
           <p className="mt-2">
@@ -38,7 +38,7 @@ export default function ContactPage() {
             right? Please let us know by emailing{" "}
             <a
               href="mailto:support@ellaspantry.co.uk"
-              className="text-amber-700 hover:text-amber-800 underline"
+              className="text-orange-700 hover:text-orange-800 underline"
             >
               support@ellaspantry.co.uk
             </a>{" "}
@@ -47,7 +47,7 @@ export default function ContactPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">
+          <h2 className="text-xl font-semibold text-neutral-900">
             Privacy &amp; Data Requests
           </h2>
           <p className="mt-2">
@@ -55,14 +55,14 @@ export default function ContactPage() {
             to submit a data deletion request, please refer to our{" "}
             <a
               href="/privacy"
-              className="text-amber-700 hover:text-amber-800 underline"
+              className="text-orange-700 hover:text-orange-800 underline"
             >
               Privacy Policy
             </a>{" "}
             or email us at{" "}
             <a
               href="mailto:privacy@ellaspantry.co.uk"
-              className="text-amber-700 hover:text-amber-800 underline"
+              className="text-orange-700 hover:text-orange-800 underline"
             >
               privacy@ellaspantry.co.uk
             </a>
@@ -71,7 +71,7 @@ export default function ContactPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">
+          <h2 className="text-xl font-semibold text-neutral-900">
             Response Times
           </h2>
           <p className="mt-2">

@@ -16,7 +16,7 @@ export function AdminEditButton({ recipeId }: AdminEditButtonProps) {
   return (
     <Link
       href={`/admin/recipes/${recipeId}/edit`}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-stone-600 hover:text-amber-700 bg-stone-100 hover:bg-amber-50 rounded-lg transition-colors no-print"
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-neutral-600 hover:text-orange-700 bg-neutral-100 hover:bg-orange-50 rounded-lg transition-colors no-print"
     >
       <Pencil className="h-4 w-4" />
       <span>Edit</span>

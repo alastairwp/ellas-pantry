@@ -67,7 +67,7 @@ export function NutritionBackfill() {
   if (loading) {
     return (
       <div className="text-center py-8">
-        <Loader2 className="h-6 w-6 text-stone-400 mx-auto animate-spin" />
+        <Loader2 className="h-6 w-6 text-neutral-400 mx-auto animate-spin" />
       </div>
     );
   }
@@ -76,34 +76,34 @@ export function NutritionBackfill() {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-stone-800 mb-4">
+      <h2 className="text-lg font-semibold text-neutral-800 mb-4">
         Nutrition Estimation Backfill
       </h2>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="p-4 bg-stone-50 rounded-lg text-center">
-          <p className="text-2xl font-bold text-stone-800">{total}</p>
-          <p className="text-sm text-stone-500">Total Recipes</p>
+        <div className="p-4 bg-neutral-50 rounded-lg text-center">
+          <p className="text-2xl font-bold text-neutral-800">{total}</p>
+          <p className="text-sm text-neutral-500">Total Recipes</p>
         </div>
         <div className="p-4 bg-green-50 rounded-lg text-center">
           <p className="text-2xl font-bold text-green-700">{estimated}</p>
-          <p className="text-sm text-stone-500">Estimated</p>
+          <p className="text-sm text-neutral-500">Estimated</p>
         </div>
-        <div className="p-4 bg-amber-50 rounded-lg text-center">
-          <p className="text-2xl font-bold text-amber-700">{missing}</p>
-          <p className="text-sm text-stone-500">Missing</p>
+        <div className="p-4 bg-orange-50 rounded-lg text-center">
+          <p className="text-2xl font-bold text-orange-700">{missing}</p>
+          <p className="text-sm text-neutral-500">Missing</p>
         </div>
       </div>
 
       {missing > 0 && (
         <div className="flex items-center gap-4 mb-6">
-          <label className="text-sm text-stone-600">
+          <label className="text-sm text-neutral-600">
             Batch size:
             <select
               value={batchSize}
               onChange={(e) => setBatchSize(parseInt(e.target.value, 10))}
               disabled={running}
-              className="ml-2 rounded border border-stone-300 px-2 py-1 text-sm"
+              className="ml-2 rounded border border-neutral-300 px-2 py-1 text-sm"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -116,7 +116,7 @@ export function NutritionBackfill() {
             <button
               type="button"
               onClick={runBatch}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors"
             >
               <Play className="h-4 w-4" />
               Start Backfill
@@ -137,14 +137,14 @@ export function NutritionBackfill() {
       {running && (
         <div className="mb-4">
           <div className="flex items-center gap-3">
-            <Loader2 className="h-4 w-4 text-amber-600 animate-spin" />
-            <span className="text-sm text-stone-600">
+            <Loader2 className="h-4 w-4 text-orange-600 animate-spin" />
+            <span className="text-sm text-neutral-600">
               Processed {processed} recipes...
             </span>
           </div>
-          <div className="mt-2 h-2 bg-stone-200 rounded-full overflow-hidden">
+          <div className="mt-2 h-2 bg-neutral-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-amber-500 transition-all"
+              className="h-full bg-orange-500 transition-all"
               style={{
                 width: `${missing > 0 ? (processed / missing) * 100 : 0}%`,
               }}

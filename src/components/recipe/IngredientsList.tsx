@@ -18,7 +18,7 @@ export function IngredientsList({ ingredients }: IngredientsListProps) {
   return (
     <div className="print-ingredients">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-stone-800">Ingredients</h2>
+        <h2 className="text-xl font-semibold text-neutral-800">Ingredients</h2>
         <CopyIngredientsButton ingredients={ingredients} />
       </div>
 
@@ -26,7 +26,7 @@ export function IngredientsList({ ingredients }: IngredientsListProps) {
         {ingredients.map((item, index) => (
           <li
             key={index}
-            className="flex items-baseline gap-1 py-1.5 border-b border-stone-100 last:border-b-0 text-stone-700"
+            className="flex items-baseline gap-1 py-1.5 border-b border-neutral-100 last:border-b-0 text-neutral-700"
           >
             <span className="font-medium">
               {toFraction(item.quantity)}
@@ -34,7 +34,7 @@ export function IngredientsList({ ingredients }: IngredientsListProps) {
             </span>
             <span>{item.ingredient.name}</span>
             {item.notes && (
-              <span className="text-sm text-stone-400">({item.notes})</span>
+              <span className="text-sm text-neutral-400">({item.notes})</span>
             )}
           </li>
         ))}

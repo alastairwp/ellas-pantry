@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      <h1 className="text-3xl font-bold text-stone-900">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-stone-500">Last updated: 6 March 2026</p>
+      <h1 className="text-3xl font-bold text-neutral-900">Privacy Policy</h1>
+      <p className="mt-2 text-sm text-neutral-500">Last updated: 6 March 2026</p>
 
-      <div className="mt-8 space-y-8 text-stone-700 leading-relaxed">
+      <div className="mt-8 space-y-8 text-neutral-700 leading-relaxed">
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">1. Who We Are</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">1. Who We Are</h2>
           <p className="mt-2">
             Ella&apos;s Pantry (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) operates the website{" "}
             <strong>www.ellaspantry.co.uk</strong>. We are a recipe discovery and meal
@@ -24,9 +24,9 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">2. Information We Collect</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">2. Information We Collect</h2>
 
-          <h3 className="mt-4 font-semibold text-stone-800">2.1 Information You Provide</h3>
+          <h3 className="mt-4 font-semibold text-neutral-800">2.1 Information You Provide</h3>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>
               <strong>Account registration:</strong> name, email address, and password
@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
             </li>
           </ul>
 
-          <h3 className="mt-4 font-semibold text-stone-800">2.2 Information Collected Automatically</h3>
+          <h3 className="mt-4 font-semibold text-neutral-800">2.2 Information Collected Automatically</h3>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>
               <strong>Usage data:</strong> pages visited, recipes viewed, search
@@ -60,7 +60,7 @@ export default function PrivacyPolicyPage() {
             </li>
           </ul>
 
-          <h3 className="mt-4 font-semibold text-stone-800">2.3 Information from Third Parties</h3>
+          <h3 className="mt-4 font-semibold text-neutral-800">2.3 Information from Third Parties</h3>
           <p className="mt-2">
             If you sign in using Google, we receive your name, email address, and
             profile picture from your Google account. We do not access any other Google
@@ -69,7 +69,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">3. How We Use Your Information</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">3. How We Use Your Information</h2>
           <p className="mt-2">We use your personal information to:</p>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>Create and manage your account.</li>
@@ -83,7 +83,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">4. Legal Basis for Processing (UK GDPR)</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">4. Legal Basis for Processing (UK GDPR)</h2>
           <p className="mt-2">We process your personal data on the following legal bases:</p>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>
@@ -102,7 +102,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">5. Third-Party Services</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">5. Third-Party Services</h2>
           <p className="mt-2">We share data with the following third-party services:</p>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>
@@ -124,7 +124,7 @@ export default function PrivacyPolicyPage() {
               processing. Please refer to{" "}
               <a
                 href="https://www.anthropic.com/privacy"
-                className="text-amber-600 hover:text-amber-700 underline"
+                className="text-orange-600 hover:text-orange-700 underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -136,7 +136,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">6. Cookies</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">6. Cookies</h2>
           <p className="mt-2">We use the following types of cookies:</p>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>
@@ -159,7 +159,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">7. Data Retention</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">7. Data Retention</h2>
           <p className="mt-2">
             We retain your personal data for as long as your account is active. If you
             delete your account, all associated data (profile, reviews, ratings, saved
@@ -170,7 +170,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">8. Your Rights</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">8. Your Rights</h2>
           <p className="mt-2">
             Under the UK GDPR, you have the following rights regarding your personal
             data:
@@ -208,7 +208,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">9. Data Security</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">9. Data Security</h2>
           <p className="mt-2">
             We take reasonable measures to protect your personal information. Passwords
             are hashed using industry-standard algorithms and are never stored in plain
@@ -219,7 +219,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">10. Children&apos;s Privacy</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">10. Children&apos;s Privacy</h2>
           <p className="mt-2">
             Our services are not directed at children under the age of 13. We do not
             knowingly collect personal information from children under 13. If we become
@@ -229,13 +229,13 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">11. Contact Us</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">11. Contact Us</h2>
           <p className="mt-2">
             If you have any questions about this Privacy Policy or wish to exercise
             your data protection rights, please contact us at:{" "}
             <a
               href="mailto:privacy@ellaspantry.co.uk"
-              className="text-amber-600 hover:text-amber-700 underline"
+              className="text-orange-600 hover:text-orange-700 underline"
             >
               privacy@ellaspantry.co.uk
             </a>
@@ -243,7 +243,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">12. Changes to This Policy</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">12. Changes to This Policy</h2>
           <p className="mt-2">
             We may update this Privacy Policy from time to time. Any changes will be
             posted on this page with an updated &quot;Last updated&quot; date. We encourage you

@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      <h1 className="text-3xl font-bold text-stone-900">Terms &amp; Conditions</h1>
-      <p className="mt-2 text-sm text-stone-500">Last updated: 6 March 2026</p>
+      <h1 className="text-3xl font-bold text-neutral-900">Terms &amp; Conditions</h1>
+      <p className="mt-2 text-sm text-neutral-500">Last updated: 6 March 2026</p>
 
-      <div className="mt-8 space-y-8 text-stone-700 leading-relaxed">
+      <div className="mt-8 space-y-8 text-neutral-700 leading-relaxed">
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">1. Introduction</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">1. Introduction</h2>
           <p className="mt-2">
             Welcome to Ella&apos;s Pantry. These Terms &amp; Conditions (&quot;Terms&quot;) govern
             your use of the website <strong>www.ellaspantry.co.uk</strong> (&quot;the
@@ -24,7 +24,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">2. About Our Services</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">2. About Our Services</h2>
           <p className="mt-2">
             Ella&apos;s Pantry is a recipe discovery and meal planning platform that
             allows users to:
@@ -38,7 +38,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">3. Account Registration</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">3. Account Registration</h2>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>
               You may register for an account using your email address and a password,
@@ -63,7 +63,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">4. User Content</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">4. User Content</h2>
           <p className="mt-2">
             When you submit content to the Site (such as reviews, ratings, or images),
             you:
@@ -90,7 +90,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">5. Acceptable Use</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">5. Acceptable Use</h2>
           <p className="mt-2">You agree not to:</p>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>Use the Site for any unlawful purpose or in violation of any applicable law.</li>
@@ -103,7 +103,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">6. AI-Powered Features</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">6. AI-Powered Features</h2>
           <p className="mt-2">
             Certain features of the Site use artificial intelligence (powered by
             Anthropic&apos;s Claude) to generate recipe suggestions, estimate
@@ -126,7 +126,7 @@ export default function TermsPage() {
             <li>
               <strong>Data processing:</strong> images and text you submit to
               AI-powered features are sent to Anthropic for processing. See our{" "}
-              <a href="/privacy" className="text-amber-600 hover:text-amber-700 underline">
+              <a href="/privacy" className="text-orange-600 hover:text-orange-700 underline">
                 Privacy Policy
               </a>{" "}
               for more details.
@@ -135,7 +135,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">7. Recipe Content &amp; Nutritional Information</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">7. Recipe Content &amp; Nutritional Information</h2>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>
               Recipes on the Site are provided for general informational and
@@ -155,7 +155,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">8. Intellectual Property</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">8. Intellectual Property</h2>
           <p className="mt-2">
             All content on the Site (excluding user-submitted content), including but
             not limited to text, graphics, logos, design, and software, is the
@@ -169,7 +169,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">9. Third-Party Links &amp; Services</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">9. Third-Party Links &amp; Services</h2>
           <p className="mt-2">
             The Site may contain links to third-party websites or services. We are not
             responsible for the content, privacy practices, or availability of any
@@ -179,7 +179,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">10. Advertisements</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">10. Advertisements</h2>
           <p className="mt-2">
             The Site displays advertisements served by Google AdSense. These
             advertisements may use cookies and similar technologies to serve ads based
@@ -189,7 +189,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">11. Account Deletion</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">11. Account Deletion</h2>
           <p className="mt-2">
             You may delete your account at any time through your profile settings.
             When you delete your account, all your personal data, saved recipes,
@@ -199,7 +199,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">12. Limitation of Liability</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">12. Limitation of Liability</h2>
           <p className="mt-2">
             To the fullest extent permitted by law:
           </p>
@@ -224,7 +224,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">13. Indemnification</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">13. Indemnification</h2>
           <p className="mt-2">
             You agree to indemnify and hold harmless Ella&apos;s Pantry from any
             claims, damages, losses, or expenses (including legal fees) arising from
@@ -234,7 +234,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">14. Changes to These Terms</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">14. Changes to These Terms</h2>
           <p className="mt-2">
             We may update these Terms from time to time. Changes will be posted on
             this page with an updated &quot;Last updated&quot; date. Your continued use of the
@@ -243,7 +243,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">15. Governing Law</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">15. Governing Law</h2>
           <p className="mt-2">
             These Terms are governed by and construed in accordance with the laws of
             England and Wales. Any disputes shall be subject to the exclusive
@@ -252,12 +252,12 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-stone-900">16. Contact Us</h2>
+          <h2 className="text-xl font-semibold text-neutral-900">16. Contact Us</h2>
           <p className="mt-2">
             If you have any questions about these Terms, please contact us at:{" "}
             <a
               href="mailto:hello@ellaspantry.co.uk"
-              className="text-amber-600 hover:text-amber-700 underline"
+              className="text-orange-600 hover:text-orange-700 underline"
             >
               hello@ellaspantry.co.uk
             </a>

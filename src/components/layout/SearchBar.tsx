@@ -22,14 +22,14 @@ export function SearchBar() {
       <label htmlFor="header-search" className="sr-only">
         Search recipes
       </label>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400 pointer-events-none" />
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none" />
       <input
         id="header-search"
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search recipes..."
-        className="w-full md:w-64 pl-9 pr-4 py-2 text-sm rounded-full border border-stone-300 bg-stone-50 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-colors"
+        className="w-full md:w-64 pl-9 pr-4 py-2 text-sm rounded-full border border-neutral-300 bg-neutral-50 text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
       />
     </form>
   );

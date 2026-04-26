@@ -17,10 +17,10 @@ export default async function WhatsInMyFridgePage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-3xl font-bold text-stone-900">
+      <h1 className="text-3xl font-bold text-neutral-900">
         What&apos;s In My Fridge?
       </h1>
-      <p className="mt-2 text-stone-500">
+      <p className="mt-2 text-neutral-500">
         Scan a photo or add ingredients manually from your fridge, cupboard, or
         larder and we&apos;ll find recipes you can make.
       </p>

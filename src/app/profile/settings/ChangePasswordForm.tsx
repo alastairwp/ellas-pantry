@@ -62,14 +62,14 @@ export function ChangePasswordForm({ hasPassword }: ChangePasswordFormProps) {
   }
 
   const inputClass =
-    "mt-1 block w-full rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-800 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400";
+    "mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm text-neutral-800 focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400";
 
   return (
     <div>
-      <h3 className="text-lg font-semibold text-stone-800">
+      <h3 className="text-lg font-semibold text-neutral-800">
         {hasPassword ? "Change Password" : "Set a Password"}
       </h3>
-      <p className="mt-1 text-sm text-stone-500">
+      <p className="mt-1 text-sm text-neutral-500">
         {hasPassword
           ? "Update your account password."
           : "Set a password to sign in with email and password."}
@@ -78,7 +78,7 @@ export function ChangePasswordForm({ hasPassword }: ChangePasswordFormProps) {
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         {hasPassword && (
           <div>
-            <label htmlFor="currentPassword" className="block text-sm font-medium text-stone-700">
+            <label htmlFor="currentPassword" className="block text-sm font-medium text-neutral-700">
               Current Password
             </label>
             <input
@@ -94,7 +94,7 @@ export function ChangePasswordForm({ hasPassword }: ChangePasswordFormProps) {
         )}
 
         <div>
-          <label htmlFor="newPassword" className="block text-sm font-medium text-stone-700">
+          <label htmlFor="newPassword" className="block text-sm font-medium text-neutral-700">
             New Password
           </label>
           <input
@@ -110,7 +110,7 @@ export function ChangePasswordForm({ hasPassword }: ChangePasswordFormProps) {
         </div>
 
         <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-stone-700">
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-neutral-700">
             Confirm New Password
           </label>
           <input
@@ -134,7 +134,7 @@ export function ChangePasswordForm({ hasPassword }: ChangePasswordFormProps) {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50 transition-colors"
+          className="rounded-lg bg-orange-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-50 transition-colors"
         >
           {saving ? (
             <span className="inline-flex items-center gap-2">

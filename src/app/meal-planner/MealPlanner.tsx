@@ -234,7 +234,7 @@ export function MealPlanner() {
   if (loading) {
     return (
       <div className="text-center py-16">
-        <Loader2 className="h-8 w-8 text-amber-600 mx-auto animate-spin" />
+        <Loader2 className="h-8 w-8 text-orange-600 mx-auto animate-spin" />
       </div>
     );
   }
@@ -251,8 +251,8 @@ export function MealPlanner() {
           onClick={() => setTab("plan")}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             tab === "plan"
-              ? "bg-amber-600 text-white"
-              : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+              ? "bg-orange-600 text-white"
+              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
           }`}
         >
           <CalendarDays className="h-4 w-4" />
@@ -263,8 +263,8 @@ export function MealPlanner() {
           onClick={() => setTab("shopping")}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             tab === "shopping"
-              ? "bg-amber-600 text-white"
-              : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+              ? "bg-orange-600 text-white"
+              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
           }`}
         >
           <ShoppingCart className="h-4 w-4" />
@@ -292,7 +292,7 @@ export function MealPlanner() {
               {DAYS.map((day) => (
                 <div
                   key={day}
-                  className="text-center text-sm font-semibold text-stone-700 py-2"
+                  className="text-center text-sm font-semibold text-neutral-700 py-2"
                 >
                   {DAY_LABELS[day]}
                 </div>
@@ -303,7 +303,7 @@ export function MealPlanner() {
             {MEAL_TYPES.map((mealType) => (
               <div key={mealType} className="grid grid-cols-8 gap-2 mb-2">
                 <div className="flex items-start justify-end pr-2 pt-2">
-                  <span className="text-xs font-medium text-stone-500 capitalize">
+                  <span className="text-xs font-medium text-neutral-500 capitalize">
                     {mealType}
                   </span>
                 </div>
@@ -312,23 +312,23 @@ export function MealPlanner() {
                   return (
                     <div
                       key={`${day}-${mealType}`}
-                      className="min-h-[80px] border border-stone-200 rounded-lg p-1.5 bg-white"
+                      className="min-h-[80px] border border-neutral-200 rounded-lg p-1.5 bg-white"
                     >
                       {entries.map((entry) => (
                         <div
                           key={entry.id}
-                          className="group relative bg-amber-50 rounded-md p-1.5 mb-1 last:mb-0"
+                          className="group relative bg-orange-50 rounded-md p-1.5 mb-1 last:mb-0"
                         >
                           <Link
                             href={`/recipes/${entry.recipe.slug}`}
-                            className="text-xs font-medium text-stone-700 hover:text-amber-700 line-clamp-2 block pr-4"
+                            className="text-xs font-medium text-neutral-700 hover:text-orange-700 line-clamp-2 block pr-4"
                           >
                             {entry.recipe.title}
                           </Link>
                           <button
                             type="button"
                             onClick={() => removeEntry(entry.id)}
-                            className="absolute top-1 right-1 p-0.5 text-stone-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute top-1 right-1 p-0.5 text-neutral-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                             aria-label="Remove"
                           >
                             <X className="h-3 w-3" />
@@ -338,7 +338,7 @@ export function MealPlanner() {
                       <button
                         type="button"
                         onClick={() => openSearch(day, mealType)}
-                        className="w-full flex items-center justify-center py-1 text-stone-300 hover:text-amber-500 transition-colors"
+                        className="w-full flex items-center justify-center py-1 text-neutral-300 hover:text-orange-500 transition-colors"
                         aria-label={`Add ${mealType} on ${day}`}
                       >
                         <Plus className="h-4 w-4" />
@@ -358,12 +358,12 @@ export function MealPlanner() {
           <PushNotificationPrompt />
           {shoppingLoading ? (
             <div className="text-center py-12">
-              <Loader2 className="h-6 w-6 text-stone-400 mx-auto animate-spin" />
+              <Loader2 className="h-6 w-6 text-neutral-400 mx-auto animate-spin" />
             </div>
           ) : shoppingItems.length === 0 ? (
             <div className="text-center py-12">
-              <ShoppingCart className="h-12 w-12 text-stone-300 mx-auto mb-3" />
-              <p className="text-stone-500">
+              <ShoppingCart className="h-12 w-12 text-neutral-300 mx-auto mb-3" />
+              <p className="text-neutral-500">
                 Add recipes to your meal plan to generate a shopping list.
               </p>
             </div>
@@ -373,7 +373,7 @@ export function MealPlanner() {
                 <button
                   type="button"
                   onClick={copyShoppingList}
-                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors"
                 >
                   {copied ? (
                     <Check className="h-4 w-4 text-green-600" />
@@ -385,7 +385,7 @@ export function MealPlanner() {
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors"
                 >
                   <Printer className="h-4 w-4" />
                   Print
@@ -394,7 +394,7 @@ export function MealPlanner() {
                   type="button"
                   onClick={sendShoppingListPush}
                   disabled={sendingPush}
-                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors disabled:opacity-50"
                 >
                   {pushSent ? (
                     <Check className="h-4 w-4 text-green-600" />
@@ -407,26 +407,26 @@ export function MealPlanner() {
                   <PushNotificationToggle />
                 </div>
               </div>
-              <ul className="divide-y divide-stone-100">
+              <ul className="divide-y divide-neutral-100">
                 {shoppingItems.map((item) => (
                   <li key={item.name} className="flex items-center gap-3 py-2.5">
                     <input
                       type="checkbox"
                       checked={checkedItems.has(item.name)}
                       onChange={() => toggleCheck(item.name)}
-                      className="h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500"
+                      className="h-4 w-4 rounded border-neutral-300 text-orange-600 focus:ring-orange-500"
                     />
                     <span
                       className={`flex-1 text-sm ${
                         checkedItems.has(item.name)
-                          ? "line-through text-stone-400"
-                          : "text-stone-700"
+                          ? "line-through text-neutral-400"
+                          : "text-neutral-700"
                       }`}
                     >
                       {item.name}
                     </span>
                     {item.detail && (
-                      <span className="text-xs text-stone-400">
+                      <span className="text-xs text-neutral-400">
                         {item.detail}
                       </span>
                     )}
@@ -447,7 +447,7 @@ export function MealPlanner() {
           />
           <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 max-h-[70vh] flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-stone-800">
+              <h3 className="text-lg font-semibold text-neutral-800">
                 Add Recipe —{" "}
                 <span className="capitalize">
                   {DAY_LABELS[searchDay]} {searchMealType}
@@ -456,20 +456,20 @@ export function MealPlanner() {
               <button
                 type="button"
                 onClick={() => setSearchOpen(false)}
-                className="p-1.5 hover:bg-stone-100 rounded-full"
+                className="p-1.5 hover:bg-neutral-100 rounded-full"
               >
-                <X className="h-5 w-5 text-stone-500" />
+                <X className="h-5 w-5 text-neutral-500" />
               </button>
             </div>
 
             <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
               <input
                 type="text"
                 placeholder="Search recipes..."
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-neutral-300 text-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
                 autoFocus
               />
             </div>
@@ -477,11 +477,11 @@ export function MealPlanner() {
             <div className="flex-1 overflow-y-auto">
               {searching && (
                 <div className="text-center py-6">
-                  <Loader2 className="h-5 w-5 text-stone-400 mx-auto animate-spin" />
+                  <Loader2 className="h-5 w-5 text-neutral-400 mx-auto animate-spin" />
                 </div>
               )}
               {!searching && searchResults.length === 0 && searchQuery.length >= 2 && (
-                <p className="text-center text-stone-500 py-6 text-sm">
+                <p className="text-center text-neutral-500 py-6 text-sm">
                   No recipes found
                 </p>
               )}
@@ -490,7 +490,7 @@ export function MealPlanner() {
                   key={recipe.id}
                   type="button"
                   onClick={() => addEntry(recipe.id)}
-                  className="w-full flex items-center gap-3 p-3 hover:bg-amber-50 rounded-lg transition-colors text-left"
+                  className="w-full flex items-center gap-3 p-3 hover:bg-orange-50 rounded-lg transition-colors text-left"
                 >
                   {recipe.heroImage && (
                     <Image
@@ -502,10 +502,10 @@ export function MealPlanner() {
                     />
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-stone-800 truncate">
+                    <p className="text-sm font-medium text-neutral-800 truncate">
                       {recipe.title}
                     </p>
-                    <p className="text-xs text-stone-400">
+                    <p className="text-xs text-neutral-400">
                       {recipe.prepTime + recipe.cookTime} min total
                     </p>
                   </div>

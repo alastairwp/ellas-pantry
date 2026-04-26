@@ -55,15 +55,15 @@ export default async function MyRecipesPage() {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-stone-900">My recipes</h1>
-          <p className="mt-2 text-stone-500">
+          <h1 className="text-3xl font-bold text-neutral-900">My recipes</h1>
+          <p className="mt-2 text-neutral-500">
             Recipes you&apos;ve created or had shared with you. None of these
             appear in the public catalogue.
           </p>
         </div>
         <Link
           href="/recipes/new/from-photo"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700"
         >
           <Camera className="h-4 w-4" />
           Create from photo
@@ -71,17 +71,17 @@ export default async function MyRecipesPage() {
       </div>
 
       <section className="mb-12">
-        <h2 className="text-xl font-semibold text-stone-800 mb-4">
+        <h2 className="text-xl font-semibold text-neutral-800 mb-4">
           My recipes ({owned.length})
         </h2>
         {owned.length === 0 ? (
-          <div className="bg-stone-50 rounded-2xl border border-stone-200 p-8 text-center">
-            <p className="text-stone-500 mb-4">
+          <div className="bg-neutral-50 rounded-2xl border border-neutral-200 p-8 text-center">
+            <p className="text-neutral-500 mb-4">
               You haven&apos;t created any recipes yet.
             </p>
             <Link
               href="/recipes/new/from-photo"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700"
             >
               <Camera className="h-4 w-4" />
               Create your first one
@@ -94,7 +94,7 @@ export default async function MyRecipesPage() {
                 <RecipeCard recipe={recipe as RecipeCardData} />
                 <Link
                   href={`/my-recipes/${recipe.id}/edit`}
-                  className="absolute top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 bg-white/90 backdrop-blur text-stone-700 text-xs font-medium rounded-full shadow-sm hover:bg-white"
+                  className="absolute top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 bg-white/90 backdrop-blur text-neutral-700 text-xs font-medium rounded-full shadow-sm hover:bg-white"
                 >
                   <Pencil className="h-3 w-3" />
                   Edit
@@ -111,7 +111,7 @@ export default async function MyRecipesPage() {
 
       {shared.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold text-stone-800 mb-4">
+          <h2 className="text-xl font-semibold text-neutral-800 mb-4">
             Shared with me ({shared.length})
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

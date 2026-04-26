@@ -75,25 +75,25 @@ function StatCard({
   subtitle?: string;
 }) {
   const colorClasses = {
-    amber: "bg-amber-50 text-amber-600",
+    amber: "bg-orange-50 text-orange-600",
     green: "bg-green-50 text-green-600",
     blue: "bg-blue-50 text-blue-600",
     purple: "bg-purple-50 text-purple-600",
     red: "bg-red-50 text-red-600",
-    stone: "bg-stone-100 text-stone-600",
+    stone: "bg-neutral-100 text-neutral-600",
   };
 
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-4">
+    <div className="rounded-xl border border-neutral-200 bg-white p-4">
       <div className="flex items-center gap-3">
         <div className={`rounded-lg p-2 ${colorClasses[color]}`}>
           <Icon className="h-5 w-5" />
         </div>
         <div>
-          <p className="text-2xl font-bold text-stone-900">{value}</p>
-          <p className="text-sm text-stone-500">{label}</p>
+          <p className="text-2xl font-bold text-neutral-900">{value}</p>
+          <p className="text-sm text-neutral-500">{label}</p>
           {subtitle && (
-            <p className="text-xs text-stone-400 mt-0.5">{subtitle}</p>
+            <p className="text-xs text-neutral-400 mt-0.5">{subtitle}</p>
           )}
         </div>
       </div>
@@ -104,7 +104,7 @@ function StatCard({
 function BarChart({
   items,
   maxValue,
-  colorClass = "bg-amber-500",
+  colorClass = "bg-orange-500",
 }: {
   items: { name: string; count: number }[];
   maxValue: number;
@@ -114,10 +114,10 @@ function BarChart({
     <div className="space-y-2">
       {items.map((item) => (
         <div key={item.name} className="flex items-center gap-3">
-          <span className="text-sm text-stone-600 w-28 truncate flex-shrink-0">
+          <span className="text-sm text-neutral-600 w-28 truncate flex-shrink-0">
             {item.name}
           </span>
-          <div className="flex-1 h-6 bg-stone-100 rounded-full overflow-hidden">
+          <div className="flex-1 h-6 bg-neutral-100 rounded-full overflow-hidden">
             <div
               className={`h-full ${colorClass} rounded-full transition-all`}
               style={{
@@ -125,7 +125,7 @@ function BarChart({
               }}
             />
           </div>
-          <span className="text-sm font-medium text-stone-700 w-12 text-right flex-shrink-0">
+          <span className="text-sm font-medium text-neutral-700 w-12 text-right flex-shrink-0">
             {item.count.toLocaleString()}
           </span>
         </div>
@@ -137,7 +137,7 @@ function BarChart({
 const dietaryColors: Record<string, string> = {
   Vegan: "bg-green-500",
   Vegetarian: "bg-emerald-500",
-  "Gluten-Free": "bg-amber-500",
+  "Gluten-Free": "bg-orange-500",
   "Dairy-Free": "bg-blue-500",
   "Nut-Free": "bg-purple-500",
   "Egg-Free": "bg-orange-500",
@@ -162,7 +162,7 @@ export function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 text-stone-400 animate-spin" />
+        <Loader2 className="h-8 w-8 text-neutral-400 animate-spin" />
       </div>
     );
   }
@@ -183,8 +183,8 @@ export function Dashboard() {
     <div className="space-y-8">
       {/* This Week */}
       <section>
-        <h2 className="text-lg font-semibold text-stone-800 mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-amber-600" />
+        <h2 className="text-lg font-semibold text-neutral-800 mb-4 flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-orange-600" />
           This Week
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -217,8 +217,8 @@ export function Dashboard() {
 
       {/* Recipe Overview */}
       <section>
-        <h2 className="text-lg font-semibold text-stone-800 mb-4 flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-amber-600" />
+        <h2 className="text-lg font-semibold text-neutral-800 mb-4 flex items-center gap-2">
+          <BookOpen className="h-5 w-5 text-orange-600" />
           Recipes
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -257,8 +257,8 @@ export function Dashboard() {
 
       {/* Users & Engagement */}
       <section>
-        <h2 className="text-lg font-semibold text-stone-800 mb-4 flex items-center gap-2">
-          <Users className="h-5 w-5 text-amber-600" />
+        <h2 className="text-lg font-semibold text-neutral-800 mb-4 flex items-center gap-2">
+          <Users className="h-5 w-5 text-orange-600" />
           Users & Engagement
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -303,34 +303,34 @@ export function Dashboard() {
 
       {/* Source & Difficulty Breakdown */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <section className="rounded-xl border border-stone-200 bg-white p-5">
-          <h3 className="text-sm font-semibold text-stone-800 mb-3">
+        <section className="rounded-xl border border-neutral-200 bg-white p-5">
+          <h3 className="text-sm font-semibold text-neutral-800 mb-3">
             Recipe Source
           </h3>
           <div className="space-y-2">
             {data.sourceBreakdown.map((s) => (
               <div key={s.source} className="flex items-center justify-between">
-                <span className="text-sm text-stone-600 capitalize">
+                <span className="text-sm text-neutral-600 capitalize">
                   {s.source}
                 </span>
-                <span className="text-sm font-medium text-stone-800">
+                <span className="text-sm font-medium text-neutral-800">
                   {s.count.toLocaleString()}
                 </span>
               </div>
             ))}
           </div>
         </section>
-        <section className="rounded-xl border border-stone-200 bg-white p-5">
-          <h3 className="text-sm font-semibold text-stone-800 mb-3">
+        <section className="rounded-xl border border-neutral-200 bg-white p-5">
+          <h3 className="text-sm font-semibold text-neutral-800 mb-3">
             Difficulty (Published)
           </h3>
           <div className="space-y-2">
             {data.difficultyBreakdown.map((d) => (
               <div key={d.difficulty} className="flex items-center justify-between">
-                <span className="text-sm text-stone-600 capitalize">
+                <span className="text-sm text-neutral-600 capitalize">
                   {d.difficulty}
                 </span>
-                <span className="text-sm font-medium text-stone-800">
+                <span className="text-sm font-medium text-neutral-800">
                   {d.count.toLocaleString()}
                 </span>
               </div>
@@ -340,33 +340,33 @@ export function Dashboard() {
       </div>
 
       {/* Categories */}
-      <section className="rounded-xl border border-stone-200 bg-white p-5">
-        <h3 className="text-sm font-semibold text-stone-800 mb-4">
+      <section className="rounded-xl border border-neutral-200 bg-white p-5">
+        <h3 className="text-sm font-semibold text-neutral-800 mb-4">
           Recipes per Category
         </h3>
         <BarChart items={data.categoryCounts} maxValue={maxCategory} />
       </section>
 
       {/* Dietary Tags */}
-      <section className="rounded-xl border border-stone-200 bg-white p-5">
-        <h3 className="text-sm font-semibold text-stone-800 mb-4">
+      <section className="rounded-xl border border-neutral-200 bg-white p-5">
+        <h3 className="text-sm font-semibold text-neutral-800 mb-4">
           Recipes per Dietary Tag
         </h3>
         <div className="space-y-2">
           {data.dietaryTagCounts.map((item) => (
             <div key={item.name} className="flex items-center gap-3">
-              <span className="text-sm text-stone-600 w-28 truncate flex-shrink-0">
+              <span className="text-sm text-neutral-600 w-28 truncate flex-shrink-0">
                 {item.name}
               </span>
-              <div className="flex-1 h-6 bg-stone-100 rounded-full overflow-hidden">
+              <div className="flex-1 h-6 bg-neutral-100 rounded-full overflow-hidden">
                 <div
-                  className={`h-full ${dietaryColors[item.name] || "bg-stone-400"} rounded-full transition-all`}
+                  className={`h-full ${dietaryColors[item.name] || "bg-neutral-400"} rounded-full transition-all`}
                   style={{
                     width: `${maxDietary > 0 ? (item.count / maxDietary) * 100 : 0}%`,
                   }}
                 />
               </div>
-              <span className="text-sm font-medium text-stone-700 w-12 text-right flex-shrink-0">
+              <span className="text-sm font-medium text-neutral-700 w-12 text-right flex-shrink-0">
                 {item.count.toLocaleString()}
               </span>
             </div>
@@ -376,20 +376,20 @@ export function Dashboard() {
 
       {/* Top Rated */}
       {data.topRatedRecipes.length > 0 && (
-        <section className="rounded-xl border border-stone-200 bg-white p-5">
-          <h3 className="text-sm font-semibold text-stone-800 mb-3">
+        <section className="rounded-xl border border-neutral-200 bg-white p-5">
+          <h3 className="text-sm font-semibold text-neutral-800 mb-3">
             Most Rated Recipes
           </h3>
           <div className="space-y-2">
             {data.topRatedRecipes.map((recipe, i) => (
               <div key={recipe.slug} className="flex items-center gap-3">
-                <span className="text-sm font-bold text-amber-600 w-6">
+                <span className="text-sm font-bold text-orange-600 w-6">
                   {i + 1}.
                 </span>
-                <span className="text-sm text-stone-700 flex-1 truncate">
+                <span className="text-sm text-neutral-700 flex-1 truncate">
                   {recipe.title}
                 </span>
-                <span className="text-xs text-stone-500">
+                <span className="text-xs text-neutral-500">
                   {recipe.ratingCount} rating{recipe.ratingCount !== 1 ? "s" : ""}
                 </span>
               </div>
@@ -401,8 +401,8 @@ export function Dashboard() {
       {/* External Popularity Data */}
       {data.externalData && (
         <section>
-          <h2 className="text-lg font-semibold text-stone-800 mb-4 flex items-center gap-2">
-            <Globe className="h-5 w-5 text-amber-600" />
+          <h2 className="text-lg font-semibold text-neutral-800 mb-4 flex items-center gap-2">
+            <Globe className="h-5 w-5 text-orange-600" />
             External Popularity Data
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
@@ -441,8 +441,8 @@ export function Dashboard() {
             />
           </div>
           {data.externalData.bySource.length > 0 && (
-            <div className="rounded-xl border border-stone-200 bg-white p-5">
-              <h3 className="text-sm font-semibold text-stone-800 mb-3">
+            <div className="rounded-xl border border-neutral-200 bg-white p-5">
+              <h3 className="text-sm font-semibold text-neutral-800 mb-3">
                 External Recipes by Source
               </h3>
               <div className="space-y-2">
@@ -451,8 +451,8 @@ export function Dashboard() {
                     key={s.source}
                     className="flex items-center justify-between"
                   >
-                    <span className="text-sm text-stone-600">{s.source}</span>
-                    <span className="text-sm font-medium text-stone-800">
+                    <span className="text-sm text-neutral-600">{s.source}</span>
+                    <span className="text-sm font-medium text-neutral-800">
                       {s.count.toLocaleString()}
                     </span>
                   </div>

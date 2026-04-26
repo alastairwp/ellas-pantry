@@ -33,7 +33,7 @@ const SORT_OPTIONS = [
 const activeClasses: Record<string, string> = {
   vegan: "bg-green-100 text-green-800 border-green-300",
   vegetarian: "bg-emerald-100 text-emerald-800 border-emerald-300",
-  "gluten-free": "bg-amber-100 text-amber-800 border-amber-300",
+  "gluten-free": "bg-orange-100 text-orange-800 border-orange-300",
   "dairy-free": "bg-blue-100 text-blue-800 border-blue-300",
   "nut-free": "bg-purple-100 text-purple-800 border-purple-300",
   "egg-free": "bg-orange-100 text-orange-800 border-orange-300",
@@ -59,15 +59,15 @@ function FilterSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-stone-200 py-4 last:border-0">
+    <div className="border-b border-neutral-200 py-4 last:border-0">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between text-sm font-semibold text-stone-800"
+        className="flex w-full items-center justify-between text-sm font-semibold text-neutral-800"
       >
         {title}
         <ChevronDown
-          className={`h-4 w-4 text-stone-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 text-neutral-400 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && <div className="mt-3">{children}</div>}
@@ -108,17 +108,17 @@ function RecipesForMeSection() {
 
   if (!hasAllergies) {
     return (
-      <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+      <div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
         <div className="flex items-center gap-2 mb-2">
-          <Shield className="h-4 w-4 text-amber-600" />
-          <span className="text-sm font-medium text-stone-800">Recipes for me</span>
+          <Shield className="h-4 w-4 text-orange-600" />
+          <span className="text-sm font-medium text-neutral-800">Recipes for me</span>
         </div>
-        <p className="text-xs text-stone-600 mb-2">
+        <p className="text-xs text-neutral-600 mb-2">
           Set up your allergy profile to filter recipes that are safe for you.
         </p>
         <Link
           href="/profile/settings?tab=dietary"
-          className="text-xs font-medium text-amber-700 hover:text-amber-800 underline"
+          className="text-xs font-medium text-orange-700 hover:text-orange-800 underline"
         >
           Set up allergies
         </Link>
@@ -132,8 +132,8 @@ function RecipesForMeSection() {
       onClick={handleToggle}
       className={`flex w-full items-center gap-2 rounded-lg border p-3 text-sm font-medium transition-colors ${
         isActive
-          ? "bg-amber-100 text-amber-800 border-amber-300"
-          : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50"
+          ? "bg-orange-100 text-orange-800 border-orange-300"
+          : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50"
       }`}
       aria-pressed={isActive}
     >
@@ -219,12 +219,12 @@ function SidebarContent({ categories }: FilterSidebarProps) {
   return (
     <>
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-stone-200">
-        <span className="text-sm font-semibold text-stone-800 flex items-center gap-2">
+      <div className="flex items-center justify-between pb-3 border-b border-neutral-200">
+        <span className="text-sm font-semibold text-neutral-800 flex items-center gap-2">
           <SlidersHorizontal className="h-4 w-4" />
           Filters
           {activeCount > 0 && (
-            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-600 text-xs font-bold text-white">
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-orange-600 text-xs font-bold text-white">
               {activeCount}
             </span>
           )}
@@ -233,7 +233,7 @@ function SidebarContent({ categories }: FilterSidebarProps) {
           <button
             type="button"
             onClick={clearAll}
-            className="text-xs text-amber-600 hover:text-amber-700 font-medium"
+            className="text-xs text-orange-600 hover:text-orange-700 font-medium"
           >
             Clear all
           </button>
@@ -241,27 +241,27 @@ function SidebarContent({ categories }: FilterSidebarProps) {
       </div>
 
       {/* Recipes for me */}
-      <div className="py-4 border-b border-stone-200">
+      <div className="py-4 border-b border-neutral-200">
         <RecipesForMeSection />
       </div>
 
       {/* Ingredient search */}
       <FilterSection title="Ingredient">
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-400" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
           <input
             type="text"
             value={ingredientValue}
             onChange={(e) => handleIngredientChange(e.target.value)}
             placeholder="Search by ingredient..."
-            className="w-full pl-8 pr-8 py-2 text-sm rounded-lg border border-stone-300 bg-white text-stone-600 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="w-full pl-8 pr-8 py-2 text-sm rounded-lg border border-neutral-300 bg-white text-neutral-600 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
             aria-label="Search by ingredient"
           />
           {ingredientValue && (
             <button
               type="button"
               onClick={() => handleIngredientChange("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-stone-400 hover:text-stone-600"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-neutral-400 hover:text-neutral-600"
               aria-label="Clear ingredient search"
             >
               <X className="h-3.5 w-3.5" />
@@ -283,7 +283,7 @@ function SidebarContent({ categories }: FilterSidebarProps) {
                 className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-colors ${
                   isActive
                     ? activeClasses[option.slug]
-                    : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50"
+                    : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50"
                 }`}
                 aria-pressed={isActive}
               >
@@ -306,8 +306,8 @@ function SidebarContent({ categories }: FilterSidebarProps) {
                 onClick={() => updateParam("category", isActive ? null : cat.slug)}
                 className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-colors ${
                   isActive
-                    ? "bg-amber-600 text-white border-amber-600"
-                    : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50"
+                    ? "bg-orange-600 text-white border-orange-600"
+                    : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50"
                 }`}
                 aria-pressed={isActive}
               >
@@ -328,8 +328,8 @@ function SidebarContent({ categories }: FilterSidebarProps) {
               onClick={() => updateParam("difficulty", activeDifficulty === opt ? null : opt)}
               className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-colors ${
                 activeDifficulty === opt
-                  ? "bg-stone-800 text-white border-stone-800"
-                  : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50"
+                  ? "bg-neutral-800 text-white border-neutral-800"
+                  : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50"
               }`}
               aria-pressed={activeDifficulty === opt}
             >
@@ -351,8 +351,8 @@ function SidebarContent({ categories }: FilterSidebarProps) {
               }
               className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-colors ${
                 activeCookTime === String(opt.value)
-                  ? "bg-stone-800 text-white border-stone-800"
-                  : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50"
+                  ? "bg-neutral-800 text-white border-neutral-800"
+                  : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50"
               }`}
               aria-pressed={activeCookTime === String(opt.value)}
             >
@@ -372,8 +372,8 @@ function SidebarContent({ categories }: FilterSidebarProps) {
               onClick={() => updateParam("sort", opt.value === "newest" ? null : opt.value)}
               className={`px-3 py-1.5 text-xs font-medium rounded-lg text-left transition-colors ${
                 activeSort === opt.value
-                  ? "bg-amber-50 text-amber-800"
-                  : "text-stone-600 hover:bg-stone-50"
+                  ? "bg-orange-50 text-orange-800"
+                  : "text-neutral-600 hover:bg-neutral-50"
               }`}
             >
               {opt.label}
@@ -404,12 +404,12 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="inline-flex items-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
           {activeCount > 0 && (
-            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-600 text-xs font-bold text-white">
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-orange-600 text-xs font-bold text-white">
               {activeCount}
             </span>
           )}
@@ -424,12 +424,12 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
             onClick={() => setMobileOpen(false)}
           />
           <div className="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white shadow-xl overflow-y-auto">
-            <div className="flex items-center justify-between p-4 border-b border-stone-200">
-              <span className="text-base font-semibold text-stone-800">Filters</span>
+            <div className="flex items-center justify-between p-4 border-b border-neutral-200">
+              <span className="text-base font-semibold text-neutral-800">Filters</span>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="p-1 text-stone-400 hover:text-stone-600"
+                className="p-1 text-neutral-400 hover:text-neutral-600"
                 aria-label="Close filters"
               >
                 <X className="h-5 w-5" />

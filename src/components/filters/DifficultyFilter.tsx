@@ -33,8 +33,8 @@ export function DifficultyFilter() {
           onClick={() => handleToggle(opt)}
           className={`px-3 py-1.5 text-sm font-medium rounded-full border transition-colors ${
             active === opt
-              ? "bg-stone-800 text-white border-stone-800"
-              : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50"
+              ? "bg-neutral-800 text-white border-neutral-800"
+              : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50"
           }`}
           aria-pressed={active === opt}
         >

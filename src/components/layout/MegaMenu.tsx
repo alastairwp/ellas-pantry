@@ -58,7 +58,7 @@ export function MegaMenu({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1 text-sm font-medium text-stone-600 hover:text-amber-700 transition-colors"
+        className="inline-flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-orange-700 transition-colors"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
@@ -69,14 +69,14 @@ export function MegaMenu({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[600px] bg-white rounded-xl border border-stone-200 shadow-xl z-50 p-6">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[600px] bg-white rounded-xl border border-neutral-200 shadow-xl z-50 p-6">
           {/* Arrow */}
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-stone-200 rotate-45" />
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-neutral-200 rotate-45" />
 
           <div className="relative grid grid-cols-3 gap-6">
             {/* Meal Type */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">
                 Meal Type
               </h3>
               <ul className="space-y-1.5">
@@ -85,7 +85,7 @@ export function MegaMenu({
                     <Link
                       href={`/categories/${cat.slug}`}
                       onClick={() => setIsOpen(false)}
-                      className="block text-sm text-stone-700 hover:text-amber-700 hover:bg-amber-50 rounded px-2 py-1 -mx-2 transition-colors"
+                      className="block text-sm text-neutral-700 hover:text-orange-700 hover:bg-orange-50 rounded px-2 py-1 -mx-2 transition-colors"
                     >
                       {cat.name}
                     </Link>
@@ -96,7 +96,7 @@ export function MegaMenu({
 
             {/* Diet Type */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">
                 Diet Type
               </h3>
               <ul className="space-y-1.5">
@@ -105,7 +105,7 @@ export function MegaMenu({
                     <Link
                       href={`/recipes?dietary=${tag.slug}`}
                       onClick={() => setIsOpen(false)}
-                      className="block text-sm text-stone-700 hover:text-amber-700 hover:bg-amber-50 rounded px-2 py-1 -mx-2 transition-colors"
+                      className="block text-sm text-neutral-700 hover:text-orange-700 hover:bg-orange-50 rounded px-2 py-1 -mx-2 transition-colors"
                     >
                       {tag.name}
                     </Link>
@@ -116,7 +116,7 @@ export function MegaMenu({
 
             {/* This Season */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">
                 This Season
               </h3>
               {activeOccasions.length > 0 ? (
@@ -126,7 +126,7 @@ export function MegaMenu({
                       <Link
                         href={`/occasions/${occ.slug}`}
                         onClick={() => setIsOpen(false)}
-                        className="block text-sm text-stone-700 hover:text-amber-700 hover:bg-amber-50 rounded px-2 py-1 -mx-2 transition-colors"
+                        className="block text-sm text-neutral-700 hover:text-orange-700 hover:bg-orange-50 rounded px-2 py-1 -mx-2 transition-colors"
                       >
                         {occ.name}
                       </Link>
@@ -134,7 +134,7 @@ export function MegaMenu({
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-stone-400 italic">
+                <p className="text-sm text-neutral-400 italic">
                   No seasonal occasions right now
                 </p>
               )}
@@ -142,11 +142,11 @@ export function MegaMenu({
           </div>
 
           {/* Footer */}
-          <div className="mt-5 pt-4 border-t border-stone-100">
+          <div className="mt-5 pt-4 border-t border-neutral-100">
             <Link
               href="/recipes"
               onClick={() => setIsOpen(false)}
-              className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors"
+              className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors"
             >
               View all recipes &rarr;
             </Link>
@@ -202,7 +202,7 @@ export function MegaMenuMobile({
 
   return (
     <div className="space-y-1">
-      <p className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-stone-400">
+      <p className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-400">
         Recipes
       </p>
       {sections.map((section) => (
@@ -210,7 +210,7 @@ export function MegaMenuMobile({
           <button
             type="button"
             onClick={() => toggle(section.key)}
-            className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-stone-700 hover:text-amber-700 hover:bg-stone-50 rounded-lg transition-colors"
+            className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-neutral-700 hover:text-orange-700 hover:bg-neutral-50 rounded-lg transition-colors"
           >
             {section.label}
             <ChevronDown
@@ -223,7 +223,7 @@ export function MegaMenuMobile({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block px-3 py-1.5 text-sm text-stone-600 hover:text-amber-700 hover:bg-stone-50 rounded transition-colors"
+                  className="block px-3 py-1.5 text-sm text-neutral-600 hover:text-orange-700 hover:bg-neutral-50 rounded transition-colors"
                 >
                   {item.name}
                 </Link>

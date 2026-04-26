@@ -62,7 +62,7 @@ export function CollectionsList() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-32 animate-pulse rounded-xl bg-stone-100"
+            className="h-32 animate-pulse rounded-xl bg-neutral-100"
           />
         ))}
       </div>
@@ -78,12 +78,12 @@ export function CollectionsList() {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           placeholder="New collection name..."
-          className="flex-1 rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+          className="flex-1 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm text-neutral-800 placeholder:text-neutral-400 focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400"
         />
         <button
           type="submit"
           disabled={!newName.trim() || creating}
-          className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-50 transition-colors"
         >
           <FolderPlus className="h-4 w-4" />
           Create
@@ -92,9 +92,9 @@ export function CollectionsList() {
 
       {collections.length === 0 ? (
         <div className="text-center py-12">
-          <BookOpen className="mx-auto h-12 w-12 text-stone-300" />
-          <p className="mt-4 text-lg text-stone-500">No collections yet</p>
-          <p className="mt-1 text-sm text-stone-400">
+          <BookOpen className="mx-auto h-12 w-12 text-neutral-300" />
+          <p className="mt-4 text-lg text-neutral-500">No collections yet</p>
+          <p className="mt-1 text-sm text-neutral-400">
             Create your first collection to start organising recipes.
           </p>
         </div>
@@ -103,23 +103,23 @@ export function CollectionsList() {
           {collections.map((collection) => (
             <div
               key={collection.id}
-              className="group relative rounded-xl border border-stone-200 bg-white p-5 hover:border-amber-300 hover:shadow-sm transition-all"
+              className="group relative rounded-xl border border-neutral-200 bg-white p-5 hover:border-orange-300 hover:shadow-sm transition-all"
             >
               <Link
                 href={`/collections/${collection.id}`}
                 className="block"
               >
-                <h3 className="font-semibold text-stone-800 group-hover:text-amber-700 transition-colors">
+                <h3 className="font-semibold text-neutral-800 group-hover:text-orange-700 transition-colors">
                   {collection.name}
                 </h3>
-                <p className="mt-1 text-sm text-stone-500">
+                <p className="mt-1 text-sm text-neutral-500">
                   {collection._count.recipes} recipe
                   {collection._count.recipes !== 1 ? "s" : ""}
                 </p>
               </Link>
               <button
                 onClick={() => deleteCollection(collection.id)}
-                className="absolute top-4 right-4 p-1.5 text-stone-400 hover:text-red-500 transition-colors"
+                className="absolute top-4 right-4 p-1.5 text-neutral-400 hover:text-red-500 transition-colors"
                 aria-label={`Delete ${collection.name}`}
               >
                 <Trash2 className="h-4 w-4" />

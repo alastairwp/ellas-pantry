@@ -44,11 +44,11 @@ export default async function SharedRecipePage({
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8">
-      <div className="mb-6 inline-block px-3 py-1 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
+      <div className="mb-6 inline-block px-3 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
         Shared privately via link
       </div>
 
-      <h1 className="text-3xl sm:text-4xl font-bold text-stone-900">
+      <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900">
         {recipe.title}
       </h1>
 
@@ -64,7 +64,7 @@ export default async function SharedRecipePage({
         </div>
       )}
 
-      <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-stone-600">
+      <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-600">
         <span>
           <strong>Prep:</strong> {recipe.prepTime} min
         </span>
@@ -80,14 +80,14 @@ export default async function SharedRecipePage({
       </div>
 
       {recipe.description && (
-        <p className="mt-6 text-lg text-stone-700 leading-relaxed">
+        <p className="mt-6 text-lg text-neutral-700 leading-relaxed">
           {recipe.description}
         </p>
       )}
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold text-stone-800 mb-3">Ingredients</h2>
-        <ul className="space-y-1.5 text-stone-700">
+        <h2 className="text-xl font-semibold text-neutral-800 mb-3">Ingredients</h2>
+        <ul className="space-y-1.5 text-neutral-700">
           {recipe.ingredients.map((ri) => (
             <li key={ri.id}>
               <span className="font-medium">
@@ -102,13 +102,13 @@ export default async function SharedRecipePage({
       </section>
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold text-stone-800 mb-3">Method</h2>
-        <ol className="space-y-4 text-stone-700 list-decimal pl-5">
+        <h2 className="text-xl font-semibold text-neutral-800 mb-3">Method</h2>
+        <ol className="space-y-4 text-neutral-700 list-decimal pl-5">
           {recipe.steps.map((s) => (
             <li key={s.id}>
               <p>{s.instruction}</p>
               {s.tipText && (
-                <p className="mt-1 text-sm text-amber-700 italic">Tip: {s.tipText}</p>
+                <p className="mt-1 text-sm text-orange-700 italic">Tip: {s.tipText}</p>
               )}
             </li>
           ))}

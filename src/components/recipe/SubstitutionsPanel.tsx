@@ -77,10 +77,10 @@ export function SubstitutionsPanel({
 
   return (
     <div className="mt-10">
-      <h2 className="text-xl font-semibold text-stone-800 mb-4">
+      <h2 className="text-xl font-semibold text-neutral-800 mb-4">
         Recipe Variations
       </h2>
-      <p className="text-sm text-stone-500 mb-4">
+      <p className="text-sm text-neutral-500 mb-4">
         Get AI-powered ingredient substitution suggestions.
       </p>
 
@@ -93,8 +93,8 @@ export function SubstitutionsPanel({
             disabled={loading}
             className={`px-4 py-2 text-sm font-medium rounded-full border transition-colors ${
               activeType === v.key
-                ? "border-amber-500 bg-amber-50 text-amber-700"
-                : "border-stone-300 text-stone-600 hover:border-amber-400 hover:text-amber-700"
+                ? "border-orange-500 bg-orange-50 text-orange-700"
+                : "border-neutral-300 text-neutral-600 hover:border-orange-400 hover:text-orange-700"
             } disabled:opacity-50`}
           >
             {v.label}
@@ -104,7 +104,7 @@ export function SubstitutionsPanel({
 
       {/* Loading */}
       {loading && (
-        <div className="flex items-center gap-2 text-sm text-stone-500 py-4">
+        <div className="flex items-center gap-2 text-sm text-neutral-500 py-4">
           <Loader2 className="h-4 w-4 animate-spin" />
           Generating suggestions...
         </div>
@@ -119,7 +119,7 @@ export function SubstitutionsPanel({
       {result && !loading && (
         <div>
           {result.suggestions.length === 0 ? (
-            <p className="text-sm text-stone-500 py-2">
+            <p className="text-sm text-neutral-500 py-2">
               No substitutions needed — this recipe is already compatible!
             </p>
           ) : (
@@ -127,25 +127,25 @@ export function SubstitutionsPanel({
               {result.suggestions.map((sub, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-3 rounded-lg border border-stone-200 p-3"
+                  className="flex items-start gap-3 rounded-lg border border-neutral-200 p-3"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 text-sm">
-                      <span className="font-medium text-stone-600 line-through">
+                      <span className="font-medium text-neutral-600 line-through">
                         {sub.original}
                       </span>
-                      <ArrowRight className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                      <span className="font-semibold text-amber-700">
+                      <ArrowRight className="h-3.5 w-3.5 text-orange-500 shrink-0" />
+                      <span className="font-semibold text-orange-700">
                         {sub.replacement}
                       </span>
                     </div>
                     {sub.quantity && (
-                      <p className="text-xs text-stone-500 mt-0.5">
+                      <p className="text-xs text-neutral-500 mt-0.5">
                         Quantity: {sub.quantity}
                       </p>
                     )}
                     {sub.notes && (
-                      <p className="text-xs text-stone-400 mt-0.5">
+                      <p className="text-xs text-neutral-400 mt-0.5">
                         {sub.notes}
                       </p>
                     )}
@@ -156,9 +156,9 @@ export function SubstitutionsPanel({
           )}
 
           {result.tips && (
-            <div className="mt-4 flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3">
-              <Lightbulb className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
-              <p className="text-sm text-amber-800">{result.tips}</p>
+            <div className="mt-4 flex items-start gap-2 rounded-lg bg-orange-50 border border-orange-200 p-3">
+              <Lightbulb className="h-4 w-4 text-orange-600 mt-0.5 shrink-0" />
+              <p className="text-sm text-orange-800">{result.tips}</p>
             </div>
           )}
         </div>

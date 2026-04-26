@@ -55,7 +55,7 @@ export function AllergySettingsForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <p className="text-sm text-stone-600">
+        <p className="text-sm text-neutral-600">
           Select any food allergies you have. We&apos;ll use this to filter
           recipes and show you only dishes that are safe for you.
         </p>
@@ -67,21 +67,21 @@ export function AllergySettingsForm({
             key={allergy}
             className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${
               selected.has(allergy)
-                ? "border-amber-400 bg-amber-50"
-                : "border-stone-200 hover:border-stone-300 hover:bg-stone-50"
+                ? "border-orange-400 bg-orange-50"
+                : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
             }`}
           >
             <input
               type="checkbox"
               checked={selected.has(allergy)}
               onChange={() => toggle(allergy)}
-              className="mt-0.5 h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500"
+              className="mt-0.5 h-4 w-4 rounded border-neutral-300 text-orange-600 focus:ring-orange-500"
             />
             <div>
-              <span className="text-sm font-medium text-stone-800">
+              <span className="text-sm font-medium text-neutral-800">
                 {ALLERGY_LABELS[allergy]}
               </span>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-neutral-500 mt-0.5">
                 {ALLERGY_DESCRIPTIONS[allergy]}
               </p>
             </div>
@@ -102,7 +102,7 @@ export function AllergySettingsForm({
       <button
         type="submit"
         disabled={saving}
-        className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50 transition-colors"
+        className="rounded-lg bg-orange-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-50 transition-colors"
       >
         {saving ? "Saving..." : "Save Allergies"}
       </button>

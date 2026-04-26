@@ -33,16 +33,16 @@ export function AllergyProfileBanner() {
   }
 
   return (
-    <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
-      <Shield className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+    <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 flex items-start gap-3">
+      <Shield className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
       <div className="flex-1">
-        <p className="text-sm text-stone-700">
+        <p className="text-sm text-neutral-700">
           <strong>Do you have food allergies?</strong> Set up your allergy
           profile to filter recipes and only see dishes that are safe for you.
         </p>
         <Link
           href="/profile/settings?tab=dietary"
-          className="mt-2 inline-block text-sm font-medium text-amber-700 hover:text-amber-800 underline"
+          className="mt-2 inline-block text-sm font-medium text-orange-700 hover:text-orange-800 underline"
         >
           Set up my allergy profile
         </Link>
@@ -50,7 +50,7 @@ export function AllergyProfileBanner() {
       <button
         type="button"
         onClick={dismiss}
-        className="text-stone-400 hover:text-stone-600 transition-colors"
+        className="text-neutral-400 hover:text-neutral-600 transition-colors"
         aria-label="Dismiss"
       >
         <X className="h-4 w-4" />

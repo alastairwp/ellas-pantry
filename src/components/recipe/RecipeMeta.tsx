@@ -41,12 +41,12 @@ export function RecipeMeta({
     <div className="flex flex-wrap gap-6 py-4">
       {items.map((item) => (
         <div key={item.label} className="flex items-center gap-2 text-sm">
-          <item.icon className="h-5 w-5 text-amber-600" />
+          <item.icon className="h-5 w-5 text-orange-600" />
           <div>
-            <p className="text-stone-400 text-xs uppercase tracking-wide">
+            <p className="text-neutral-400 text-xs uppercase tracking-wide">
               {item.label}
             </p>
-            <p className="font-medium text-stone-700">{item.value}</p>
+            <p className="font-medium text-neutral-700">{item.value}</p>
           </div>
         </div>
       ))}

@@ -49,7 +49,7 @@ export function ShowMoreRecipes({
           <button
             onClick={loadMore}
             disabled={loading}
-            className="rounded-lg border border-stone-300 px-6 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-50 transition-colors"
+            className="rounded-lg border border-neutral-300 px-6 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-50 transition-colors"
           >
             {loading ? "Loading..." : "Show More"}
           </button>

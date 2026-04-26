@@ -145,7 +145,7 @@ export function AIGenerator() {
   }
 
   const inputClass =
-    "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500";
+    "w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-800 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500";
 
   // --- Single Recipe ---
 
@@ -256,14 +256,14 @@ export function AIGenerator() {
   return (
     <div className="space-y-10">
       {/* Single Recipe Generator */}
-      <section className="rounded-xl border border-stone-200 bg-white p-6">
+      <section className="rounded-xl border border-neutral-200 bg-white p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="h-5 w-5 text-amber-600" />
-          <h2 className="text-lg font-semibold text-stone-800">
+          <Sparkles className="h-5 w-5 text-orange-600" />
+          <h2 className="text-lg font-semibold text-neutral-800">
             Generate Single Recipe
           </h2>
         </div>
-        <p className="text-sm text-stone-500 mb-4">
+        <p className="text-sm text-neutral-500 mb-4">
           Enter a dish name and AI will write an original recipe with
           ingredients, steps, and find a matching image.
         </p>
@@ -280,7 +280,7 @@ export function AIGenerator() {
           <button
             type="submit"
             disabled={singleLoading || !singleDishName.trim()}
-            className="rounded-lg bg-amber-600 px-5 py-2 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+            className="rounded-lg bg-orange-600 px-5 py-2 text-sm font-semibold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
           >
             {singleLoading ? (
               <span className="flex items-center gap-2">
@@ -316,14 +316,14 @@ export function AIGenerator() {
       </section>
 
       {/* Background Generator (batch + continuous) */}
-      <section className="rounded-xl border border-amber-200 bg-amber-50 p-6">
+      <section className="rounded-xl border border-orange-200 bg-orange-50 p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="h-5 w-5 text-amber-700" />
-          <h2 className="text-lg font-semibold text-stone-800">
+          <Sparkles className="h-5 w-5 text-orange-700" />
+          <h2 className="text-lg font-semibold text-neutral-800">
             Background Generation
           </h2>
         </div>
-        <p className="text-sm text-stone-600 mb-4">
+        <p className="text-sm text-neutral-600 mb-4">
           Generate recipes in the background from a pool of 700,000+ dish name
           combinations. Recipes keep generating even if you leave this page or
           close the tab. You can stop at any time.
@@ -333,7 +333,7 @@ export function AIGenerator() {
         {!isJobActive && (
           <>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-stone-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Category
               </label>
               <select
@@ -352,7 +352,7 @@ export function AIGenerator() {
 
             <div className="grid grid-cols-2 gap-4 mb-4 sm:grid-cols-4">
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Target Count
                 </label>
                 <input
@@ -366,7 +366,7 @@ export function AIGenerator() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Batch Size
                 </label>
                 <input
@@ -379,7 +379,7 @@ export function AIGenerator() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Concurrency
                 </label>
                 <input
@@ -392,7 +392,7 @@ export function AIGenerator() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Current Offset
                 </label>
                 <div className="flex gap-2">
@@ -408,7 +408,7 @@ export function AIGenerator() {
                   <button
                     type="button"
                     onClick={saveOffset}
-                    className="rounded-lg border border-stone-300 bg-white px-3 py-2 text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors whitespace-nowrap"
+                    className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-xs font-medium text-neutral-600 hover:bg-neutral-50 transition-colors whitespace-nowrap"
                   >
                     Save
                   </button>
@@ -420,14 +420,14 @@ export function AIGenerator() {
               <button
                 onClick={() => startJob(false)}
                 disabled={!offsetLoaded}
-                className="rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50 transition-colors"
+                className="rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 disabled:opacity-50 transition-colors"
               >
                 Generate {targetCount || 100} Recipes
               </button>
               <button
                 onClick={() => startJob(true)}
                 disabled={!offsetLoaded}
-                className="inline-flex items-center gap-2 rounded-lg border border-amber-500 bg-white px-5 py-2.5 text-sm font-semibold text-amber-700 hover:bg-amber-50 disabled:opacity-50 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg border border-orange-500 bg-white px-5 py-2.5 text-sm font-semibold text-orange-700 hover:bg-orange-50 disabled:opacity-50 transition-colors"
               >
                 <Play className="h-4 w-4" /> Run Continuously
               </button>
@@ -454,7 +454,7 @@ export function AIGenerator() {
           <div className="mb-4">
             <button
               onClick={clearJob}
-              className="rounded-lg border border-amber-500 bg-white px-5 py-2.5 text-sm font-semibold text-amber-700 hover:bg-amber-50 transition-colors"
+              className="rounded-lg border border-orange-500 bg-white px-5 py-2.5 text-sm font-semibold text-orange-700 hover:bg-orange-50 transition-colors"
             >
               Start New Job
             </button>
@@ -472,7 +472,7 @@ export function AIGenerator() {
             {/* Status badge */}
             <div className="flex items-center gap-3">
               {isJobRunning && (
-                <span className="inline-flex items-center gap-1.5 text-sm text-amber-700">
+                <span className="inline-flex items-center gap-1.5 text-sm text-orange-700">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Generating recipes in the background...
                 </span>
@@ -499,27 +499,27 @@ export function AIGenerator() {
 
             {/* Stats */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm">
-              <span className="text-stone-600">
+              <span className="text-neutral-600">
                 Generated:{" "}
                 <strong className="text-green-700">
                   {activeJob.successCount}
                 </strong>
               </span>
-              <span className="text-stone-600">
+              <span className="text-neutral-600">
                 Errors:{" "}
                 <strong className="text-red-700">
                   {activeJob.errorCount}
                 </strong>
               </span>
-              <span className="text-stone-600">
+              <span className="text-neutral-600">
                 Offset: <strong>{activeJob.currentOffset}</strong>
               </span>
               {jobTarget > 0 && (
-                <span className="text-stone-600">
+                <span className="text-neutral-600">
                   Target: <strong>{jobTarget}</strong>
                 </span>
               )}
-              <span className="text-stone-400 text-xs">
+              <span className="text-neutral-400 text-xs">
                 Started{" "}
                 {new Date(activeJob.createdAt).toLocaleTimeString()}
               </span>
@@ -527,7 +527,7 @@ export function AIGenerator() {
 
             {/* Progress bar */}
             <div>
-              <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
+              <div className="flex items-center justify-between text-xs text-neutral-500 mb-1">
                 <span>
                   {jobTarget > 0
                     ? `Progress: ${jobTotal} / ${jobTarget}`
@@ -543,9 +543,9 @@ export function AIGenerator() {
                   </span>
                 )}
               </div>
-              <div className="h-2 w-full rounded-full bg-stone-200">
+              <div className="h-2 w-full rounded-full bg-neutral-200">
                 <div
-                  className="h-2 rounded-full bg-amber-500 transition-all duration-300"
+                  className="h-2 rounded-full bg-orange-500 transition-all duration-300"
                   style={{
                     width:
                       jobTarget > 0

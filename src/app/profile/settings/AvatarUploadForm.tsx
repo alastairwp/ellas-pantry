@@ -68,7 +68,7 @@ export function AvatarUploadForm({ currentImage, userName }: AvatarUploadFormPro
 
   return (
     <div>
-      <h3 className="text-lg font-semibold text-stone-800">Profile Photo</h3>
+      <h3 className="text-lg font-semibold text-neutral-800">Profile Photo</h3>
       <div className="mt-3 flex items-center gap-4">
         <Avatar name={userName} image={image} size="lg" />
         <div className="flex flex-col gap-2">
@@ -77,7 +77,7 @@ export function AvatarUploadForm({ currentImage, userName }: AvatarUploadFormPro
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="inline-flex items-center gap-2 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-50 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-50 transition-colors"
             >
               {uploading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -98,7 +98,7 @@ export function AvatarUploadForm({ currentImage, userName }: AvatarUploadFormPro
               </button>
             )}
           </div>
-          <p className="text-xs text-stone-400">JPG, PNG or WebP. Max 5MB.</p>
+          <p className="text-xs text-neutral-400">JPG, PNG or WebP. Max 5MB.</p>
         </div>
         <input
           ref={fileInputRef}

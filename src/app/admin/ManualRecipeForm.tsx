@@ -55,8 +55,8 @@ export function ManualRecipeForm() {
   }, []);
 
   const inputClass =
-    "w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500";
-  const labelClass = "block text-sm font-medium text-stone-700 mb-1";
+    "w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-800 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500";
+  const labelClass = "block text-sm font-medium text-neutral-700 mb-1";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -130,7 +130,7 @@ export function ManualRecipeForm() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-stone-800 border-b border-stone-200 pb-2">
+          <h2 className="text-lg font-semibold text-neutral-800 border-b border-neutral-200 pb-2">
             Basic Information
           </h2>
           <div>
@@ -170,13 +170,13 @@ export function ManualRecipeForm() {
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-stone-800 border-b border-stone-200 pb-2">Categories & Dietary Tags</h2>
+          <h2 className="text-lg font-semibold text-neutral-800 border-b border-neutral-200 pb-2">Categories & Dietary Tags</h2>
           <div>
             <label className={labelClass}>Categories</label>
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <button key={cat.id} type="button" onClick={() => setSelectedCategories((prev) => prev.includes(cat.id) ? prev.filter((c) => c !== cat.id) : [...prev, cat.id])}
-                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${selectedCategories.includes(cat.id) ? "bg-amber-600 text-white" : "bg-stone-100 text-stone-600 hover:bg-stone-200"}`}>
+                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${selectedCategories.includes(cat.id) ? "bg-orange-600 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}>
                   {cat.name}
                 </button>
               ))}
@@ -187,7 +187,7 @@ export function ManualRecipeForm() {
             <div className="flex flex-wrap gap-2">
               {dietaryTags.map((tag) => (
                 <button key={tag.id} type="button" onClick={() => setSelectedDietaryTags((prev) => prev.includes(tag.id) ? prev.filter((t) => t !== tag.id) : [...prev, tag.id])}
-                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${selectedDietaryTags.includes(tag.id) ? "bg-green-600 text-white" : "bg-stone-100 text-stone-600 hover:bg-stone-200"}`}>
+                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${selectedDietaryTags.includes(tag.id) ? "bg-green-600 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}>
                   {tag.name}
                 </button>
               ))}
@@ -196,24 +196,24 @@ export function ManualRecipeForm() {
         </section>
 
         <section className="space-y-4">
-          <div className="flex items-center justify-between border-b border-stone-200 pb-2">
-            <h2 className="text-lg font-semibold text-stone-800">Ingredients</h2>
+          <div className="flex items-center justify-between border-b border-neutral-200 pb-2">
+            <h2 className="text-lg font-semibold text-neutral-800">Ingredients</h2>
             <button type="button" onClick={() => setIngredients([...ingredients, { name: "", quantity: "", unit: "", notes: "" }])}
-              className="inline-flex items-center gap-1 rounded-lg bg-stone-100 px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-200 transition-colors">
+              className="inline-flex items-center gap-1 rounded-lg bg-neutral-100 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-200 transition-colors">
               <Plus className="h-4 w-4" /> Add
             </button>
           </div>
           <div className="space-y-3">
             {ingredients.map((ing, index) => (
               <div key={index} className="flex items-start gap-2">
-                <GripVertical className="mt-2.5 h-4 w-4 flex-shrink-0 text-stone-300" />
+                <GripVertical className="mt-2.5 h-4 w-4 flex-shrink-0 text-neutral-300" />
                 <div className="grid flex-1 grid-cols-2 gap-2 sm:grid-cols-4">
                   <input type="text" placeholder="Quantity" value={ing.quantity} onChange={(e) => { const u = [...ingredients]; u[index].quantity = e.target.value; setIngredients(u); }} className={inputClass} />
                   <input type="text" placeholder="Unit" value={ing.unit} onChange={(e) => { const u = [...ingredients]; u[index].unit = e.target.value; setIngredients(u); }} className={inputClass} />
                   <input type="text" placeholder="Ingredient *" value={ing.name} onChange={(e) => { const u = [...ingredients]; u[index].name = e.target.value; setIngredients(u); }} className={inputClass} />
                   <input type="text" placeholder="Notes" value={ing.notes} onChange={(e) => { const u = [...ingredients]; u[index].notes = e.target.value; setIngredients(u); }} className={inputClass} />
                 </div>
-                <button type="button" onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))} className="mt-2 text-stone-400 hover:text-red-500 transition-colors">
+                <button type="button" onClick={() => setIngredients(ingredients.filter((_, i) => i !== index))} className="mt-2 text-neutral-400 hover:text-red-500 transition-colors">
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
@@ -222,22 +222,22 @@ export function ManualRecipeForm() {
         </section>
 
         <section className="space-y-4">
-          <div className="flex items-center justify-between border-b border-stone-200 pb-2">
-            <h2 className="text-lg font-semibold text-stone-800">Cooking Steps</h2>
+          <div className="flex items-center justify-between border-b border-neutral-200 pb-2">
+            <h2 className="text-lg font-semibold text-neutral-800">Cooking Steps</h2>
             <button type="button" onClick={() => setSteps([...steps, { instruction: "", tipText: "" }])}
-              className="inline-flex items-center gap-1 rounded-lg bg-stone-100 px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-200 transition-colors">
+              className="inline-flex items-center gap-1 rounded-lg bg-neutral-100 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-200 transition-colors">
               <Plus className="h-4 w-4" /> Add Step
             </button>
           </div>
           <div className="space-y-4">
             {steps.map((step, index) => (
               <div key={index} className="flex items-start gap-2">
-                <span className="mt-2.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 text-xs font-semibold text-amber-700">{index + 1}</span>
+                <span className="mt-2.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-semibold text-orange-700">{index + 1}</span>
                 <div className="flex-1 space-y-2">
                   <textarea placeholder={`Step ${index + 1} instruction *`} value={step.instruction} onChange={(e) => { const u = [...steps]; u[index].instruction = e.target.value; setSteps(u); }} rows={2} className={inputClass} />
                   <input type="text" placeholder="Tip (optional)" value={step.tipText} onChange={(e) => { const u = [...steps]; u[index].tipText = e.target.value; setSteps(u); }} className={inputClass} />
                 </div>
-                <button type="button" onClick={() => setSteps(steps.filter((_, i) => i !== index))} className="mt-2 text-stone-400 hover:text-red-500 transition-colors">
+                <button type="button" onClick={() => setSteps(steps.filter((_, i) => i !== index))} className="mt-2 text-neutral-400 hover:text-red-500 transition-colors">
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
@@ -245,9 +245,9 @@ export function ManualRecipeForm() {
           </div>
         </section>
 
-        <div className="flex items-center justify-end gap-4 border-t border-stone-200 pt-6">
+        <div className="flex items-center justify-end gap-4 border-t border-neutral-200 pt-6">
           <button type="submit" disabled={submitting}
-            className="rounded-full bg-amber-600 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            className="rounded-full bg-orange-600 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             {submitting ? "Creating..." : "Create Recipe"}
           </button>
         </div>

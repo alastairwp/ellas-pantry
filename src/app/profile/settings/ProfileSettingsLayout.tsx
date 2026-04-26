@@ -44,13 +44,13 @@ export function ProfileSettingsLayout({
   const tabClass = (tab: SettingsTab) =>
     `px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
       activeTab === tab
-        ? "bg-white text-amber-700 border border-stone-200 border-b-white -mb-px"
-        : "text-stone-500 hover:text-stone-700 hover:bg-stone-50"
+        ? "bg-white text-orange-700 border border-neutral-200 border-b-white -mb-px"
+        : "text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50"
     }`;
 
   return (
     <div className="mt-8">
-      <div className="flex gap-1 border-b border-stone-200">
+      <div className="flex gap-1 border-b border-neutral-200">
         <button onClick={() => setActiveTab("security")} className={tabClass("security")}>
           Security
         </button>

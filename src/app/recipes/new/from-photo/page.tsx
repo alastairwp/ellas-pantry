@@ -17,10 +17,10 @@ export default async function NewRecipeFromPhotoPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-3xl font-bold text-stone-900">
+      <h1 className="text-3xl font-bold text-neutral-900">
         Create a recipe from a photo
       </h1>
-      <p className="mt-2 text-stone-500">
+      <p className="mt-2 text-neutral-500">
         Take a photo of a finished dish. Our AI will identify it and draft a
         recipe based on what it can see. You can then edit it &mdash; add hidden
         ingredients, secret seasonings, family touches &mdash; before saving it

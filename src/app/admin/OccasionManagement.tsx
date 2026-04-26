@@ -155,15 +155,15 @@ export function OccasionManagement() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-semibold text-stone-800">Seasonal Occasions</h2>
-          <p className="text-sm text-stone-500 mt-1">
+          <h2 className="text-xl font-semibold text-neutral-800">Seasonal Occasions</h2>
+          <p className="text-sm text-neutral-500 mt-1">
             Manage seasonal occasions that appear in the &quot;This Season&quot; menu. Occasions are active when today&apos;s date falls within their date range.
           </p>
         </div>
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 transition-colors"
           >
             <Plus className="h-4 w-4" /> Add Occasion
           </button>
@@ -172,13 +172,13 @@ export function OccasionManagement() {
 
       {/* Add/Edit Form */}
       {showForm && (
-        <div className="mb-6 rounded-lg border border-stone-200 bg-stone-50 p-5">
-          <h3 className="text-sm font-semibold text-stone-700 mb-4">
+        <div className="mb-6 rounded-lg border border-neutral-200 bg-neutral-50 p-5">
+          <h3 className="text-sm font-semibold text-neutral-700 mb-4">
             {editingId ? "Edit Occasion" : "New Occasion"}
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-stone-600 mb-1">
+              <label className="block text-sm font-medium text-neutral-600 mb-1">
                 Name
               </label>
               <input
@@ -186,11 +186,11 @@ export function OccasionManagement() {
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
                 placeholder="e.g. Easter, BBQ Season, Christmas"
-                className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-800 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-stone-600 mb-1">
+              <label className="block text-sm font-medium text-neutral-600 mb-1">
                 Description (optional)
               </label>
               <input
@@ -198,18 +198,18 @@ export function OccasionManagement() {
                 value={formDescription}
                 onChange={(e) => setFormDescription(e.target.value)}
                 placeholder="A short description of this occasion"
-                className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-800 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-600 mb-1">
+              <label className="block text-sm font-medium text-neutral-600 mb-1">
                 Start Date
               </label>
               <div className="flex gap-2">
                 <select
                   value={formStartDay}
                   onChange={(e) => setFormStartDay(Number(e.target.value))}
-                  className="w-20 rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-700 bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="w-20 rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-700 bg-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                 >
                   {dayOptions(formStartMonth).map((d) => (
                     <option key={d} value={d}>{d}</option>
@@ -218,7 +218,7 @@ export function OccasionManagement() {
                 <select
                   value={formStartMonth}
                   onChange={(e) => setFormStartMonth(Number(e.target.value))}
-                  className="flex-1 rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-700 bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-700 bg-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                 >
                   {MONTHS.map((m, i) => (
                     <option key={i} value={i + 1}>{m}</option>
@@ -227,14 +227,14 @@ export function OccasionManagement() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-600 mb-1">
+              <label className="block text-sm font-medium text-neutral-600 mb-1">
                 End Date
               </label>
               <div className="flex gap-2">
                 <select
                   value={formEndDay}
                   onChange={(e) => setFormEndDay(Number(e.target.value))}
-                  className="w-20 rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-700 bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="w-20 rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-700 bg-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                 >
                   {dayOptions(formEndMonth).map((d) => (
                     <option key={d} value={d}>{d}</option>
@@ -243,7 +243,7 @@ export function OccasionManagement() {
                 <select
                   value={formEndMonth}
                   onChange={(e) => setFormEndMonth(Number(e.target.value))}
-                  className="flex-1 rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-700 bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                  className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-700 bg-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                 >
                   {MONTHS.map((m, i) => (
                     <option key={i} value={i + 1}>{m}</option>
@@ -262,7 +262,7 @@ export function OccasionManagement() {
             </button>
             <button
               onClick={resetForm}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-stone-200 px-4 py-2 text-sm font-medium text-stone-600 hover:bg-stone-300 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-neutral-200 px-4 py-2 text-sm font-medium text-neutral-600 hover:bg-neutral-300 transition-colors"
             >
               <X className="h-4 w-4" /> Cancel
             </button>
@@ -272,37 +272,37 @@ export function OccasionManagement() {
 
       {/* Occasions List */}
       {loading ? (
-        <div className="py-12 text-center text-stone-400">Loading...</div>
+        <div className="py-12 text-center text-neutral-400">Loading...</div>
       ) : occasions.length === 0 ? (
-        <div className="py-12 text-center text-stone-400">
+        <div className="py-12 text-center text-neutral-400">
           No occasions yet. Add one to get started.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-stone-200">
+        <div className="overflow-hidden rounded-lg border border-neutral-200">
           <table className="w-full text-sm">
-            <thead className="bg-stone-50">
+            <thead className="bg-neutral-50">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-stone-600">Occasion</th>
-                <th className="px-4 py-3 text-left font-medium text-stone-600">Date Range</th>
-                <th className="px-4 py-3 text-left font-medium text-stone-600 hidden sm:table-cell">Status</th>
-                <th className="px-4 py-3 text-left font-medium text-stone-600 hidden sm:table-cell">Recipes</th>
-                <th className="px-4 py-3 text-right font-medium text-stone-600">Actions</th>
+                <th className="px-4 py-3 text-left font-medium text-neutral-600">Occasion</th>
+                <th className="px-4 py-3 text-left font-medium text-neutral-600">Date Range</th>
+                <th className="px-4 py-3 text-left font-medium text-neutral-600 hidden sm:table-cell">Status</th>
+                <th className="px-4 py-3 text-left font-medium text-neutral-600 hidden sm:table-cell">Recipes</th>
+                <th className="px-4 py-3 text-right font-medium text-neutral-600">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-neutral-100">
               {occasions.map((occ) => (
-                <tr key={occ.id} className="hover:bg-stone-50">
+                <tr key={occ.id} className="hover:bg-neutral-50">
                   <td className="px-4 py-3">
                     <div>
-                      <span className="font-medium text-stone-800">{occ.name}</span>
+                      <span className="font-medium text-neutral-800">{occ.name}</span>
                       {occ.description && (
-                        <p className="text-xs text-stone-400 mt-0.5">{occ.description}</p>
+                        <p className="text-xs text-neutral-400 mt-0.5">{occ.description}</p>
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-stone-600">
+                  <td className="px-4 py-3 text-neutral-600">
                     <div className="flex items-center gap-1.5">
-                      <Calendar className="h-3.5 w-3.5 text-stone-400" />
+                      <Calendar className="h-3.5 w-3.5 text-neutral-400" />
                       {formatDate(occ.startMonth, occ.startDay)} &ndash; {formatDate(occ.endMonth, occ.endDay)}
                     </div>
                   </td>
@@ -312,26 +312,26 @@ export function OccasionManagement() {
                         Active
                       </span>
                     ) : (
-                      <span className="inline-flex items-center rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-500">
+                      <span className="inline-flex items-center rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-500">
                         Inactive
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-stone-600 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-neutral-600 hidden sm:table-cell">
                     {occ._count.recipes}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => startEdit(occ)}
-                        className="rounded-md bg-stone-50 p-1.5 text-stone-500 hover:bg-amber-50 hover:text-amber-600 transition-colors"
+                        className="rounded-md bg-neutral-50 p-1.5 text-neutral-500 hover:bg-orange-50 hover:text-orange-600 transition-colors"
                         title="Edit occasion"
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(occ.id, occ.name)}
-                        className="rounded-md bg-stone-50 p-1.5 text-stone-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+                        className="rounded-md bg-neutral-50 p-1.5 text-neutral-400 hover:bg-red-50 hover:text-red-500 transition-colors"
                         title="Delete occasion"
                       >
                         <Trash2 className="h-4 w-4" />

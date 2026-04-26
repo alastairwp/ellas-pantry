@@ -42,20 +42,20 @@ export function IngredientSearch() {
 
   return (
     <div className="relative">
-      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-400" />
+      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
       <input
         type="text"
         value={value}
         onChange={(e) => handleChange(e.target.value)}
         placeholder="Search by ingredient..."
-        className="pl-8 pr-8 py-1.5 text-sm rounded-lg border border-stone-300 bg-white text-stone-600 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 w-48"
+        className="pl-8 pr-8 py-1.5 text-sm rounded-lg border border-neutral-300 bg-white text-neutral-600 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 w-48"
         aria-label="Search by ingredient"
       />
       {value && (
         <button
           type="button"
           onClick={clear}
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-stone-400 hover:text-stone-600"
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-neutral-400 hover:text-neutral-600"
           aria-label="Clear ingredient search"
         >
           <X className="h-3.5 w-3.5" />

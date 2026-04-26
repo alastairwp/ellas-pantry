@@ -72,12 +72,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       <div className="flex items-center gap-5">
         <Avatar name={user.name} image={user.image} size="lg" />
         <div>
-          <h1 className="text-2xl font-bold text-stone-900">
+          <h1 className="text-2xl font-bold text-neutral-900">
             {user.name || "Anonymous"}
           </h1>
-          <p className="text-sm text-stone-500">Member since {memberSince}</p>
+          <p className="text-sm text-neutral-500">Member since {memberSince}</p>
           {user.bio && (
-            <p className="mt-2 text-stone-600">{user.bio}</p>
+            <p className="mt-2 text-neutral-600">{user.bio}</p>
           )}
         </div>
       </div>
@@ -85,7 +85,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       {/* Edit Profile (owner only) */}
       {isOwner && (
         <section className="mt-10 space-y-8">
-          <h2 className="text-xl font-semibold text-stone-800">Edit Profile</h2>
+          <h2 className="text-xl font-semibold text-neutral-800">Edit Profile</h2>
           <AvatarUploadForm currentImage={user.image} userName={user.name || ""} />
           <ProfileSettingsForm initialName={user.name || ""} initialBio={user.bio || ""} />
         </section>
@@ -100,10 +100,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl bg-stone-50 p-4 text-center"
+            className="rounded-xl bg-neutral-50 p-4 text-center"
           >
-            <p className="text-2xl font-bold text-amber-700">{stat.value}</p>
-            <p className="text-sm text-stone-500">{stat.label}</p>
+            <p className="text-2xl font-bold text-orange-700">{stat.value}</p>
+            <p className="text-sm text-neutral-500">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -111,25 +111,25 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       {/* Recent Reviews */}
       {reviews.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-xl font-semibold text-stone-800">
+          <h2 className="text-xl font-semibold text-neutral-800">
             Recent Reviews
           </h2>
           <div className="mt-4 space-y-4">
             {reviews.map((review) => (
               <div
                 key={review.id}
-                className="rounded-lg border border-stone-200 p-4"
+                className="rounded-lg border border-neutral-200 p-4"
               >
                 <Link
                   href={`/recipes/${review.recipe.slug}`}
-                  className="font-medium text-amber-700 hover:text-amber-800 transition-colors"
+                  className="font-medium text-orange-700 hover:text-orange-800 transition-colors"
                 >
                   {review.recipe.title}
                 </Link>
-                <p className="mt-1 text-sm text-stone-600 line-clamp-2">
+                <p className="mt-1 text-sm text-neutral-600 line-clamp-2">
                   {review.text}
                 </p>
-                <p className="mt-2 text-xs text-stone-400">
+                <p className="mt-2 text-xs text-neutral-400">
                   {new Date(review.createdAt).toLocaleDateString("en-GB", {
                     day: "numeric",
                     month: "short",
@@ -145,15 +145,15 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       {/* Collections */}
       {collections.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-xl font-semibold text-stone-800">Collections</h2>
+          <h2 className="text-xl font-semibold text-neutral-800">Collections</h2>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {collections.map((col) => (
               <div
                 key={col.id}
-                className="rounded-lg border border-stone-200 p-4"
+                className="rounded-lg border border-neutral-200 p-4"
               >
-                <p className="font-medium text-stone-800">{col.name}</p>
-                <p className="text-sm text-stone-500">
+                <p className="font-medium text-neutral-800">{col.name}</p>
+                <p className="text-sm text-neutral-500">
                   {col._count.recipes} recipe
                   {col._count.recipes !== 1 ? "s" : ""}
                 </p>

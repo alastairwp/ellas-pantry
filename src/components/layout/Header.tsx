@@ -33,7 +33,7 @@ export async function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white border-b border-stone-200">
+    <header className="sticky top-0 z-40 w-full bg-white border-b border-neutral-200">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link
@@ -57,25 +57,25 @@ export async function Header() {
             <MegaMenu {...menuData} />
             <Link
               href="/meal-planner"
-              className="text-sm font-medium text-stone-600 hover:text-amber-700 transition-colors"
+              className="text-sm font-medium text-neutral-600 hover:text-orange-700 transition-colors"
             >
               Meal Planner
             </Link>
             <Link
               href="/whats-in-my-fridge"
-              className="text-sm font-medium text-stone-600 hover:text-amber-700 transition-colors"
+              className="text-sm font-medium text-neutral-600 hover:text-orange-700 transition-colors"
             >
               My Fridge
             </Link>
             <Link
               href="/my-recipes"
-              className="text-sm font-medium text-stone-600 hover:text-amber-700 transition-colors"
+              className="text-sm font-medium text-neutral-600 hover:text-orange-700 transition-colors"
             >
               My Recipes
             </Link>
             <Link
               href="/collections"
-              className="text-sm font-medium text-stone-600 hover:text-amber-700 transition-colors"
+              className="text-sm font-medium text-neutral-600 hover:text-orange-700 transition-colors"
             >
               Collections
             </Link>
@@ -91,32 +91,32 @@ export async function Header() {
             <MegaMenuMobile {...menuData} />
             <Link
               href="/meal-planner"
-              className="block px-3 py-2 text-base font-medium text-stone-700 hover:text-amber-700 hover:bg-stone-50 rounded-lg transition-colors"
+              className="block px-3 py-2 text-base font-medium text-neutral-700 hover:text-orange-700 hover:bg-neutral-50 rounded-lg transition-colors"
             >
               Meal Planner
             </Link>
             <Link
               href="/whats-in-my-fridge"
-              className="block px-3 py-2 text-base font-medium text-stone-700 hover:text-amber-700 hover:bg-stone-50 rounded-lg transition-colors"
+              className="block px-3 py-2 text-base font-medium text-neutral-700 hover:text-orange-700 hover:bg-neutral-50 rounded-lg transition-colors"
             >
               My Fridge
             </Link>
             <Link
               href="/my-recipes"
-              className="block px-3 py-2 text-base font-medium text-stone-700 hover:text-amber-700 hover:bg-stone-50 rounded-lg transition-colors"
+              className="block px-3 py-2 text-base font-medium text-neutral-700 hover:text-orange-700 hover:bg-neutral-50 rounded-lg transition-colors"
             >
               My Recipes
             </Link>
             <Link
               href="/collections"
-              className="block px-3 py-2 text-base font-medium text-stone-700 hover:text-amber-700 hover:bg-stone-50 rounded-lg transition-colors"
+              className="block px-3 py-2 text-base font-medium text-neutral-700 hover:text-orange-700 hover:bg-neutral-50 rounded-lg transition-colors"
             >
               Collections
             </Link>
-            <div className="pt-2 border-t border-stone-200 mt-2">
+            <div className="pt-2 border-t border-neutral-200 mt-2">
               <SearchBar />
             </div>
-            <div className="pt-2 border-t border-stone-200 mt-2 px-3 py-2">
+            <div className="pt-2 border-t border-neutral-200 mt-2 px-3 py-2">
               <AuthButtons />
             </div>
           </NavBar>

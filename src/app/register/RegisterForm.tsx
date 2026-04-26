@@ -79,7 +79,7 @@ export function RegisterForm() {
   }
 
   const inputClass =
-    "mt-1 block w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500";
+    "mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-800 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500";
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -91,7 +91,7 @@ export function RegisterForm() {
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-stone-700"
+          className="block text-sm font-medium text-neutral-700"
         >
           Name
         </label>
@@ -106,7 +106,7 @@ export function RegisterForm() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-stone-700"
+          className="block text-sm font-medium text-neutral-700"
         >
           Email
         </label>
@@ -122,7 +122,7 @@ export function RegisterForm() {
       <div>
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-stone-700"
+          className="block text-sm font-medium text-neutral-700"
         >
           Password
         </label>
@@ -139,7 +139,7 @@ export function RegisterForm() {
       <div>
         <label
           htmlFor="confirmPassword"
-          className="block text-sm font-medium text-stone-700"
+          className="block text-sm font-medium text-neutral-700"
         >
           Confirm Password
         </label>
@@ -156,7 +156,7 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-amber-600 py-2.5 text-sm font-semibold text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full rounded-lg bg-orange-600 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? (
           <span className="inline-flex items-center gap-2">
@@ -172,17 +172,17 @@ export function RegisterForm() {
         <>
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-stone-200" />
+              <div className="w-full border-t border-neutral-200" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-stone-400">or</span>
+              <span className="bg-white px-4 text-neutral-400">or</span>
             </div>
           </div>
 
           <button
             type="button"
             onClick={() => signIn("google", { callbackUrl: "/" })}
-            className="w-full rounded-lg border border-stone-300 bg-white py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors flex items-center justify-center gap-3"
+            className="w-full rounded-lg border border-neutral-300 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors flex items-center justify-center gap-3"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />

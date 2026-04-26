@@ -11,18 +11,18 @@ export default async function RegisterPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-16">
-      <h1 className="text-2xl font-bold text-stone-900 text-center">
+      <h1 className="text-2xl font-bold text-neutral-900 text-center">
         Create Account
       </h1>
-      <p className="mt-2 text-center text-sm text-stone-500">
+      <p className="mt-2 text-center text-sm text-neutral-500">
         Sign up to save your favourite recipes and more.
       </p>
       <RegisterForm />
-      <p className="mt-6 text-center text-sm text-stone-500">
+      <p className="mt-6 text-center text-sm text-neutral-500">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-medium text-amber-600 hover:text-amber-700"
+          className="font-medium text-orange-600 hover:text-orange-700"
         >
           Sign in
         </Link>

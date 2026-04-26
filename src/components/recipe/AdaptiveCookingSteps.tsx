@@ -86,15 +86,15 @@ export function AdaptiveCookingSteps({
 
       {loading ? (
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-stone-800 mb-6">
+          <h2 className="text-xl font-semibold text-neutral-800 mb-6">
             Instructions
           </h2>
           {originalSteps.map((step) => (
             <div key={step.stepNumber} className="flex gap-4 animate-pulse">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-stone-200" />
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-neutral-200" />
               <div className="flex-1 space-y-2 pt-1">
-                <div className="h-4 bg-stone-200 rounded w-full" />
-                <div className="h-4 bg-stone-200 rounded w-3/4" />
+                <div className="h-4 bg-neutral-200 rounded w-full" />
+                <div className="h-4 bg-neutral-200 rounded w-3/4" />
               </div>
             </div>
           ))}
@@ -102,7 +102,7 @@ export function AdaptiveCookingSteps({
       ) : (
         <>
           {error && (
-            <p className="text-xs text-amber-600 mb-2">
+            <p className="text-xs text-orange-600 mb-2">
               Couldn&apos;t adapt instructions — showing original steps.
             </p>
           )}

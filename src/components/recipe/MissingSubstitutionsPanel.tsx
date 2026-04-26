@@ -18,9 +18,9 @@ const feasibilityStyles = {
     label: "Fully Feasible",
   },
   moderate: {
-    bg: "bg-amber-50",
-    border: "border-amber-200",
-    text: "text-amber-800",
+    bg: "bg-orange-50",
+    border: "border-orange-200",
+    text: "text-orange-800",
     icon: AlertTriangle,
     label: "Will Work With Changes",
   },
@@ -40,7 +40,7 @@ export function MissingSubstitutionsPanel({
 }: MissingSubstitutionsPanelProps) {
   if (loading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-stone-500 py-4 mt-4">
+      <div className="flex items-center gap-2 text-sm text-neutral-500 py-4 mt-4">
         <Loader2 className="h-4 w-4 animate-spin" />
         Finding substitutions...
       </div>
@@ -80,31 +80,31 @@ export function MissingSubstitutionsPanel({
         {result.substitutions.map((sub, i) => (
           <div
             key={i}
-            className="rounded-lg border border-stone-200 p-3"
+            className="rounded-lg border border-neutral-200 p-3"
           >
             <div className="flex items-baseline gap-2 mb-1">
-              <span className="font-semibold text-stone-800 text-sm">
+              <span className="font-semibold text-neutral-800 text-sm">
                 {sub.missing}
               </span>
-              <span className="text-xs text-stone-400">— {sub.role}</span>
+              <span className="text-xs text-neutral-400">— {sub.role}</span>
             </div>
 
             {sub.canSubstitute && sub.options ? (
               <div className="space-y-2 mt-2">
                 {sub.options.map((option, j) => (
                   <div key={j} className="flex items-start gap-2 text-sm">
-                    <ArrowRight className="h-3.5 w-3.5 text-amber-500 mt-0.5 shrink-0" />
+                    <ArrowRight className="h-3.5 w-3.5 text-orange-500 mt-0.5 shrink-0" />
                     <div>
-                      <span className="font-medium text-amber-700">
+                      <span className="font-medium text-orange-700">
                         {option.name}
                       </span>
                       {option.quantity && (
-                        <span className="text-stone-500 ml-1">
+                        <span className="text-neutral-500 ml-1">
                           ({option.quantity})
                         </span>
                       )}
                       {option.notes && (
-                        <p className="text-xs text-stone-400 mt-0.5">
+                        <p className="text-xs text-neutral-400 mt-0.5">
                           {option.notes}
                         </p>
                       )}

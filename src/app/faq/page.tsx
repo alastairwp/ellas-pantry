@@ -101,15 +101,15 @@ const faqs = [
 export default function FAQPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      <h1 className="text-3xl font-bold text-stone-900">
+      <h1 className="text-3xl font-bold text-neutral-900">
         Frequently Asked Questions
       </h1>
-      <p className="mt-2 text-stone-600">
+      <p className="mt-2 text-neutral-600">
         Everything you need to know about using Ella&apos;s Pantry. Can&apos;t
         find what you&apos;re looking for?{" "}
         <a
           href="/contact"
-          className="text-amber-700 hover:text-amber-800 underline"
+          className="text-orange-700 hover:text-orange-800 underline"
         >
           Get in touch
         </a>{" "}
@@ -119,16 +119,16 @@ export default function FAQPage() {
       <div className="mt-10 space-y-10">
         {faqs.map((section) => (
           <section key={section.category}>
-            <h2 className="text-xl font-semibold text-stone-900">
+            <h2 className="text-xl font-semibold text-neutral-900">
               {section.category}
             </h2>
             <dl className="mt-4 space-y-5">
               {section.questions.map((item) => (
                 <div key={item.q}>
-                  <dt className="text-sm font-semibold text-stone-800">
+                  <dt className="text-sm font-semibold text-neutral-800">
                     {item.q}
                   </dt>
-                  <dd className="mt-1 text-sm text-stone-600 leading-relaxed">
+                  <dd className="mt-1 text-sm text-neutral-600 leading-relaxed">
                     {item.a}
                   </dd>
                 </div>

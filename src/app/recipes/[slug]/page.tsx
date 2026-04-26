@@ -74,7 +74,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
   return (
     <article>
       {!recipe.published && (
-        <div className="bg-amber-500 text-white text-center text-sm font-medium py-2 px-4">
+        <div className="bg-orange-500 text-white text-center text-sm font-medium py-2 px-4">
           This recipe is pending review and not visible to the public.
         </div>
       )}
@@ -154,9 +154,9 @@ export default async function RecipePage({ params }: RecipePageProps) {
           <div className="lg:col-span-2">
             {recipe.description && (
               <div className="prose prose-stone mb-8">
-                <p className="text-stone-700 text-lg leading-relaxed">{recipe.description}</p>
+                <p className="text-neutral-700 text-lg leading-relaxed">{recipe.description}</p>
                 <p
-                  className="text-xl text-amber-700 mt-4"
+                  className="text-xl text-orange-700 mt-4"
                   style={{ fontFamily: "cursive" }}
                 >
                   Ella x

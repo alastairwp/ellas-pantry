@@ -55,7 +55,7 @@ export default async function EditRecipePage({ params }: EditPageProps) {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-stone-800 mb-6">Edit Recipe</h1>
+      <h1 className="text-2xl font-bold text-neutral-800 mb-6">Edit Recipe</h1>
       <RecipeEditForm initialData={initialData} />
     </div>
   );

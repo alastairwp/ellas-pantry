@@ -18,7 +18,7 @@ export async function RelatedRecipes({
 
   return (
     <section className="mt-12">
-      <h2 className="text-2xl font-bold text-stone-900">
+      <h2 className="text-2xl font-bold text-neutral-900">
         You Might Also Like
       </h2>
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

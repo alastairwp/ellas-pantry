@@ -121,27 +121,27 @@ export function AddToCollectionButton({ recipeId }: AddToCollectionButtonProps) 
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={handleOpen}
-        className="inline-flex items-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+        className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
       >
         <FolderPlus className="h-4 w-4" />
         Collection
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded-xl border border-stone-200 bg-white shadow-lg">
-          <div className="p-3 border-b border-stone-100">
-            <p className="text-xs font-medium text-stone-500 uppercase tracking-wide">
+        <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded-xl border border-neutral-200 bg-white shadow-lg">
+          <div className="p-3 border-b border-neutral-100">
+            <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">
               Add to collection
             </p>
           </div>
 
           <div className="max-h-56 overflow-y-auto p-2">
             {loading ? (
-              <p className="px-3 py-4 text-sm text-stone-400 text-center">
+              <p className="px-3 py-4 text-sm text-neutral-400 text-center">
                 Loading...
               </p>
             ) : collections.length === 0 ? (
-              <p className="px-3 py-4 text-sm text-stone-400 text-center">
+              <p className="px-3 py-4 text-sm text-neutral-400 text-center">
                 No collections yet
               </p>
             ) : (
@@ -149,13 +149,13 @@ export function AddToCollectionButton({ recipeId }: AddToCollectionButtonProps) 
                 <button
                   key={col.id}
                   onClick={() => toggleCollection(col.id)}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                 >
                   <span
                     className={`flex h-5 w-5 items-center justify-center rounded border ${
                       memberOf.has(col.id)
-                        ? "border-amber-500 bg-amber-500 text-white"
-                        : "border-stone-300"
+                        ? "border-orange-500 bg-orange-500 text-white"
+                        : "border-neutral-300"
                     }`}
                   >
                     {memberOf.has(col.id) && <Check className="h-3 w-3" />}
@@ -168,7 +168,7 @@ export function AddToCollectionButton({ recipeId }: AddToCollectionButtonProps) 
 
           <form
             onSubmit={createAndAdd}
-            className="border-t border-stone-100 p-2"
+            className="border-t border-neutral-100 p-2"
           >
             <div className="flex gap-2">
               <input
@@ -176,12 +176,12 @@ export function AddToCollectionButton({ recipeId }: AddToCollectionButtonProps) 
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="New collection..."
-                className="flex-1 rounded-lg border border-stone-200 px-3 py-1.5 text-sm placeholder:text-stone-400 focus:border-amber-400 focus:outline-none"
+                className="flex-1 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm placeholder:text-neutral-400 focus:border-orange-400 focus:outline-none"
               />
               <button
                 type="submit"
                 disabled={!newName.trim() || creating}
-                className="rounded-lg bg-amber-600 p-1.5 text-white hover:bg-amber-700 disabled:opacity-50 transition-colors"
+                className="rounded-lg bg-orange-600 p-1.5 text-white hover:bg-orange-700 disabled:opacity-50 transition-colors"
               >
                 <Plus className="h-4 w-4" />
               </button>

@@ -33,7 +33,7 @@ export function SortFilter() {
     <select
       value={active}
       onChange={(e) => handleChange(e.target.value)}
-      className="px-3 py-1.5 text-sm font-medium rounded-lg border border-stone-300 bg-white text-stone-600 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+      className="px-3 py-1.5 text-sm font-medium rounded-lg border border-neutral-300 bg-white text-neutral-600 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
       aria-label="Sort recipes"
     >
       {OPTIONS.map((opt) => (

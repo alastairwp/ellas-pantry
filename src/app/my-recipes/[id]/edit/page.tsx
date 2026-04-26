@@ -73,8 +73,8 @@ export default async function EditUserRecipePage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-3xl font-bold text-stone-900">Edit recipe</h1>
-      <p className="mt-2 text-stone-500">
+      <h1 className="text-3xl font-bold text-neutral-900">Edit recipe</h1>
+      <p className="mt-2 text-neutral-500">
         Refine your recipe and choose how to share it. Your recipes are private
         by default.
       </p>

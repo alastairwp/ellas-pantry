@@ -49,7 +49,7 @@ export function SaveRecipeButton({ recipeId }: SaveRecipeButtonProps) {
     return (
       <Link
         href="/login"
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-stone-600 hover:text-amber-700 bg-stone-100 hover:bg-amber-50 rounded-lg transition-colors"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-neutral-600 hover:text-orange-700 bg-neutral-100 hover:bg-orange-50 rounded-lg transition-colors"
       >
         <Heart className="h-4 w-4" />
         <span>Save</span>
@@ -64,7 +64,7 @@ export function SaveRecipeButton({ recipeId }: SaveRecipeButtonProps) {
       className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
         saved
           ? "text-red-600 bg-red-50 hover:bg-red-100"
-          : "text-stone-600 hover:text-amber-700 bg-stone-100 hover:bg-amber-50"
+          : "text-neutral-600 hover:text-orange-700 bg-neutral-100 hover:bg-orange-50"
       }`}
     >
       <Heart

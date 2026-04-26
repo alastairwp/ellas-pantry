@@ -53,8 +53,8 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
             onClick={() => handleSelect(category.slug)}
             className={`flex-shrink-0 px-4 py-1.5 text-sm font-medium rounded-full border transition-colors whitespace-nowrap ${
               isActive
-                ? "bg-amber-600 text-white border-amber-600"
-                : "bg-white text-stone-600 border-stone-300 hover:bg-stone-50 hover:border-stone-400"
+                ? "bg-orange-600 text-white border-orange-600"
+                : "bg-white text-neutral-600 border-neutral-300 hover:bg-neutral-50 hover:border-neutral-400"
             }`}
             aria-pressed={isActive}
           >

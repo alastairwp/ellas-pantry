@@ -34,12 +34,12 @@ export function RecipeListItem({ recipe }: RecipeListItemProps) {
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <h3 className="text-base font-semibold text-stone-800 group-hover:text-amber-700 transition-colors line-clamp-1">
+        <h3 className="text-base font-semibold text-neutral-800 group-hover:text-orange-700 transition-colors line-clamp-1">
           {recipe.title}
         </h3>
 
         {recipe.description && (
-          <p className="text-sm text-stone-500 line-clamp-1 mt-0.5">
+          <p className="text-sm text-neutral-500 line-clamp-1 mt-0.5">
             {recipe.description}
           </p>
         )}
@@ -48,12 +48,12 @@ export function RecipeListItem({ recipe }: RecipeListItemProps) {
           {recipe.ratingAverage !== undefined && recipe.ratingAverage > 0 && (
             <div className="flex items-center gap-1.5">
               <StarRating rating={recipe.ratingAverage} count={recipe.ratingCount || 0} size="sm" />
-              <span className="text-xs font-medium text-stone-600">{recipe.ratingAverage.toFixed(1)}</span>
+              <span className="text-xs font-medium text-neutral-600">{recipe.ratingAverage.toFixed(1)}</span>
             </div>
           )}
 
-          <div className="flex items-center gap-1 text-sm text-stone-500">
-            <Clock className="h-3.5 w-3.5 text-stone-400" />
+          <div className="flex items-center gap-1 text-sm text-neutral-500">
+            <Clock className="h-3.5 w-3.5 text-neutral-400" />
             <span className="text-xs">{formatDuration(totalTime)}</span>
           </div>
 

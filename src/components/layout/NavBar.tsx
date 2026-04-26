@@ -24,7 +24,7 @@ export function NavBar({ children }: NavBarProps) {
       {/* Mobile hamburger button */}
       <button
         type="button"
-        className="md:hidden p-2 rounded-lg text-stone-600 hover:bg-stone-100 transition-colors"
+        className="md:hidden p-2 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? "Close menu" : "Open menu"}
         aria-expanded={isOpen}
@@ -34,7 +34,7 @@ export function NavBar({ children }: NavBarProps) {
 
       {/* Mobile dropdown menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white border-b border-stone-200 shadow-lg md:hidden z-50">
+        <div className="absolute top-full left-0 right-0 bg-white border-b border-neutral-200 shadow-lg md:hidden z-50">
           <nav className="flex flex-col p-4 gap-2">
             {children}
           </nav>

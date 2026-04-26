@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Geist } from "next/font/google";
+import { Geist, Fraunces } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/components/providers/SessionProvider";
@@ -12,6 +12,12 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -35,7 +41,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#d97706" />
+        <meta name="theme-color" content="#ea580c" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Ella's Pantry" />
@@ -60,7 +66,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${geistSans.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${fraunces.variable} antialiased`}>
         <AuthProvider>
           <SavedRecipesProvider>
             <SkillLevelWrapper>

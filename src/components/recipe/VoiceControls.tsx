@@ -79,8 +79,8 @@ export function VoiceControls({
           hasMicError
             ? "bg-red-600 text-white"
             : isActive
-              ? "bg-amber-600 text-white"
-              : "bg-stone-800 text-stone-400 hover:text-white"
+              ? "bg-orange-600 text-white"
+              : "bg-neutral-800 text-neutral-400 hover:text-white"
         }`}
         aria-label={isActive ? "Turn off voice mode" : "Turn on voice mode"}
       >
@@ -93,7 +93,7 @@ export function VoiceControls({
         )}
         {/* Pulsing ring for active TTS+STT */}
         {isTTSAndSTT && isListening && !hasMicError && (
-          <span className="absolute inset-0 rounded-full border-2 border-amber-400 animate-ping opacity-50" />
+          <span className="absolute inset-0 rounded-full border-2 border-orange-400 animate-ping opacity-50" />
         )}
       </button>
 
@@ -102,7 +102,7 @@ export function VoiceControls({
         <button
           type="button"
           onClick={() => setDismissedCommands(false)}
-          className="flex items-center justify-center px-2 h-11 rounded-full bg-stone-800 text-stone-400 hover:text-white transition-colors text-xs font-medium"
+          className="flex items-center justify-center px-2 h-11 rounded-full bg-neutral-800 text-neutral-400 hover:text-white transition-colors text-xs font-medium"
           aria-label="Show voice commands"
         >
           ?
@@ -111,15 +111,15 @@ export function VoiceControls({
 
       {/* Command reference — shown persistently when voice+STT is active */}
       {showCommands && isTTSAndSTT && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[60] w-80 max-w-[calc(100vw-2rem)] px-4 py-3 bg-stone-800/95 backdrop-blur-sm rounded-xl shadow-lg border border-stone-700/50">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[60] w-80 max-w-[calc(100vw-2rem)] px-4 py-3 bg-neutral-800/95 backdrop-blur-sm rounded-xl shadow-lg border border-neutral-700/50">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-wide">
+            <p className="text-xs font-semibold text-orange-400 uppercase tracking-wide">
               Voice Commands
             </p>
             <button
               type="button"
               onClick={dismissCommands}
-              className="p-0.5 text-stone-500 hover:text-white transition-colors"
+              className="p-0.5 text-neutral-500 hover:text-white transition-colors"
               aria-label="Dismiss commands"
             >
               <X className="h-3.5 w-3.5" />
@@ -127,9 +127,9 @@ export function VoiceControls({
           </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1">
             {VOICE_COMMANDS.map(({ command, alt }) => (
-              <p key={command} className="text-xs text-stone-300">
+              <p key={command} className="text-xs text-neutral-300">
                 <span className="text-white font-medium">&ldquo;{command}&rdquo;</span>
-                {alt && <span className="text-stone-500"> / &ldquo;{alt}&rdquo;</span>}
+                {alt && <span className="text-neutral-500"> / &ldquo;{alt}&rdquo;</span>}
               </p>
             ))}
           </div>
@@ -138,10 +138,10 @@ export function VoiceControls({
 
       {/* Transcript flash */}
       {isActive && (transcript || lastCommand) && (
-        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-[60] px-4 py-2 bg-stone-800/90 rounded-full text-sm text-white max-w-xs text-center">
+        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-[60] px-4 py-2 bg-neutral-800/90 rounded-full text-sm text-white max-w-xs text-center">
           {transcript && <span>{transcript}</span>}
           {lastCommand && (
-            <span className="ml-2 text-amber-400 font-medium">{lastCommand}</span>
+            <span className="ml-2 text-orange-400 font-medium">{lastCommand}</span>
           )}
         </div>
       )}
@@ -155,7 +155,7 @@ export function VoiceControls({
 
       {/* STT unavailable note */}
       {showSttNote && !micError && (
-        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-[60] px-4 py-2 bg-stone-800/90 rounded-full text-xs text-stone-300 max-w-xs text-center">
+        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-[60] px-4 py-2 bg-neutral-800/90 rounded-full text-xs text-neutral-300 max-w-xs text-center">
           Voice commands aren&apos;t available in this browser. Steps will be read aloud.
         </div>
       )}

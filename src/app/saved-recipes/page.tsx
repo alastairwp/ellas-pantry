@@ -34,9 +34,9 @@ export default async function SavedRecipesPage({
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="flex items-center gap-3">
         <Heart className="h-7 w-7 text-red-500 fill-red-500" />
-        <h1 className="text-3xl font-bold text-stone-900">My Favourites</h1>
+        <h1 className="text-3xl font-bold text-neutral-900">My Favourites</h1>
       </div>
-      <p className="mt-2 text-stone-500">
+      <p className="mt-2 text-neutral-500">
         {total} saved recipe{total !== 1 ? "s" : ""}
       </p>
 
@@ -48,13 +48,13 @@ export default async function SavedRecipesPage({
         </div>
       ) : (
         <div className="mt-12 text-center">
-          <Heart className="mx-auto h-12 w-12 text-stone-300" />
-          <p className="mt-4 text-lg text-stone-500">
+          <Heart className="mx-auto h-12 w-12 text-neutral-300" />
+          <p className="mt-4 text-lg text-neutral-500">
             No saved recipes yet.
           </p>
           <Link
             href="/recipes"
-            className="mt-4 inline-block text-amber-600 hover:text-amber-700 font-medium"
+            className="mt-4 inline-block text-orange-600 hover:text-orange-700 font-medium"
           >
             Browse recipes to find something you love
           </Link>
@@ -66,18 +66,18 @@ export default async function SavedRecipesPage({
           {page > 1 && (
             <Link
               href={`/saved-recipes?page=${page - 1}`}
-              className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
             >
               Previous
             </Link>
           )}
-          <span className="px-3 py-2 text-sm text-stone-600">
+          <span className="px-3 py-2 text-sm text-neutral-600">
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
             <Link
               href={`/saved-recipes?page=${page + 1}`}
-              className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
             >
               Next
             </Link>

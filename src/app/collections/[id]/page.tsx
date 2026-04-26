@@ -60,31 +60,31 @@ export default async function CollectionDetailPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="flex items-center gap-2 text-sm text-stone-500 mb-4">
+      <div className="flex items-center gap-2 text-sm text-neutral-500 mb-4">
         <Link
           href="/collections"
-          className="hover:text-amber-700 transition-colors"
+          className="hover:text-orange-700 transition-colors"
         >
           My Collections
         </Link>
         <span>/</span>
-        <span className="text-stone-800">{collection.name}</span>
+        <span className="text-neutral-800">{collection.name}</span>
       </div>
 
-      <h1 className="text-3xl font-bold text-stone-900">{collection.name}</h1>
-      <p className="mt-2 text-stone-500">
+      <h1 className="text-3xl font-bold text-neutral-900">{collection.name}</h1>
+      <p className="mt-2 text-neutral-500">
         {collection.recipes.length} recipe
         {collection.recipes.length !== 1 ? "s" : ""}
       </p>
 
       {collection.recipes.length === 0 ? (
         <div className="mt-12 text-center">
-          <p className="text-lg text-stone-500">
+          <p className="text-lg text-neutral-500">
             This collection is empty.
           </p>
           <Link
             href="/recipes"
-            className="mt-4 inline-block text-amber-600 hover:text-amber-700"
+            className="mt-4 inline-block text-orange-600 hover:text-orange-700"
           >
             Browse recipes to add some
           </Link>
@@ -107,16 +107,16 @@ export default async function CollectionDetailPage({
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-semibold text-stone-800 group-hover:text-amber-700 transition-colors line-clamp-1">
+                <h3 className="font-semibold text-neutral-800 group-hover:text-orange-700 transition-colors line-clamp-1">
                   {recipe.title}
                 </h3>
                 {recipe.description && (
-                  <p className="mt-1 text-sm text-stone-500 line-clamp-2">
+                  <p className="mt-1 text-sm text-neutral-500 line-clamp-2">
                     {recipe.description}
                   </p>
                 )}
-                <div className="mt-2 flex items-center gap-1.5 text-sm text-stone-500">
-                  <Clock className="h-4 w-4 text-stone-400" />
+                <div className="mt-2 flex items-center gap-1.5 text-sm text-neutral-500">
+                  <Clock className="h-4 w-4 text-neutral-400" />
                   <span>
                     {formatDuration(recipe.prepTime + recipe.cookTime)}
                   </span>

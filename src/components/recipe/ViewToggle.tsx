@@ -35,13 +35,13 @@ export function ViewToggle() {
   );
 
   return (
-    <div className="flex items-center rounded-lg border border-stone-200 overflow-hidden">
+    <div className="flex items-center rounded-lg border border-neutral-200 overflow-hidden">
       <button
         onClick={() => toggle("grid")}
         className={`p-2 transition-colors ${
           view === "grid"
-            ? "bg-stone-800 text-white"
-            : "text-stone-400 hover:text-stone-600 hover:bg-stone-50"
+            ? "bg-neutral-800 text-white"
+            : "text-neutral-400 hover:text-neutral-600 hover:bg-neutral-50"
         }`}
         title="Gallery view"
       >
@@ -51,8 +51,8 @@ export function ViewToggle() {
         onClick={() => toggle("list")}
         className={`p-2 transition-colors ${
           view === "list"
-            ? "bg-stone-800 text-white"
-            : "text-stone-400 hover:text-stone-600 hover:bg-stone-50"
+            ? "bg-neutral-800 text-white"
+            : "text-neutral-400 hover:text-neutral-600 hover:bg-neutral-50"
         }`}
         title="List view"
       >

@@ -238,13 +238,13 @@ export function TimelineView({ steps, onComplete }: TimelineViewProps) {
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-3">
         {activeGroupIndex < 0 && (
           <div className="flex flex-col items-center justify-center py-12 gap-4">
-            <p className="text-stone-400 text-sm">
+            <p className="text-neutral-400 text-sm">
               {groups.length} steps &middot; ~{formatTime(totalDuration)} total
             </p>
             <button
               type="button"
               onClick={startCooking}
-              className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium transition-colors"
+              className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
             >
               Start Cooking
             </button>
@@ -274,11 +274,11 @@ export function TimelineView({ steps, onComplete }: TimelineViewProps) {
 
       {/* Bottom progress bar */}
       {activeGroupIndex >= 0 && (
-        <div className="px-4 py-3 bg-stone-800 border-t border-stone-700 text-center">
-          <p className="text-sm text-stone-300">
+        <div className="px-4 py-3 bg-neutral-800 border-t border-neutral-700 text-center">
+          <p className="text-sm text-neutral-300">
             Step {Math.min(completedSteps + 1, totalSteps)} of {totalSteps}
             {remainingDuration > 0 && (
-              <span className="text-stone-500">
+              <span className="text-neutral-500">
                 {" "}&mdash; ~{formatTime(Math.max(0, remainingDuration))} remaining
               </span>
             )}
@@ -303,7 +303,7 @@ function getGroupStatus(
 
 function CompletedGroup({ group }: { group: TimelineGroup }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-stone-800/50 text-stone-500">
+    <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-neutral-800/50 text-neutral-500">
       <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
       <span className="text-sm truncate">
         {group.steps.map((s) => `Step ${s.stepNumber}`).join(" & ")}
@@ -372,15 +372,15 @@ function ActiveStepCard({
   const isDone = state.status === "completed";
 
   return (
-    <div className="rounded-xl bg-stone-700 p-4 space-y-3">
+    <div className="rounded-xl bg-neutral-700 p-4 space-y-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0">
-          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-600 flex items-center justify-center text-sm font-bold">
+          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center text-sm font-bold">
             {isDone ? <Check className="h-4 w-4" /> : step.stepNumber}
           </div>
           <div className="min-w-0">
             {isParallel && step.lane === 1 && (
-              <span className="inline-block text-xs font-medium text-amber-400 bg-amber-900/40 px-2 py-0.5 rounded mb-1">
+              <span className="inline-block text-xs font-medium text-orange-400 bg-orange-900/40 px-2 py-0.5 rounded mb-1">
                 runs in parallel
               </span>
             )}
@@ -388,7 +388,7 @@ function ActiveStepCard({
               {step.instruction}
             </p>
             {step.tipText && (
-              <p className="text-xs text-amber-200 mt-1">
+              <p className="text-xs text-orange-200 mt-1">
                 <span className="font-semibold">Tip:</span> {step.tipText}
               </p>
             )}
@@ -397,10 +397,10 @@ function ActiveStepCard({
       </div>
 
       {/* Progress bar */}
-      <div className="h-1.5 bg-stone-600 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-neutral-600 rounded-full overflow-hidden">
         <div
           className={`h-full transition-all duration-1000 rounded-full ${
-            isDone ? "bg-green-500" : "bg-amber-500"
+            isDone ? "bg-green-500" : "bg-orange-500"
           }`}
           style={{ width: `${progress}%` }}
         />
@@ -409,7 +409,7 @@ function ActiveStepCard({
       {/* Timer + controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm">
-          <Timer className="h-3.5 w-3.5 text-stone-400" />
+          <Timer className="h-3.5 w-3.5 text-neutral-400" />
           {isDone ? (
             <span className="text-green-400 font-medium">Done!</span>
           ) : (
@@ -418,7 +418,7 @@ function ActiveStepCard({
             </span>
           )}
           {step.isEstimatedDuration && !isDone && (
-            <span className="text-stone-500 text-xs">(estimate)</span>
+            <span className="text-neutral-500 text-xs">(estimate)</span>
           )}
         </div>
 
@@ -427,7 +427,7 @@ function ActiveStepCard({
             <button
               type="button"
               onClick={() => onTogglePause(step.stepNumber)}
-              className="p-1.5 rounded-full hover:bg-stone-600 transition-colors"
+              className="p-1.5 rounded-full hover:bg-neutral-600 transition-colors"
               aria-label={state.paused ? "Resume" : "Pause"}
             >
               {state.paused ? (
@@ -439,7 +439,7 @@ function ActiveStepCard({
             <button
               type="button"
               onClick={() => onMarkDone(step.stepNumber)}
-              className="px-3 py-1 text-xs font-medium bg-stone-600 hover:bg-stone-500 rounded-full transition-colors"
+              className="px-3 py-1 text-xs font-medium bg-neutral-600 hover:bg-neutral-500 rounded-full transition-colors"
             >
               Mark Done
             </button>
@@ -452,10 +452,10 @@ function ActiveStepCard({
 
 function PendingGroup({ group }: { group: TimelineGroup }) {
   return (
-    <div className="px-4 py-2 text-stone-500 space-y-1">
+    <div className="px-4 py-2 text-neutral-500 space-y-1">
       {group.steps.map((step) => (
         <div key={step.stepNumber} className="flex items-start gap-3">
-          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-stone-800 flex items-center justify-center text-xs">
+          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-xs">
             {step.stepNumber}
           </div>
           <p className="text-sm truncate">

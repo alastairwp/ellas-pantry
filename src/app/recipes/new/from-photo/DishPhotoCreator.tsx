@@ -98,23 +98,23 @@ export function DishPhotoCreator() {
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl border border-stone-200 p-6 sm:p-10 shadow-sm">
+    <div className="bg-white rounded-2xl border border-neutral-200 p-6 sm:p-10 shadow-sm">
       {state === "idle" && (
         <div className="text-center">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 mb-4">
-            <ChefHat className="h-8 w-8 text-amber-600" />
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-orange-50 mb-4">
+            <ChefHat className="h-8 w-8 text-orange-600" />
           </div>
-          <h2 className="text-xl font-semibold text-stone-800 mb-2">
+          <h2 className="text-xl font-semibold text-neutral-800 mb-2">
             Photograph a finished dish
           </h2>
-          <p className="text-stone-500 mb-6 max-w-md mx-auto">
+          <p className="text-neutral-500 mb-6 max-w-md mx-auto">
             Snap a picture of a meal &mdash; restaurant, home cooked, anything.
             Our AI will identify it and draft a recipe for you to refine.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <label
               htmlFor="dish-photo-upload"
-              className="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors"
+              className="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors"
             >
               <Upload className="h-4 w-4" />
               Upload Photo
@@ -131,7 +131,7 @@ export function DishPhotoCreator() {
             </label>
             <label
               htmlFor="dish-photo-camera"
-              className="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-white text-stone-700 border border-stone-300 rounded-lg font-medium hover:bg-stone-50 transition-colors"
+              className="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 bg-white text-neutral-700 border border-neutral-300 rounded-lg font-medium hover:bg-neutral-50 transition-colors"
             >
               <Camera className="h-4 w-4" />
               Take Photo
@@ -174,14 +174,14 @@ export function DishPhotoCreator() {
             <button
               type="button"
               onClick={handleAnalyze}
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors"
             >
               Identify Dish
             </button>
             <button
               type="button"
               onClick={reset}
-              className="px-6 py-2.5 text-stone-600 border border-stone-300 rounded-lg font-medium hover:bg-stone-50 transition-colors"
+              className="px-6 py-2.5 text-neutral-600 border border-neutral-300 rounded-lg font-medium hover:bg-neutral-50 transition-colors"
             >
               Choose Different Photo
             </button>
@@ -191,11 +191,11 @@ export function DishPhotoCreator() {
 
       {state === "scanning" && (
         <div className="text-center py-16">
-          <Loader2 className="h-12 w-12 text-amber-600 mx-auto mb-4 animate-spin" />
-          <p className="text-lg font-medium text-stone-700">
+          <Loader2 className="h-12 w-12 text-orange-600 mx-auto mb-4 animate-spin" />
+          <p className="text-lg font-medium text-neutral-700">
             Looking at your dish...
           </p>
-          <p className="text-stone-500 mt-1">
+          <p className="text-neutral-500 mt-1">
             Identifying the dish and drafting a recipe
           </p>
         </div>
@@ -203,29 +203,29 @@ export function DishPhotoCreator() {
 
       {state === "saving" && (
         <div className="text-center py-16">
-          <Loader2 className="h-12 w-12 text-amber-600 mx-auto mb-4 animate-spin" />
-          <p className="text-lg font-medium text-stone-700">Saving your recipe...</p>
+          <Loader2 className="h-12 w-12 text-orange-600 mx-auto mb-4 animate-spin" />
+          <p className="text-lg font-medium text-neutral-700">Saving your recipe...</p>
         </div>
       )}
 
       {state === "draft" && draft && (
         <div>
           <div className="mb-6">
-            <p className="text-sm font-medium text-amber-700 uppercase tracking-wide">
+            <p className="text-sm font-medium text-orange-700 uppercase tracking-wide">
               Identified
             </p>
-            <h2 className="text-2xl font-semibold text-stone-900 mt-1">
+            <h2 className="text-2xl font-semibold text-neutral-900 mt-1">
               {draft.title}
             </h2>
-            <p className="text-stone-600 mt-2">{draft.description}</p>
+            <p className="text-neutral-600 mt-2">{draft.description}</p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 mb-8">
             <div>
-              <h3 className="font-semibold text-stone-800 mb-3">
+              <h3 className="font-semibold text-neutral-800 mb-3">
                 Ingredients ({draft.ingredients.length})
               </h3>
-              <ul className="space-y-1.5 text-sm text-stone-700">
+              <ul className="space-y-1.5 text-sm text-neutral-700">
                 {draft.ingredients.map((ing, i) => (
                   <li key={i}>
                     <span className="font-medium">
@@ -239,10 +239,10 @@ export function DishPhotoCreator() {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-stone-800 mb-3">
+              <h3 className="font-semibold text-neutral-800 mb-3">
                 Method ({draft.steps.length} steps)
               </h3>
-              <ol className="space-y-2 text-sm text-stone-700 list-decimal pl-5">
+              <ol className="space-y-2 text-sm text-neutral-700 list-decimal pl-5">
                 {draft.steps.map((step, i) => (
                   <li key={i}>{step.instruction}</li>
                 ))}
@@ -250,7 +250,7 @@ export function DishPhotoCreator() {
             </div>
           </div>
 
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-900">
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6 text-sm text-orange-900">
             This is a starting point. On the next screen you can edit anything,
             add hidden ingredients the camera couldn&apos;t see, and tweak the
             steps before saving to your private collection.
@@ -260,14 +260,14 @@ export function DishPhotoCreator() {
             <button
               type="button"
               onClick={handleSaveAndEdit}
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors"
             >
               Save &amp; Edit
             </button>
             <button
               type="button"
               onClick={reset}
-              className="px-6 py-2.5 text-stone-600 border border-stone-300 rounded-lg font-medium hover:bg-stone-50 transition-colors"
+              className="px-6 py-2.5 text-neutral-600 border border-neutral-300 rounded-lg font-medium hover:bg-neutral-50 transition-colors"
             >
               Try Another Photo
             </button>
@@ -281,7 +281,7 @@ export function DishPhotoCreator() {
           <button
             type="button"
             onClick={reset}
-            className="px-6 py-2.5 text-stone-600 border border-stone-300 rounded-lg font-medium hover:bg-stone-50 transition-colors"
+            className="px-6 py-2.5 text-neutral-600 border border-neutral-300 rounded-lg font-medium hover:bg-neutral-50 transition-colors"
           >
             Start Over
           </button>

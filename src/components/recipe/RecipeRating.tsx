@@ -74,7 +74,7 @@ export function RecipeRating({ recipeId }: RecipeRatingProps) {
           size="md"
         />
         {average > 0 && (
-          <span className="text-sm font-medium text-stone-700">
+          <span className="text-sm font-medium text-neutral-700">
             {average.toFixed(1)}
           </span>
         )}
@@ -83,7 +83,7 @@ export function RecipeRating({ recipeId }: RecipeRatingProps) {
       {/* User rating section */}
       {status === "loading" ? null : session ? (
         <div className="flex items-center gap-3">
-          <span className="text-sm text-stone-500">Your rating:</span>
+          <span className="text-sm text-neutral-500">Your rating:</span>
           <StarRating
             rating={userRating || 0}
             interactive={!submitting}
@@ -91,12 +91,12 @@ export function RecipeRating({ recipeId }: RecipeRatingProps) {
             onRate={handleRate}
           />
           {message && (
-            <span className="text-sm text-amber-600">{message}</span>
+            <span className="text-sm text-orange-600">{message}</span>
           )}
         </div>
       ) : (
-        <p className="text-sm text-stone-500">
-          <Link href="/login" className="text-amber-600 hover:text-amber-700 font-medium">
+        <p className="text-sm text-neutral-500">
+          <Link href="/login" className="text-orange-600 hover:text-orange-700 font-medium">
             Sign in
           </Link>
           {" "}to rate this recipe

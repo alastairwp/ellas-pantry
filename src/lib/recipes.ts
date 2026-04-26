@@ -278,24 +278,49 @@ export async function getRelatedRecipes(
   return withRatingStats(results);
 }
 
-export async function getRecipeOfTheDay() {
-  const today = new Date().toISOString().slice(0, 10); // "2026-03-04"
-  const seed = [...today].reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  const count = await prisma.recipe.count({ where: { published: true, visibility: "public" } });
-  if (count === 0) return null;
-  const skip = seed % count;
-  const [recipe] = await prisma.recipe.findMany({
-    where: { published: true, visibility: "public" },
-    select: recipeCardSelect,
-    skip,
-    take: 1,
-  });
-  return recipe ? (await withRatingStats([recipe]))[0] : null;
-}
-
 export async function getAllRecipeSlugs() {
   return prisma.recipe.findMany({
     where: { published: true, visibility: "public" },
     select: { slug: true, updatedAt: true },
   });
+}
+
+export async function getQuickRecipes(count = 8) {
+  const rawRecipes = await prisma.recipe.findMany({
+    where: {
+      published: true,
+      visibility: "public",
+      cookTime: { lte: 30 },
+    },
+    select: recipeCardSelect,
+    orderBy: { popularity: { compositeScore: "desc" } },
+    take: count,
+  });
+
+  return withRatingStats(rawRecipes);
+}
+
+export async function getLatestRecipes(count = 8) {
+  const rawRecipes = await prisma.recipe.findMany({
+    where: { published: true, visibility: "public" },
+    select: recipeCardSelect,
+    orderBy: { createdAt: "desc" },
+    take: count,
+  });
+
+  return withRatingStats(rawRecipes);
+}
+
+export async function getTopRatedRecipes(count = 8) {
+  const rawRecipes = await prisma.recipe.findMany({
+    where: { published: true, visibility: "public" },
+    select: recipeCardSelect,
+    orderBy: { popularity: { compositeScore: "desc" } },
+    take: count * 4,
+  });
+
+  const withStats = await withRatingStats(rawRecipes);
+  return withStats
+    .sort((a, b) => b.ratingAverage - a.ratingAverage)
+    .slice(0, count);
 }

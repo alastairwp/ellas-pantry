@@ -67,10 +67,10 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-stone-900">
+          <h1 className="text-3xl font-bold text-neutral-900">
             {query ? `Results for "${query}"` : "All Recipes"}
           </h1>
-          <p className="mt-2 text-stone-500">
+          <p className="mt-2 text-neutral-500">
             {total} recipe{total !== 1 ? "s" : ""} found
           </p>
         </div>
@@ -107,12 +107,12 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
 
           {recipes.length === 0 && (
             <div className="mt-12 text-center">
-              <p className="text-lg text-stone-500">
+              <p className="text-lg text-neutral-500">
                 No recipes found matching your filters.
               </p>
               <Link
                 href="/recipes"
-                className="mt-4 inline-block text-amber-600 hover:text-amber-700"
+                className="mt-4 inline-block text-orange-600 hover:text-orange-700"
               >
                 Clear filters
               </Link>
@@ -127,7 +127,7 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
                   Previous
                 </PaginationLink>
               )}
-              <span className="px-3 py-2 text-sm text-stone-600">
+              <span className="px-3 py-2 text-sm text-neutral-600">
                 Page {page} of {totalPages}
               </span>
               {page < totalPages && (
@@ -167,7 +167,7 @@ function PaginationLink({
   return (
     <Link
       href={`/recipes?${params.toString()}`}
-      className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+      className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
     >
       {children}
     </Link>

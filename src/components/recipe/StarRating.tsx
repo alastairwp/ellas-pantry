@@ -54,10 +54,10 @@ export function StarRating({
               <Star
                 className={`${iconSize} transition-colors ${
                   filled
-                    ? "fill-amber-400 text-amber-400"
+                    ? "fill-orange-400 text-orange-400"
                     : half
-                      ? "fill-amber-200 text-amber-400"
-                      : "fill-none text-stone-300"
+                      ? "fill-orange-200 text-orange-400"
+                      : "fill-none text-neutral-300"
                 }`}
               />
             </button>
@@ -65,7 +65,7 @@ export function StarRating({
         })}
       </div>
       {count !== undefined && (
-        <span className={`text-stone-500 ${size === "sm" ? "text-xs" : "text-sm"}`}>
+        <span className={`text-neutral-500 ${size === "sm" ? "text-xs" : "text-sm"}`}>
           ({count})
         </span>
       )}

@@ -19,8 +19,8 @@ const COMMON_PROBLEMS = [
 
 const likelihoodStyles = {
   high: { bg: "bg-red-50", border: "border-red-200", badge: "bg-red-100 text-red-700" },
-  medium: { bg: "bg-amber-50", border: "border-amber-200", badge: "bg-amber-100 text-amber-700" },
-  low: { bg: "bg-stone-50", border: "border-stone-200", badge: "bg-stone-100 text-stone-600" },
+  medium: { bg: "bg-orange-50", border: "border-orange-200", badge: "bg-orange-100 text-orange-700" },
+  low: { bg: "bg-neutral-50", border: "border-neutral-200", badge: "bg-neutral-100 text-neutral-600" },
 };
 
 export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
@@ -92,12 +92,12 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
         onClick={() => setExpanded(!expanded)}
         className="flex items-center gap-2 w-full text-left"
       >
-        <HelpCircle className="h-5 w-5 text-amber-600" />
-        <h2 className="text-xl font-semibold text-stone-800">
+        <HelpCircle className="h-5 w-5 text-orange-600" />
+        <h2 className="text-xl font-semibold text-neutral-800">
           What Went Wrong?
         </h2>
         <ChevronDown
-          className={`h-4 w-4 text-stone-400 ml-auto transition-transform ${
+          className={`h-4 w-4 text-neutral-400 ml-auto transition-transform ${
             expanded ? "rotate-180" : ""
           }`}
         />
@@ -107,7 +107,7 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
         <div className="mt-4 space-y-4">
           {!result && (
             <>
-              <p className="text-sm text-stone-500">
+              <p className="text-sm text-neutral-500">
                 Describe what went wrong and get AI-powered troubleshooting advice.
               </p>
 
@@ -121,8 +121,8 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
                     disabled={loading}
                     className={`px-3 py-1.5 text-sm font-medium rounded-full border transition-colors ${
                       problem === p
-                        ? "border-amber-500 bg-amber-50 text-amber-700"
-                        : "border-stone-300 text-stone-600 hover:border-amber-400 hover:text-amber-700"
+                        ? "border-orange-500 bg-orange-50 text-orange-700"
+                        : "border-neutral-300 text-neutral-600 hover:border-orange-400 hover:text-orange-700"
                     } disabled:opacity-50`}
                   >
                     {p}
@@ -138,10 +138,10 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
                   maxLength={500}
                   disabled={loading}
                   placeholder="e.g. My cake sank in the middle, the edges are dry but the centre is gooey..."
-                  className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 disabled:opacity-50 resize-none"
+                  className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-800 placeholder:text-neutral-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 disabled:opacity-50 resize-none"
                   rows={3}
                 />
-                <p className="text-xs text-stone-400 mt-1 text-right">
+                <p className="text-xs text-neutral-400 mt-1 text-right">
                   {problem.length}/500
                 </p>
               </div>
@@ -151,7 +151,7 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
                 type="button"
                 onClick={diagnose}
                 disabled={loading || problem.trim().length === 0}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>
@@ -189,7 +189,7 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
               {/* Likely causes */}
               {result.causes.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-stone-700 mb-2">
+                  <h3 className="text-sm font-semibold text-neutral-700 mb-2">
                     Likely Causes
                   </h3>
                   <div className="space-y-2">
@@ -207,12 +207,12 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
                               {cause.likelihood}
                             </span>
                             {cause.relatedStep && (
-                              <span className="text-xs text-stone-400">
+                              <span className="text-xs text-neutral-400">
                                 Step {cause.relatedStep}
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-stone-700">
+                          <p className="text-sm text-neutral-700">
                             {cause.cause}
                           </p>
                         </div>
@@ -225,7 +225,7 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
               {/* Fixes */}
               {result.fixes.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-stone-700 mb-2">
+                  <h3 className="text-sm font-semibold text-neutral-700 mb-2">
                     Next Time
                   </h3>
                   <div className="space-y-1.5">
@@ -244,13 +244,13 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
 
               {/* Salvage tip */}
               {result.salvage && (
-                <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3">
-                  <Lightbulb className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+                <div className="flex items-start gap-2 rounded-lg bg-orange-50 border border-orange-200 p-3">
+                  <Lightbulb className="h-4 w-4 text-orange-600 mt-0.5 shrink-0" />
                   <div>
-                    <span className="text-sm font-semibold text-amber-800">
+                    <span className="text-sm font-semibold text-orange-800">
                       Salvage Tip
                     </span>
-                    <p className="text-sm text-amber-800 mt-0.5">
+                    <p className="text-sm text-orange-800 mt-0.5">
                       {result.salvage}
                     </p>
                   </div>
@@ -261,7 +261,7 @@ export function TroubleshooterPanel({ recipeId }: TroubleshooterPanelProps) {
               <button
                 type="button"
                 onClick={reset}
-                className="text-sm text-stone-500 hover:text-amber-600 underline transition-colors"
+                className="text-sm text-neutral-500 hover:text-orange-600 underline transition-colors"
               >
                 Try another problem
               </button>

@@ -61,7 +61,7 @@ export function SkillLevelSettingsForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <p className="text-sm text-stone-600">
+        <p className="text-sm text-neutral-600">
           Choose your cooking skill level. This controls how much detail recipe
           instructions show — beginners get expanded tips, advanced cooks get
           concise professional steps.
@@ -74,8 +74,8 @@ export function SkillLevelSettingsForm({
             key={option.value}
             className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${
               selected === option.value
-                ? "border-amber-400 bg-amber-50"
-                : "border-stone-200 hover:border-stone-300 hover:bg-stone-50"
+                ? "border-orange-400 bg-orange-50"
+                : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
             }`}
           >
             <input
@@ -84,13 +84,13 @@ export function SkillLevelSettingsForm({
               value={option.value}
               checked={selected === option.value}
               onChange={() => setSelected(option.value)}
-              className="mt-0.5 h-4 w-4 border-stone-300 text-amber-600 focus:ring-amber-500"
+              className="mt-0.5 h-4 w-4 border-neutral-300 text-orange-600 focus:ring-orange-500"
             />
             <div>
-              <span className="text-sm font-medium text-stone-800">
+              <span className="text-sm font-medium text-neutral-800">
                 {option.label}
               </span>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-neutral-500 mt-0.5">
                 {option.description}
               </p>
             </div>
@@ -111,7 +111,7 @@ export function SkillLevelSettingsForm({
       <button
         type="submit"
         disabled={saving}
-        className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50 transition-colors"
+        className="rounded-lg bg-orange-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-50 transition-colors"
       >
         {saving ? "Saving..." : "Save Skill Level"}
       </button>

@@ -89,7 +89,7 @@ export function CookModeButton({ title, steps, recipeId, prepTime, cookTime }: C
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700 transition-colors"
+        className="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 transition-colors"
       >
         <CookingPot className="h-4 w-4" />
         Start Cooking
@@ -130,7 +130,7 @@ function InstructionWithTimers({
             key={timer.label}
             type="button"
             onClick={() => onStartTimer(timer)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-full transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-full transition-colors"
           >
             <Timer className="h-3.5 w-3.5" />
             {timer.label}
@@ -283,11 +283,11 @@ function CookModeOverlay({
   const progress = ((current + 1) / total) * 100;
 
   return (
-    <div className="fixed inset-0 z-50 bg-stone-900 text-white flex flex-col">
+    <div className="fixed inset-0 z-50 bg-neutral-900 text-white flex flex-col">
       {/* Progress bar */}
-      <div className="h-1 bg-stone-700">
+      <div className="h-1 bg-neutral-700">
         <div
-          className="h-full bg-amber-500 transition-all duration-300"
+          className="h-full bg-orange-500 transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -295,23 +295,23 @@ function CookModeOverlay({
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
         <div className="min-w-0">
-          <p className="text-sm text-stone-400 truncate">{title}</p>
+          <p className="text-sm text-neutral-400 truncate">{title}</p>
           {viewMode === "step" && (
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-neutral-500">
               Step {current + 1} of {total}
             </p>
           )}
         </div>
 
         {/* View mode toggle */}
-        <div className="flex items-center gap-1 bg-stone-800 rounded-lg p-0.5">
+        <div className="flex items-center gap-1 bg-neutral-800 rounded-lg p-0.5">
           <button
             type="button"
             onClick={() => setViewMode("step")}
             className={`p-1.5 rounded-md transition-colors ${
               viewMode === "step"
-                ? "bg-stone-600 text-white"
-                : "text-stone-400 hover:text-white"
+                ? "bg-neutral-600 text-white"
+                : "text-neutral-400 hover:text-white"
             }`}
             aria-label="Step-by-step view"
           >
@@ -322,8 +322,8 @@ function CookModeOverlay({
             onClick={() => setViewMode("timeline")}
             className={`p-1.5 rounded-md transition-colors ${
               viewMode === "timeline"
-                ? "bg-stone-600 text-white"
-                : "text-stone-400 hover:text-white"
+                ? "bg-neutral-600 text-white"
+                : "text-neutral-400 hover:text-white"
             }`}
             aria-label="Timeline view"
           >
@@ -347,7 +347,7 @@ function CookModeOverlay({
         <button
           type="button"
           onClick={onClose}
-          className="p-2 rounded-full hover:bg-stone-800 transition-colors"
+          className="p-2 rounded-full hover:bg-neutral-800 transition-colors"
           aria-label="Exit cook mode"
         >
           <X className="h-5 w-5" />
@@ -361,7 +361,7 @@ function CookModeOverlay({
           {/* Step content */}
           <div className="flex-1 flex items-center justify-center px-6 sm:px-12 overflow-y-auto">
             <div className="max-w-2xl w-full text-center">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-600 text-2xl font-bold mb-6">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-orange-600 text-2xl font-bold mb-6">
                 {step.stepNumber}
               </div>
               <p className="text-xl sm:text-2xl lg:text-3xl leading-relaxed font-light">
@@ -371,8 +371,8 @@ function CookModeOverlay({
                 />
               </p>
               {step.tipText && (
-                <div className="mt-6 p-4 bg-amber-900/30 border border-amber-700/50 rounded-xl inline-block max-w-lg">
-                  <p className="text-sm sm:text-base text-amber-200">
+                <div className="mt-6 p-4 bg-orange-900/30 border border-orange-700/50 rounded-xl inline-block max-w-lg">
+                  <p className="text-sm sm:text-base text-orange-200">
                     <span className="font-semibold">Tip:</span> {step.tipText}
                   </p>
                 </div>
@@ -382,7 +382,7 @@ function CookModeOverlay({
 
           {/* Active timers */}
           {timers.length > 0 && (
-            <div className="px-4 py-2 bg-stone-800 border-t border-stone-700">
+            <div className="px-4 py-2 bg-neutral-800 border-t border-neutral-700">
               <div className="flex flex-wrap gap-2 justify-center">
                 {timers.map((t) => (
                   <div
@@ -390,7 +390,7 @@ function CookModeOverlay({
                     className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
                       t.remaining === 0
                         ? "bg-green-600 animate-pulse"
-                        : "bg-stone-700"
+                        : "bg-neutral-700"
                     }`}
                   >
                     <Timer className="h-3.5 w-3.5" />
@@ -401,7 +401,7 @@ function CookModeOverlay({
                       <button
                         type="button"
                         onClick={() => toggleTimer(t.id)}
-                        className="p-0.5 hover:bg-stone-600 rounded-full"
+                        className="p-0.5 hover:bg-neutral-600 rounded-full"
                         aria-label={t.running ? "Pause" : "Resume"}
                       >
                         {t.running ? (
@@ -414,7 +414,7 @@ function CookModeOverlay({
                     <button
                       type="button"
                       onClick={() => removeTimer(t.id)}
-                      className="p-0.5 hover:bg-stone-600 rounded-full"
+                      className="p-0.5 hover:bg-neutral-600 rounded-full"
                       aria-label="Remove timer"
                     >
                       <X className="h-3 w-3" />
@@ -431,7 +431,7 @@ function CookModeOverlay({
               type="button"
               onClick={prev}
               disabled={current === 0}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-stone-800"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-neutral-800"
             >
               <ChevronLeft className="h-5 w-5" />
               Previous
@@ -446,10 +446,10 @@ function CookModeOverlay({
                   onClick={() => setCurrent(i)}
                   className={`w-2.5 h-2.5 rounded-full transition-colors ${
                     i === current
-                      ? "bg-amber-500"
+                      ? "bg-orange-500"
                       : i < current
-                        ? "bg-amber-800"
-                        : "bg-stone-600"
+                        ? "bg-orange-800"
+                        : "bg-neutral-600"
                   }`}
                   aria-label={`Go to step ${i + 1}`}
                 />
@@ -460,7 +460,7 @@ function CookModeOverlay({
               <button
                 type="button"
                 onClick={next}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-600 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-orange-600 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors"
               >
                 Next
                 <ChevronRight className="h-5 w-5" />
@@ -480,7 +480,7 @@ function CookModeOverlay({
                     onClose();
                     window.location.hash = "troubleshooter";
                   }}
-                  className="text-sm text-stone-400 hover:text-amber-400 underline mt-2"
+                  className="text-sm text-neutral-400 hover:text-orange-400 underline mt-2"
                 >
                   Something didn&apos;t go right?
                 </button>
